@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            app:startDestination="@id/intent_list">
+
+    <fragment
+            android:id="@+id/intent_list"
+            android:name="com.simprints.simprintsidtester.fragments.list.IntentListFragment"
+            android:label="Welcome Fragment"
+            tools:layout="@layout/intent_list_fragment">
+        <action
+                android:id="@+id/openEditIntentFragment"
+                app:destination="@id/edit_intent_fragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"/>
+
+    </fragment>
+    <fragment
+            android:id="@+id/edit_intent_fragment"
+            android:name="com.simprints.simprintsidtester.fragments.edit.IntentEditFragment"
+            android:label="Edit Intent Fragment"
+            tools:layout="@layout/intent_edit_fragment">
+        <argument
+                android:name="intent"
+                app:argType="com.simprints.simprintsidtester.model.domain.SimprintsIntent"
+                app:nullable="true"/>
+    </fragment>
+</navigation>

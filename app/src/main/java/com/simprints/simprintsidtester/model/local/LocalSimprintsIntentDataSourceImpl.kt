@@ -1,0 +1,28 @@
+package com.simprints.simprintsidtester.model.local
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import com.simprints.simprintsidtester.model.domain.SimprintsIntent
+import org.koin.standalone.KoinComponent
+import org.koin.standalone.inject
+
+open class LocalSimprintsIntentDataSourceImpl: LocalSimprintsIntentDataSource, KoinComponent {
+
+    val localSimprintsIntentDao: LocalSimprintsIntentIntentDao by inject()
+
+    override fun getIntents(): LiveData<List<SimprintsIntent>> =
+        Transformations.map(localSimprintsIntentDao.getIntents()) { intents ->
+            intents.map { it.toDomainClass() }
+        }
+
+    override fun getById(id: String): LiveData<SimprintsIntent?> =
+        Transformations.map(localSimprintsIntentDao.getById(id)) { intent ->
+            intent?.toDomainClass()
+        }
+
+    override fun update(intent: SimprintsIntent) = localSimprintsIntentDao.save(LocalSimprintsIntent(intent))
+
+    override fun delete(intent: SimprintsIntent) = localSimprintsIntentDao.delete(LocalSimprintsIntent(intent))
+
+    override fun deleteUncompletedSimprintsIntent() = localSimprintsIntentDao.deleteUncompletedSimprintsIntent()
+}

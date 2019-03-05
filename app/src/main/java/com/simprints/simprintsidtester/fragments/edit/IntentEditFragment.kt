@@ -10,6 +10,7 @@ import androidx.navigation.Navigation
 import com.google.gson.GsonBuilder
 import com.simprints.libsimprints.Constants
 import com.simprints.libsimprints.Identification
+import com.simprints.libsimprints.RefusalForm
 import com.simprints.libsimprints.Registration
 import com.simprints.simprintsidtester.MainActivity
 import com.simprints.simprintsidtester.R
@@ -73,12 +74,14 @@ class IntentEditFragment : Fragment(), BackButtonInterface, IntentEditViewModel.
         val enrol = data?.getParcelableExtra<Registration>(Constants.SIMPRINTS_REGISTRATION)
         val verify = data?.getParcelableExtra<Identification>(Constants.SIMPRINTS_VERIFICATION)
         val identify = data?.getParcelableArrayListExtra<Identification>(Constants.SIMPRINTS_IDENTIFICATIONS)
+        val refusalForm = data?.getParcelableExtra<RefusalForm>(Constants.SIMPRINTS_REFUSAL_FORM)
 
         binding.intentEditResponse.text = when {
             enrol != null -> gson.toJson(enrol)
             verify != null -> gson.toJson(verify)
             identify != null -> gson.toJson(identify)
-            else -> ""
+            refusalForm != null -> gson.toJson(refusalForm)
+            else -> "Different response: ${data?.extras?.keySet()}"
         }
     }
 

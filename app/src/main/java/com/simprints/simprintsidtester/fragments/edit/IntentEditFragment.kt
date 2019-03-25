@@ -2,16 +2,12 @@ package com.simprints.simprintsidtester.fragments.edit
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.gson.GsonBuilder
-import com.simprints.libsimprints.Constants
-import com.simprints.libsimprints.Identification
-import com.simprints.libsimprints.RefusalForm
-import com.simprints.libsimprints.Registration
+import com.simprints.libsimprints.*
 import com.simprints.simprintsidtester.MainActivity
 import com.simprints.simprintsidtester.R
 import com.simprints.simprintsidtester.databinding.IntentEditFragmentBinding
@@ -47,7 +43,6 @@ class IntentEditFragment : Fragment(), BackButtonInterface, IntentEditViewModel.
                 adapter = RecyclerViewAdapter(intentEditViewModel, R.layout.intent_edit_item)
                 intentEditExtras.layoutManager = WrapContentLinearLayoutManager(it)
                 intentEditExtras.adapter = adapter
-                intentEditResponse.movementMethod = ScrollingMovementMethod()
             }
         }
 
@@ -72,7 +67,7 @@ class IntentEditFragment : Fragment(), BackButtonInterface, IntentEditViewModel.
         val gson = GsonBuilder().setPrettyPrinting().create()
 
         val enrol = data?.getParcelableExtra<Registration>(Constants.SIMPRINTS_REGISTRATION)
-        val verify = data?.getParcelableExtra<Identification>(Constants.SIMPRINTS_VERIFICATION)
+        val verify = data?.getParcelableExtra<Verification>(Constants.SIMPRINTS_VERIFICATION)
         val identify = data?.getParcelableArrayListExtra<Identification>(Constants.SIMPRINTS_IDENTIFICATIONS)
         val refusalForm = data?.getParcelableExtra<RefusalForm>(Constants.SIMPRINTS_REFUSAL_FORM)
 

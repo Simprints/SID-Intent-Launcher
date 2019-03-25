@@ -93,6 +93,10 @@
                     android:id="@+id/intent_edit_response"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="true"
+                    android:textIsSelectable="true"
+                    android:focusable="true"
+                    android:longClickable="true"
                     android:scrollbars = "vertical"/>
 
         </LinearLayout>

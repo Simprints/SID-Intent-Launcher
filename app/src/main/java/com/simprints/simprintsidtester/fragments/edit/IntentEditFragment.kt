@@ -74,7 +74,7 @@ class IntentEditFragment : Fragment(), BackButtonInterface, IntentEditViewModel.
         val enrol = data?.getParcelableExtra<Registration>(Constants.SIMPRINTS_REGISTRATION)
         val verify = data?.getParcelableExtra<Identification>(Constants.SIMPRINTS_VERIFICATION)
         val identify = data?.getParcelableArrayListExtra<Identification>(Constants.SIMPRINTS_IDENTIFICATIONS)
-        val refusal = data?.getParcelableArrayListExtra<RefusalForm>(Constants.SIMPRINTS_REFUSAL_FORM)
+        val refusal = data?.getParcelableExtra<RefusalForm>(Constants.SIMPRINTS_REFUSAL_FORM)
 
         binding.intentEditResponse.text = when {
             enrol != null -> "$resultCode ${gson.toJson(enrol)}"

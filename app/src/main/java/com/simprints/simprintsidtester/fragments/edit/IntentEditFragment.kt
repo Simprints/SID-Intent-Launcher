@@ -2,7 +2,6 @@ package com.simprints.simprintsidtester.fragments.edit
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -44,10 +43,8 @@ class IntentEditFragment : Fragment(), BackButtonInterface, IntentEditViewModel.
                 adapter = RecyclerViewAdapter(intentEditViewModel, R.layout.intent_edit_item)
                 intentEditExtras.layoutManager = WrapContentLinearLayoutManager(it)
                 intentEditExtras.adapter = adapter
-                intentEditResponse.movementMethod = ScrollingMovementMethod()
             }
         }
-
         return binding.root
     }
 

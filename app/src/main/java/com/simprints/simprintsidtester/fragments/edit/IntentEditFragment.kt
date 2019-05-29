@@ -7,7 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.google.gson.GsonBuilder
-import com.simprints.libsimprints.*
 import com.simprints.simprintsidtester.MainActivity
 import com.simprints.simprintsidtester.R
 import com.simprints.simprintsidtester.databinding.IntentEditFragmentBinding
@@ -65,18 +64,11 @@ class IntentEditFragment : Fragment(), BackButtonInterface, IntentEditViewModel.
         super.onActivityResult(requestCode, resultCode, data)
         val gson = GsonBuilder().setPrettyPrinting().create()
 
-        val enrol = data?.getParcelableExtra<Registration>(Constants.SIMPRINTS_REGISTRATION)
-        val verify = data?.getParcelableExtra<Verification>(Constants.SIMPRINTS_VERIFICATION)
-        val identify = data?.getParcelableArrayListExtra<Identification>(Constants.SIMPRINTS_IDENTIFICATIONS)
-        val refusal = data?.getParcelableExtra<RefusalForm>(Constants.SIMPRINTS_REFUSAL_FORM)
+        binding.intentEditResponse.text =
+            "$resultCode \n ${data?.extras?.keySet()?.map {
+                "$it : \n ${gson.toJson(data?.extras?.get(it))}"
+            }}"
 
-        binding.intentEditResponse.text = when {
-            enrol != null -> "$resultCode ${gson.toJson(enrol)}"
-            verify != null -> "$resultCode ${gson.toJson(verify)}"
-            identify != null -> "$resultCode ${gson.toJson(identify)}"
-            refusal != null -> "$resultCode ${gson.toJson(refusal)}"
-            else -> "$resultCode"
-        }
     }
 
     override fun onBackPressed() {

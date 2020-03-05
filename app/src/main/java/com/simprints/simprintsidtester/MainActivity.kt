@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.Navigation.findNavController
 import com.simprints.simprintsidtester.fragments.BackButtonInterface
 import com.simprints.simprintsidtester.fragments.list.IntentListFragment
-import com.simprints.simprintsidtester.fragments.list.IntentListFragmentDirections.openEditIntentFragment
+import com.simprints.simprintsidtester.fragments.list.IntentListFragmentDirections.Companion.openEditIntentFragment
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 
 class MainActivity : AppCompatActivity(), IntentListFragment.UserListActions {

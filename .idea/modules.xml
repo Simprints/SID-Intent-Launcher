@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SimprintsIDTester.iml" filepath="$PROJECT_DIR$/SimprintsIDTester.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="intents-launcher/app" />
+      <module fileurl="file://$PROJECT_DIR$/intents-launcher.iml" filepath="$PROJECT_DIR$/intents-launcher.iml" group="intents-launcher" />
     </modules>
   </component>
 </project>

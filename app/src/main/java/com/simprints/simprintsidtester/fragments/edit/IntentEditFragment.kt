@@ -16,7 +16,8 @@ import com.simprints.simprintsidtester.fragments.ui.WrapContentLinearLayoutManag
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class IntentEditFragment : Fragment(), BackButtonInterface, IntentEditViewModel.ViewEditIntentEvents {
+class IntentEditFragment : Fragment(), BackButtonInterface,
+    IntentEditViewModel.ViewEditIntentEvents {
 
     private val intentEditViewModel by viewModel<IntentEditViewModel>()
 
@@ -75,6 +76,7 @@ class IntentEditFragment : Fragment(), BackButtonInterface, IntentEditViewModel.
     }
 
     override fun finish() {
-        Navigation.findNavController(activity as MainActivity, R.id.nav_host_fragment).popBackStack()
+        Navigation.findNavController(activity as MainActivity, R.id.nav_host_fragment)
+            .popBackStack()
     }
 }

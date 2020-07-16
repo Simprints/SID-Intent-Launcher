@@ -9,13 +9,11 @@ import com.simprints.simprintsidtester.model.domain.IntentArgument
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import com.simprints.simprintsidtester.model.domain.toIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
+import com.simprints.simprintsidtester.model.local.LocalSimprintsresultDataSource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-
-
-
 
 class IntentEditViewModel : ViewModel(), KoinComponent,
     ViewModelForAdapter {
@@ -28,6 +26,7 @@ class IntentEditViewModel : ViewModel(), KoinComponent,
     lateinit var intent: SimprintsIntent
 
     private val intentsDao: LocalSimprintsIntentDataSource by inject()
+    private val resultDao: LocalSimprintsresultDataSource by inject()
 
     override fun getCount() = addPlaceholderIfNecessary(false).let { intent.extra.size }
     fun getIntentArguments(position: Int) = intent.extra[position]
@@ -51,9 +50,9 @@ class IntentEditViewModel : ViewModel(), KoinComponent,
         }
     }
 
-    private fun addPlaceholderIfNecessary(notifyToAdapter: Boolean = true){
+    private fun addPlaceholderIfNecessary(notifyToAdapter: Boolean = true) {
         val empty = intent.extra.filter { it.value.isEmpty() && it.key.isEmpty() }
-        if(empty.isEmpty()) {
+        if (empty.isEmpty()) {
             intent.extra.add(IntentArgument("", ""))
             if (notifyToAdapter) {
                 viewEditEvents.sendEvent { this.notifyIntentArgumentAdded(intent.extra.size - 1) }
@@ -90,7 +89,8 @@ class IntentEditViewModel : ViewModel(), KoinComponent,
 
     private fun updateSimprintsIntent(intent: SimprintsIntent) =
         GlobalScope.launch {
-            intentsDao.update(intent.copy(extra = intent.extra.filter { it.key.isNotEmpty() }.toMutableList()))
+            intentsDao.update(intent.copy(extra = intent.extra.filter { it.key.isNotEmpty() }
+                .toMutableList()))
         }
 
     interface ViewEditIntentEvents {

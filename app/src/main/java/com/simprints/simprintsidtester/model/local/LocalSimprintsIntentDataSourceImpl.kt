@@ -6,9 +6,9 @@ import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-open class LocalSimprintsIntentDataSourceImpl: LocalSimprintsIntentDataSource, KoinComponent {
+open class LocalSimprintsIntentDataSourceImpl : LocalSimprintsIntentDataSource, KoinComponent {
 
-    val localSimprintsIntentDao: LocalSimprintsIntentIntentDao by inject()
+    val localSimprintsIntentDao: LocalSimprintsIntentDao by inject()
 
     override fun getIntents(): LiveData<List<SimprintsIntent>> =
         Transformations.map(localSimprintsIntentDao.getIntents()) { intents ->
@@ -20,9 +20,12 @@ open class LocalSimprintsIntentDataSourceImpl: LocalSimprintsIntentDataSource, K
             intent?.toDomainClass()
         }
 
-    override fun update(intent: SimprintsIntent) = localSimprintsIntentDao.save(LocalSimprintsIntent(intent))
+    override fun update(intent: SimprintsIntent) =
+        localSimprintsIntentDao.save(LocalSimprintsIntent(intent))
 
-    override fun delete(intent: SimprintsIntent) = localSimprintsIntentDao.delete(LocalSimprintsIntent(intent))
+    override fun delete(intent: SimprintsIntent) =
+        localSimprintsIntentDao.delete(LocalSimprintsIntent(intent))
 
-    override fun deleteUncompletedSimprintsIntent() = localSimprintsIntentDao.deleteUncompletedSimprintsIntent()
+    override fun deleteUncompletedSimprintsIntent() =
+        localSimprintsIntentDao.deleteUncompletedSimprintsIntent()
 }

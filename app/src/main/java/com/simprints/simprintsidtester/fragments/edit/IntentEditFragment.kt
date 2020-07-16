@@ -65,11 +65,13 @@ class IntentEditFragment : Fragment(), BackButtonInterface,
         super.onActivityResult(requestCode, resultCode, data)
         val gson = GsonBuilder().setPrettyPrinting().create()
 
-        binding.intentEditResponse.text =
-            "$resultCode \n ${data?.extras?.keySet()?.map {
-                "$it : \n ${gson.toJson(data?.extras?.get(it))}"
-            }}"
+        val result = "$resultCode \n ${data?.extras?.keySet()?.map {
+            "$it : \n ${gson.toJson(data.extras?.get(it))}"
+        }}"
 
+        binding.intentEditResponse.text = result
+
+        intentEditViewModel.saveResult(result)
     }
 
     override fun onBackPressed() {

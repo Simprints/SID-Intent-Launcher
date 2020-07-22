@@ -21,7 +21,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     private var listener: UserListActions? = null
-    private val intentListViewModel by viewModel<IntentListViewModel>()
+    private val intentListViewModel: IntentListViewModel by viewModel()
     private lateinit var binding: IntentListFragmentBinding
     private lateinit var adapter: RecyclerViewAdapter<IntentListViewModel>
 
@@ -54,7 +54,7 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.intent_list_menu_action, menu)
+        inflater.inflate(R.menu.intent_list_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

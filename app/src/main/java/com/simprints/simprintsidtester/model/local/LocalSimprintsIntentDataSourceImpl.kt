@@ -3,12 +3,9 @@ package com.simprints.simprintsidtester.model.local
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
 
-open class LocalSimprintsIntentDataSourceImpl : LocalSimprintsIntentDataSource, KoinComponent {
-
-    val localSimprintsIntentDao: LocalSimprintsIntentDao by inject()
+open class LocalSimprintsIntentDataSourceImpl(private val localSimprintsIntentDao: LocalSimprintsIntentDao) :
+    LocalSimprintsIntentDataSource {
 
     override fun getIntents(): LiveData<List<SimprintsIntent>> =
         Transformations.map(localSimprintsIntentDao.getIntents()) { intents ->

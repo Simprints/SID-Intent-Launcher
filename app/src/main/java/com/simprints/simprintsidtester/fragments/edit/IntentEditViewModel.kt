@@ -13,12 +13,12 @@ import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSourc
 import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
 import java.util.*
 
-class IntentEditViewModel : ViewModel(), KoinComponent,
-    ViewModelForAdapter {
+class IntentEditViewModel(
+    private val intentsDao: LocalSimprintsIntentDataSource,
+    private val resultDao: LocalSimprintsResultDataSource
+) : ViewModel(), ViewModelForAdapter {
 
     companion object {
         const val REQUEST_CODE = 1
@@ -27,8 +27,7 @@ class IntentEditViewModel : ViewModel(), KoinComponent,
     val viewEditEvents = LiveMessageEvent<ViewEditIntentEvents>()
     lateinit var intent: SimprintsIntent
 
-    private val intentsDao: LocalSimprintsIntentDataSource by inject()
-    private val resultDao: LocalSimprintsResultDataSource by inject()
+
     private var lastIntentSentTime: Date? = null
 
     override fun getCount() = addPlaceholderIfNecessary(false).let { intent.extra.size }

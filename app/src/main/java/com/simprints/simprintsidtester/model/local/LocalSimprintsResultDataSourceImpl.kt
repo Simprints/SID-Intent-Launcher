@@ -3,8 +3,6 @@ package com.simprints.simprintsidtester.model.local
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.simprints.simprintsidtester.model.domain.SimprintsResult
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
 
 interface LocalSimprintsResultDataSource {
 
@@ -13,9 +11,8 @@ interface LocalSimprintsResultDataSource {
     fun getResults(): LiveData<List<SimprintsResult>>
 }
 
-open class LocalSimprintsResultDataSourceImpl : LocalSimprintsResultDataSource, KoinComponent {
-
-    val localSimprintsResultDao: LocalSimprintsResultDao by inject()
+open class LocalSimprintsResultDataSourceImpl(private val localSimprintsResultDao: LocalSimprintsResultDao) :
+    LocalSimprintsResultDataSource {
 
     override fun update(simprintsResult: SimprintsResult) =
         localSimprintsResultDao.save(LocalSimprintsResult.fromSimprintsResult(simprintsResult))

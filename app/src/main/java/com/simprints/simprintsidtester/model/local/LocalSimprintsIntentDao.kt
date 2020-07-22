@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Dao
-interface LocalSimprintsIntentIntentDao {
+interface LocalSimprintsIntentDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(intent: LocalSimprintsIntent)

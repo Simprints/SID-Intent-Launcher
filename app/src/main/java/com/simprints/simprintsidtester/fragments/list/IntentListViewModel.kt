@@ -8,14 +8,10 @@ import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
 import java.util.*
 
-class IntentListViewModel : ViewModel(), KoinComponent,
-    ViewModelForAdapter {
+class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource) : ViewModel(), ViewModelForAdapter {
 
-    private val intentsDao: LocalSimprintsIntentDataSource by inject()
     private val intentsList: MutableList<SimprintsIntent> = mutableListOf()
     val viewListEvents = LiveMessageEvent<ViewListIntentEvents>()
 

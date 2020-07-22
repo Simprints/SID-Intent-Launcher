@@ -7,18 +7,18 @@ import com.simprints.simprintsidtester.fragments.LiveMessageEvent
 import com.simprints.simprintsidtester.fragments.ui.ViewModelForAdapter
 import com.simprints.simprintsidtester.model.domain.IntentArgument
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
+import com.simprints.simprintsidtester.model.domain.SimprintsResult
 import com.simprints.simprintsidtester.model.domain.toIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
+import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
+import java.util.*
 
-
-
-
-class IntentEditViewModel : ViewModel(), KoinComponent,
-    ViewModelForAdapter {
+class IntentEditViewModel(
+    private val intentsDao: LocalSimprintsIntentDataSource,
+    private val resultDao: LocalSimprintsResultDataSource
+) : ViewModel(), ViewModelForAdapter {
 
     companion object {
         const val REQUEST_CODE = 1
@@ -27,7 +27,8 @@ class IntentEditViewModel : ViewModel(), KoinComponent,
     val viewEditEvents = LiveMessageEvent<ViewEditIntentEvents>()
     lateinit var intent: SimprintsIntent
 
-    private val intentsDao: LocalSimprintsIntentDataSource by inject()
+
+    private var lastIntentSentTime: Date? = null
 
     override fun getCount() = addPlaceholderIfNecessary(false).let { intent.extra.size }
     fun getIntentArguments(position: Int) = intent.extra[position]
@@ -51,9 +52,9 @@ class IntentEditViewModel : ViewModel(), KoinComponent,
         }
     }
 
-    private fun addPlaceholderIfNecessary(notifyToAdapter: Boolean = true){
+    private fun addPlaceholderIfNecessary(notifyToAdapter: Boolean = true) {
         val empty = intent.extra.filter { it.value.isEmpty() && it.key.isEmpty() }
-        if(empty.isEmpty()) {
+        if (empty.isEmpty()) {
             intent.extra.add(IntentArgument("", ""))
             if (notifyToAdapter) {
                 viewEditEvents.sendEvent { this.notifyIntentArgumentAdded(intent.extra.size - 1) }
@@ -74,6 +75,7 @@ class IntentEditViewModel : ViewModel(), KoinComponent,
     fun userDidWantToExecuteIntent(v: View) {
         viewEditEvents.sendEvent {
             try {
+                lastIntentSentTime = Date()
                 startActivityForResult(intent.toIntent(), REQUEST_CODE)
             } catch (t: Throwable) {
                 t.printStackTrace()
@@ -90,8 +92,19 @@ class IntentEditViewModel : ViewModel(), KoinComponent,
 
     private fun updateSimprintsIntent(intent: SimprintsIntent) =
         GlobalScope.launch {
-            intentsDao.update(intent.copy(extra = intent.extra.filter { it.key.isNotEmpty() }.toMutableList()))
+            intentsDao.update(intent.copy(extra = intent.extra.filter { it.key.isNotEmpty() }
+                .toMutableList()))
         }
+
+    fun saveResult(resultReceived: String) {
+        val simprintsResult = SimprintsResult(
+            dateTimeSent = lastIntentSentTime.toString(),
+            intentSent = intent.toString(),
+            resultReceived = resultReceived
+        )
+
+        GlobalScope.launch { resultDao.update(simprintsResult) }
+    }
 
     interface ViewEditIntentEvents {
         fun startActivityForResult(intent: Intent?, requestCode: Int)

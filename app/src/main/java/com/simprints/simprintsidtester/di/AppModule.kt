@@ -3,6 +3,7 @@ package com.simprints.simprintsidtester.di
 import androidx.room.Room
 import com.simprints.simprintsidtester.fragments.edit.IntentEditViewModel
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel
+import com.simprints.simprintsidtester.fragments.result.ResultListViewModel
 import com.simprints.simprintsidtester.model.local.*
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.ext.koin.viewModel
@@ -25,8 +26,9 @@ class KoinCoreModule {
         single { get<LocalSimprintsIntentDatabase>().localSimprintsIntentDao() }
         single { get<LocalSimprintsIntentDatabase>().localSimprintsResultDao() }
         single<LocalSimprintsIntentDataSource> { LocalSimprintsIntentDataSourceImpl() }
-        single<LocalSimprintsresultDataSource> { LocalSimprintsresultDataSourceImpl() }
+        single<LocalSimprintsResultDataSource> { LocalSimprintsResultDataSourceImpl() }
         viewModel { IntentListViewModel() }
         viewModel { IntentEditViewModel() }
+        viewModel { ResultListViewModel(get()) }
     }
 }

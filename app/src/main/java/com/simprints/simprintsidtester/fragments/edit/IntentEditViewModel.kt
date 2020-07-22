@@ -10,7 +10,7 @@ import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import com.simprints.simprintsidtester.model.domain.SimprintsResult
 import com.simprints.simprintsidtester.model.domain.toIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
-import com.simprints.simprintsidtester.model.local.LocalSimprintsresultDataSource
+import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.standalone.KoinComponent
@@ -28,7 +28,7 @@ class IntentEditViewModel : ViewModel(), KoinComponent,
     lateinit var intent: SimprintsIntent
 
     private val intentsDao: LocalSimprintsIntentDataSource by inject()
-    private val resultDao: LocalSimprintsresultDataSource by inject()
+    private val resultDao: LocalSimprintsResultDataSource by inject()
     private var lastIntentSentTime: Date? = null
 
     override fun getCount() = addPlaceholderIfNecessary(false).let { intent.extra.size }

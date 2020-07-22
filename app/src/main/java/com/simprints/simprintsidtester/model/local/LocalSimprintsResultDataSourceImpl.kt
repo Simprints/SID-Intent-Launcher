@@ -6,14 +6,14 @@ import com.simprints.simprintsidtester.model.domain.SimprintsResult
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
 
-interface LocalSimprintsresultDataSource {
+interface LocalSimprintsResultDataSource {
 
     fun update(simprintsResult: SimprintsResult)
 
     fun getResults(): LiveData<List<SimprintsResult>>
 }
 
-open class LocalSimprintsresultDataSourceImpl : LocalSimprintsresultDataSource, KoinComponent {
+open class LocalSimprintsResultDataSourceImpl : LocalSimprintsResultDataSource, KoinComponent {
 
     val localSimprintsResultDao: LocalSimprintsResultDao by inject()
 

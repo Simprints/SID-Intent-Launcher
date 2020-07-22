@@ -2,12 +2,12 @@ package com.simprints.simprintsidtester.fragments.list
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.simprints.simprintsidtester.R
 import com.simprints.simprintsidtester.databinding.IntentListFragmentBinding
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel.ViewListIntentEvents
@@ -27,7 +27,7 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        intentListViewModel.getSimprintsIntents().observe(this, Observer {
+        intentListViewModel.getSimprintsIntents().observe(viewLifecycleOwner, Observer {
             it?.let { intents ->
                 intentListViewModel.addIntents(it)
                 adapter.notifyDataSetChanged()
@@ -48,9 +48,19 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
                 intentsList.layoutManager = WrapContentLinearLayoutManager(it)
                 intentsList.adapter = adapter
             }
-
+            setHasOptionsMenu(true)
             return root
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.intent_list_menu_action, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return NavigationUI.onNavDestinationSelected(item, findNavController()) ||
+                super.onOptionsItemSelected(item)
     }
 
     override fun onCreateIntent(newIntent: SimprintsIntent) {

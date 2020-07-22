@@ -1,7 +1,9 @@
 package com.simprints.simprintsidtester.model.local
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface LocalSimprintsResultDao {
@@ -10,6 +12,6 @@ interface LocalSimprintsResultDao {
     fun save(intent: LocalSimprintsResult)
 
     @Query("SELECT * FROM LocalSimprintsResult")
-    fun getResults(): LiveData<List<LocalSimprintsResult>>
+    suspend fun getResults(): List<LocalSimprintsResult>
 
 }

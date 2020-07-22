@@ -1,14 +1,14 @@
 package com.simprints.simprintsidtester.model.local
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import com.simprints.simprintsidtester.model.domain.SimprintsResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 interface LocalSimprintsResultDataSource {
 
     fun update(simprintsResult: SimprintsResult)
 
-    fun getResults(): LiveData<List<SimprintsResult>>
+    suspend fun getResults(): List<SimprintsResult>
 }
 
 open class LocalSimprintsResultDataSourceImpl(private val localSimprintsResultDao: LocalSimprintsResultDao) :
@@ -17,8 +17,7 @@ open class LocalSimprintsResultDataSourceImpl(private val localSimprintsResultDa
     override fun update(simprintsResult: SimprintsResult) =
         localSimprintsResultDao.save(LocalSimprintsResult.fromSimprintsResult(simprintsResult))
 
-    override fun getResults(): LiveData<List<SimprintsResult>> =
-        Transformations.map(localSimprintsResultDao.getResults()) { intents ->
-            intents.map { it.toDomainClass() }
-        }
+    override suspend fun getResults(): List<SimprintsResult> = withContext(Dispatchers.IO) {
+        localSimprintsResultDao.getResults().map { it.toDomainClass() }
+    }
 }

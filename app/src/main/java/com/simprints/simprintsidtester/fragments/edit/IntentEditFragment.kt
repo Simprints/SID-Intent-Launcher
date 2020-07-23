@@ -8,19 +8,19 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.google.gson.GsonBuilder
+import com.google.gson.Gson
 import com.simprints.simprintsidtester.MainActivity
 import com.simprints.simprintsidtester.R
 import com.simprints.simprintsidtester.databinding.IntentEditFragmentBinding
 import com.simprints.simprintsidtester.fragments.ui.RecyclerViewAdapter
 import com.simprints.simprintsidtester.fragments.ui.WrapContentLinearLayoutManager
+import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
-
 
 class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents {
 
     private val intentEditViewModel by viewModel<IntentEditViewModel>()
-
+    private val gson: Gson by inject()
     private lateinit var binding: IntentEditFragmentBinding
     private lateinit var adapter: RecyclerViewAdapter<IntentEditViewModel>
 
@@ -54,7 +54,6 @@ class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val gson = GsonBuilder().setPrettyPrinting().create()
 
         val result = "$resultCode \n ${data?.extras?.keySet()?.map {
             "$it : \n ${gson.toJson(data.extras?.get(it))}"

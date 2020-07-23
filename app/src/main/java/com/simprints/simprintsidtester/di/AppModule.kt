@@ -1,6 +1,7 @@
 package com.simprints.simprintsidtester.di
 
 import androidx.room.Room
+import com.google.gson.GsonBuilder
 import com.simprints.simprintsidtester.fragments.edit.IntentEditViewModel
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel
 import com.simprints.simprintsidtester.fragments.result.ResultListViewModel
@@ -21,6 +22,7 @@ val appModule = module {
             .allowMainThreadQueries()
             .build()
     }
+    single { GsonBuilder().setPrettyPrinting().create() }
 
     single { get<LocalSimprintsIntentDatabase>().localSimprintsIntentDao() }
     single { get<LocalSimprintsIntentDatabase>().localSimprintsResultDao() }
@@ -28,6 +30,6 @@ val appModule = module {
     single<LocalSimprintsResultDataSource> { LocalSimprintsResultDataSourceImpl(get()) }
 
     viewModel { IntentListViewModel(get()) }
-    viewModel { IntentEditViewModel(get(), get()) }
+    viewModel { IntentEditViewModel(get(), get(), get()) }
     viewModel { ResultListViewModel(get()) }
 }

@@ -3,6 +3,7 @@ package com.simprints.simprintsidtester.fragments.edit
 import android.content.Intent
 import android.view.View
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
 import com.simprints.simprintsidtester.fragments.LiveMessageEvent
 import com.simprints.simprintsidtester.fragments.ui.ViewModelForAdapter
 import com.simprints.simprintsidtester.model.domain.IntentArgument
@@ -17,7 +18,8 @@ import java.util.*
 
 class IntentEditViewModel(
     private val intentsDao: LocalSimprintsIntentDataSource,
-    private val resultDao: LocalSimprintsResultDataSource
+    private val resultDao: LocalSimprintsResultDataSource,
+    private val gson: Gson
 ) : ViewModel(), ViewModelForAdapter {
 
     companion object {
@@ -99,7 +101,7 @@ class IntentEditViewModel(
     fun saveResult(resultReceived: String) {
         val simprintsResult = SimprintsResult(
             dateTimeSent = lastIntentSentTime.toString(),
-            intentSent = intent.toString(),
+            intentSent = gson.toJson(intent),
             resultReceived = resultReceived
         )
 

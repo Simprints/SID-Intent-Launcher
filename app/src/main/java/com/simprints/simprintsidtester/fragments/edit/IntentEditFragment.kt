@@ -55,9 +55,7 @@ class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        val result = "$resultCode \n ${data?.extras?.keySet()?.map {
-            "$it : \n ${gson.toJson(data.extras?.get(it))}"
-        }}"
+        val result = "$resultCode \n ${gson.toJson(data?.extras)}"
 
         binding.intentEditResponse.text = result
 

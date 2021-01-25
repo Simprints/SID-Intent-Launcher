@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.simprints.simprintsidtester.fragments.edit.IntentEditViewModel
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel
 import com.simprints.simprintsidtester.fragments.result.ResultListViewModel
+import com.simprints.simprintsidtester.model.BundleTypeAdapterFactory
 import com.simprints.simprintsidtester.model.local.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.viewmodel.dsl.viewModel
@@ -22,7 +23,7 @@ val appModule = module {
             .allowMainThreadQueries()
             .build()
     }
-    single { GsonBuilder().setPrettyPrinting().create() }
+    single { GsonBuilder().setPrettyPrinting().registerTypeAdapterFactory(BundleTypeAdapterFactory()).create() }
 
     single { get<LocalSimprintsIntentDatabase>().localSimprintsIntentDao() }
     single { get<LocalSimprintsIntentDatabase>().localSimprintsResultDao() }

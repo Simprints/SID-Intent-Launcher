@@ -15,7 +15,7 @@ interface LocalSimprintsIntentDao {
     @Query("DELETE FROM localsimprintsintent WHERE name = \"\"")
     fun deleteUncompletedSimprintsIntent()
 
-    @Query("SELECT * FROM localsimprintsintent")
+    @Query("SELECT * FROM localsimprintsintent ORDER BY name")
     fun getIntents(): LiveData<List<LocalSimprintsIntent>>
 
     @Query("SELECT * from localsimprintsintent WHERE id= :id")

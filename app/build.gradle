@@ -55,7 +55,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
     kapt "com.android.databinding:compiler:3.3.1"
 
-    def koin_version = '2.1.5'
+    def koin_version = '2.2.2'
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-android-viewmodel:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"

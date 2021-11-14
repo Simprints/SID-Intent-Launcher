@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -46,6 +47,24 @@ class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents 
             }
         }
         return binding.root
+    }
+
+    override fun onDeleteButtonClicked() {
+        AlertDialog.Builder(requireContext()).apply {
+            setTitle("Caution!")
+            setMessage("Confirm that you want to proceed with the delete operation!")
+            setCancelable(false)
+                .setPositiveButton(
+                    "Yes"
+                ) { _, _ ->
+                    intentEditViewModel.userConfirmedDelete()
+                }
+                .setNegativeButton(
+                    "No"
+                ) { dialog, _ ->
+                    dialog.cancel()
+                }
+        }.create().show()
     }
 
     override fun notifyIntentArgumentAdded(position: Int) {

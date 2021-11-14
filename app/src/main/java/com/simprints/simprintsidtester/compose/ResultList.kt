@@ -23,7 +23,7 @@ fun ResultList(resultListViewModel: ResultListViewModel) {
 private fun ResultListContent(resultList: List<SimprintsResult>) {
     LazyColumn {
         items(items = resultList) { item ->
-            ResultItem(resultInfo = item, modifier = Modifier.padding(start = 16.dp, end = 16.dp))
+            ResultItem(resultInfo = item, modifier = Modifier.padding(all = 12.dp))
         }
     }
 }

@@ -3,7 +3,7 @@ package com.simprints.simprintsidtester.model.domain
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 @Parcelize

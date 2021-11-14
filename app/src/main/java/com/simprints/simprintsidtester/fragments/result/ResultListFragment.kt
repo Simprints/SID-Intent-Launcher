@@ -14,7 +14,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class ResultListFragment : Fragment() {
     private val resultListViewModel: ResultListViewModel by viewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = ResultListFragmentBinding.inflate(layoutInflater).apply {
             composeResultList.apply {
                 // Dispose the Composition when the view's LifecycleOwner

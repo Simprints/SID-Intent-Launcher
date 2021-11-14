@@ -5,18 +5,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.simprints.simprintsidtester.databinding.ActivityMainBinding
 import com.simprints.simprintsidtester.fragments.list.IntentListFragment
 import com.simprints.simprintsidtester.fragments.list.IntentListFragmentDirections.Companion.openEditIntentFragment
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), IntentListFragment.UserListActions {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setSupportActionBar(topAppBar)
+        setSupportActionBar(binding.topAppBar)
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)

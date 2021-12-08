@@ -33,7 +33,7 @@ class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         intentEditViewModel.intent = simprintsIntent
         intentEditViewModel.viewEditEvents.setEventReceiver(this, this)
 

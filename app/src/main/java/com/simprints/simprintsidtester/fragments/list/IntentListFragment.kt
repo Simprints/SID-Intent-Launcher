@@ -6,6 +6,7 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.simprints.simprintsidtester.R
@@ -27,8 +28,8 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        intentListViewModel.getSimprintsIntents().observe(viewLifecycleOwner, Observer {
-            it?.let { intents ->
+        intentListViewModel.getSimprintsIntents().observe(viewLifecycleOwner, {
+            it?.let {
                 intentListViewModel.addIntents(it)
                 adapter.notifyDataSetChanged()
             }
@@ -86,7 +87,7 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     override fun onResume() {
         super.onResume()
-        GlobalScope.launch {
+        lifecycleScope.launch {
             intentListViewModel.deleteUncompletedSimprintsIntent()
         }
     }

@@ -9,7 +9,7 @@ import androidx.room.Query
 interface LocalSimprintsResultDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(intent: LocalSimprintsResult)
+    suspend fun save(intent: LocalSimprintsResult)
 
     @Query("SELECT * FROM LocalSimprintsResult")
     suspend fun getResults(): List<LocalSimprintsResult>

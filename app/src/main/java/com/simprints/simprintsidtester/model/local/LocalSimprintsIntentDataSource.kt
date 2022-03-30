@@ -7,7 +7,7 @@ interface LocalSimprintsIntentDataSource {
 
     fun getIntents(): LiveData<List<SimprintsIntent>>
     fun getById(id: String): LiveData<SimprintsIntent?>
-    fun deleteUncompletedSimprintsIntent()
-    fun delete(intent: SimprintsIntent)
-    fun update(intent: SimprintsIntent)
+    suspend fun deleteUncompletedSimprintsIntent()
+    suspend fun delete(intent: SimprintsIntent)
+    suspend fun update(intent: SimprintsIntent)
 }

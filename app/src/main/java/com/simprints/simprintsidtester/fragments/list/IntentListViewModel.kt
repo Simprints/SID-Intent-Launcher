@@ -23,7 +23,7 @@ class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource
     fun getSimprintsIntents() = intentsDao.getIntents()
 
     fun deleteUncompletedSimprintsIntent() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             intentsDao.deleteUncompletedSimprintsIntent()
         }
     }
@@ -40,7 +40,7 @@ class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource
 
     fun userDidWantToCreateANewIntent(view: View) {
         SimprintsIntent().let {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 intentsDao.update(it)
             }
             viewListEvents.sendEvent { onCreateIntent(it) }

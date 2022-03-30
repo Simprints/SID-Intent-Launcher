@@ -17,12 +17,12 @@ open class LocalSimprintsIntentDataSourceImpl(private val localSimprintsIntentDa
             intent?.toDomainClass()
         }
 
-    override fun update(intent: SimprintsIntent) =
+    override suspend fun update(intent: SimprintsIntent) =
         localSimprintsIntentDao.save(LocalSimprintsIntent(intent))
 
-    override fun delete(intent: SimprintsIntent) =
+    override suspend fun delete(intent: SimprintsIntent) =
         localSimprintsIntentDao.delete(LocalSimprintsIntent(intent))
 
-    override fun deleteUncompletedSimprintsIntent() =
+    override suspend fun deleteUncompletedSimprintsIntent() =
         localSimprintsIntentDao.deleteUncompletedSimprintsIntent()
 }

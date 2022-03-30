@@ -2,6 +2,7 @@ package com.simprints.simprintsidtester.fragments.list
 
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.simprints.simprintsidtester.fragments.LiveMessageEvent
 import com.simprints.simprintsidtester.fragments.ui.ViewModelForAdapter
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
@@ -25,7 +26,7 @@ class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource
     fun userDidWantToDuplicateIntent(position: Int) {
         intentsList[position].copy(id = UUID.randomUUID().toString()).let {
             intentsList.add(it)
-            GlobalScope.launch {
+            viewModelScope.launch {
                 intentsDao.update(it)
             }
             viewListEvents.sendEvent { updateListView() }
@@ -34,7 +35,7 @@ class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource
 
     fun userDidWantToCreateANewIntent(view: View) {
         SimprintsIntent().let {
-            GlobalScope.launch {
+            viewModelScope.launch {
                 intentsDao.update(it)
             }
             viewListEvents.sendEvent { onCreateIntent(it) }

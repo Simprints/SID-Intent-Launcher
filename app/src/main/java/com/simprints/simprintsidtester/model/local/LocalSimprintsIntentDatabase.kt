@@ -10,7 +10,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.simprints.simprintsidtester.model.domain.IntentArgument
 
-
 @Database(entities = [LocalSimprintsIntent::class, LocalSimprintsResult::class], version = 2)
 @TypeConverters(GithubTypeConverters::class)
 abstract class LocalSimprintsIntentDatabase : RoomDatabase() {

@@ -28,12 +28,12 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        intentListViewModel.getSimprintsIntents().observe(viewLifecycleOwner, {
+        intentListViewModel.getSimprintsIntents().observe(viewLifecycleOwner) {
             it?.let {
                 intentListViewModel.addIntents(it)
                 adapter.notifyDataSetChanged()
             }
-        })
+        }
     }
 
     override fun onCreateView(

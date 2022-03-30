@@ -5,11 +5,12 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: "kotlin-parcelize"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
     defaultConfig {
+        ndkVersion = "24.0.7956693-beta2"
         applicationId "com.simprints.simprintsidtester"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 3
         versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -50,14 +51,14 @@ dependencies {
     implementation 'com.simprints:libsimprints:2021.3.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.recyclerview:recyclerview:1.3.0-alpha01'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
     kapt "com.android.databinding:compiler:3.3.1"
 
@@ -76,16 +77,16 @@ dependencies {
 
     testImplementation 'junit:junit:4.13.2'
 
-    def room_version = "2.3.0"
+    def room_version = "2.4.2"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     androidTestImplementation 'com.jraska.livedata:testing-ktx:1.1.0'
 
-    androidTestImplementation 'androidx.test:runner:1.4.1-alpha03'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0-alpha03'
+    androidTestImplementation 'androidx.test:runner:1.5.0-alpha02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0-alpha05'
 
-    def nav_version = "2.3.5"
+    def nav_version = "2.4.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 }

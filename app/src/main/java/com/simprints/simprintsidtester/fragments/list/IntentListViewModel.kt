@@ -7,11 +7,12 @@ import com.simprints.simprintsidtester.fragments.LiveMessageEvent
 import com.simprints.simprintsidtester.fragments.ui.ViewModelForAdapter
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.UUID
 
-class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource) : ViewModel(), ViewModelForAdapter {
+class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource) : ViewModel(),
+    ViewModelForAdapter {
 
     private val intentsList: MutableList<SimprintsIntent> = mutableListOf()
     val viewListEvents = LiveMessageEvent<ViewListIntentEvents>()
@@ -21,7 +22,11 @@ class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource
 
     fun getSimprintsIntents() = intentsDao.getIntents()
 
-    fun deleteUncompletedSimprintsIntent() = intentsDao.deleteUncompletedSimprintsIntent()
+    fun deleteUncompletedSimprintsIntent() {
+        viewModelScope.launch(Dispatchers.IO) {
+            intentsDao.deleteUncompletedSimprintsIntent()
+        }
+    }
 
     fun userDidWantToDuplicateIntent(position: Int) {
         intentsList[position].copy(id = UUID.randomUUID().toString()).let {
@@ -35,7 +40,7 @@ class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource
 
     fun userDidWantToCreateANewIntent(view: View) {
         SimprintsIntent().let {
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 intentsDao.update(it)
             }
             viewListEvents.sendEvent { onCreateIntent(it) }

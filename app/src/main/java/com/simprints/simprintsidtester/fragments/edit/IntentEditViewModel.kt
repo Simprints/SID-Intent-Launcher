@@ -13,8 +13,9 @@ import com.simprints.simprintsidtester.model.domain.SimprintsResult
 import com.simprints.simprintsidtester.model.domain.toIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
 import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 
 class IntentEditViewModel(
     private val intentsDao: LocalSimprintsIntentDataSource,
@@ -86,7 +87,7 @@ class IntentEditViewModel(
     }
 
     fun userConfirmedDelete() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             intentsDao.delete(intent)
         }
         viewEditEvents.sendEvent {
@@ -101,7 +102,7 @@ class IntentEditViewModel(
     }
 
     private fun updateSimprintsIntent(intent: SimprintsIntent) =
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             intentsDao.update(intent.copy(extra = intent.extra.filter { it.key.isNotEmpty() }
                 .toMutableList()))
         }

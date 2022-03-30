@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.simprints.simprintsidtester.R
@@ -15,8 +13,6 @@ import com.simprints.simprintsidtester.fragments.list.IntentListViewModel.ViewLi
 import com.simprints.simprintsidtester.fragments.ui.RecyclerViewAdapter
 import com.simprints.simprintsidtester.fragments.ui.WrapContentLinearLayoutManager
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class IntentListFragment : Fragment(), ViewListIntentEvents {
@@ -87,9 +83,7 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     override fun onResume() {
         super.onResume()
-        lifecycleScope.launch {
-            intentListViewModel.deleteUncompletedSimprintsIntent()
-        }
+        intentListViewModel.deleteUncompletedSimprintsIntent()
     }
 
     override fun onDetach() {

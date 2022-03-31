@@ -14,7 +14,7 @@ import com.simprints.simprintsidtester.fragments.ui.SimpleListAdapter
 import com.simprints.simprintsidtester.model.domain.SimprintsResult
 import kotlinx.android.synthetic.main.result_list_fragment.*
 import kotlinx.android.synthetic.main.result_list_item.view.*
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultListFragment : Fragment(R.layout.result_list_fragment) {
     private val resultListViewModel: ResultListViewModel by viewModel()

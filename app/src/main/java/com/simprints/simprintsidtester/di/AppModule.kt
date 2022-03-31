@@ -8,7 +8,8 @@ import com.simprints.simprintsidtester.fragments.result.ResultListViewModel
 import com.simprints.simprintsidtester.model.BundleTypeAdapterFactory
 import com.simprints.simprintsidtester.model.local.*
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+
 import org.koin.dsl.module
 
 val appModule = module {

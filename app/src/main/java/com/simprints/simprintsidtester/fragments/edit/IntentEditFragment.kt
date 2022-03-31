@@ -15,7 +15,7 @@ import com.simprints.simprintsidtester.databinding.IntentEditFragmentBinding
 import com.simprints.simprintsidtester.fragments.ui.RecyclerViewAdapter
 import com.simprints.simprintsidtester.fragments.ui.WrapContentLinearLayoutManager
 import org.koin.android.ext.android.inject
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents {
 

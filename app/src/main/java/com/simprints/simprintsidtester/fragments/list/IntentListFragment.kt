@@ -16,7 +16,7 @@ import com.simprints.simprintsidtester.fragments.ui.WrapContentLinearLayoutManag
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IntentListFragment : Fragment(), ViewListIntentEvents {
 

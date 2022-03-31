@@ -45,7 +45,7 @@ fun IntentItem(
             )
             IconButton(onClick = onClickCopy) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_content_copy_black_24dp),
+                    painter = painterResource(id = R.drawable.ic_copy),
                     contentDescription = "Copy Intent Image"
                 )
             }

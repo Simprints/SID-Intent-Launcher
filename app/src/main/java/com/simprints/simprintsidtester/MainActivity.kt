@@ -2,6 +2,7 @@ package com.simprints.simprintsidtester
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -10,6 +11,7 @@ import com.simprints.simprintsidtester.fragments.list.IntentListFragment
 import com.simprints.simprintsidtester.fragments.list.IntentListFragmentDirections.Companion.openEditIntentFragment
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 
+@ExperimentalMaterialApi
 class MainActivity : AppCompatActivity(), IntentListFragment.UserListActions {
 
     override fun onCreate(savedInstanceState: Bundle?) {

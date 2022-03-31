@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -18,6 +19,7 @@ import com.simprints.simprintsidtester.fragments.ui.WrapContentLinearLayoutManag
 import org.koin.android.ext.android.inject
 import org.koin.android.viewmodel.ext.android.viewModel
 
+@ExperimentalMaterialApi
 class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents {
 
     private val intentEditViewModel by viewModel<IntentEditViewModel>()

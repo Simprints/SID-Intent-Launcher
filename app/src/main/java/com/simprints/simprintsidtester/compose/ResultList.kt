@@ -15,7 +15,13 @@ import com.simprints.simprintsidtester.model.domain.SimprintsResult
 fun ResultList(resultListViewModel: ResultListViewModel) {
     val resultList by resultListViewModel.getResults().observeAsState()
     resultList?.let {
-        ResultListContent(it)
+        if (it.isEmpty()) {
+            NothingToDisplay(
+                text = "There is no content to display at the moment. Sophisticated Salmom says play around with the app for a bit and your fish will appear here. Happy fishing!",
+                modifier = Modifier
+            )
+        } else
+            ResultListContent(it)
     }
 }
 

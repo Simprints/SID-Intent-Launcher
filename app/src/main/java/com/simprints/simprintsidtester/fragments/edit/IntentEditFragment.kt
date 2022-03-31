@@ -53,8 +53,8 @@ class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents 
 
     override fun onDeleteButtonClicked() {
         AlertDialog.Builder(requireContext()).apply {
-            setTitle("Caution!")
-            setMessage("Confirm that you want to proceed with the delete operation!")
+            setTitle("Sophisticated Salmon says:")
+            setMessage("Are you sure you want to delete this intent?")
             setCancelable(false)
                 .setPositiveButton(
                     "Yes"

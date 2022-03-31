@@ -3,6 +3,7 @@ package com.simprints.simprintsidtester.fragments.edit
 import android.content.Intent
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.simprints.simprintsidtester.fragments.LiveMessageEvent
 import com.simprints.simprintsidtester.fragments.ui.ViewModelForAdapter
@@ -12,9 +13,8 @@ import com.simprints.simprintsidtester.model.domain.SimprintsResult
 import com.simprints.simprintsidtester.model.domain.toIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
 import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 
 class IntentEditViewModel(
     private val intentsDao: LocalSimprintsIntentDataSource,
@@ -85,15 +85,23 @@ class IntentEditViewModel(
         }
     }
 
-    fun userDidWantToDeleteIntent(v: View) {
-        GlobalScope.launch {
+    fun userConfirmedDelete() {
+        viewModelScope.launch {
             intentsDao.delete(intent)
         }
-        viewEditEvents.sendEvent { finish() }
+        viewEditEvents.sendEvent {
+            finish()
+        }
+    }
+
+    fun userDidWantToDeleteIntent(v: View) {
+        viewEditEvents.sendEvent {
+            onDeleteButtonClicked()
+        }
     }
 
     private fun updateSimprintsIntent(intent: SimprintsIntent) =
-        GlobalScope.launch {
+        viewModelScope.launch{
             intentsDao.update(intent.copy(extra = intent.extra.filter { it.key.isNotEmpty() }
                 .toMutableList()))
         }
@@ -105,12 +113,13 @@ class IntentEditViewModel(
             resultReceived = resultReceived
         )
 
-        GlobalScope.launch { resultDao.update(simprintsResult) }
+        viewModelScope.launch { resultDao.update(simprintsResult) }
     }
 
     interface ViewEditIntentEvents {
         fun startActivityForResult(intent: Intent?, requestCode: Int)
         fun finish()
         fun notifyIntentArgumentAdded(position: Int)
+        fun onDeleteButtonClicked()
     }
 }

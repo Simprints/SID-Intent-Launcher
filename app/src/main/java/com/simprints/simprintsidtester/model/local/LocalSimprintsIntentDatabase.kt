@@ -1,6 +1,8 @@
 package com.simprints.simprintsidtester.model.local
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
@@ -10,13 +12,40 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.simprints.simprintsidtester.model.domain.IntentArgument
 
-
 @Database(entities = [LocalSimprintsIntent::class, LocalSimprintsResult::class], version = 2)
 @TypeConverters(GithubTypeConverters::class)
 abstract class LocalSimprintsIntentDatabase : RoomDatabase() {
 
     abstract fun localSimprintsIntentDao(): LocalSimprintsIntentDao
     abstract fun localSimprintsResultDao(): LocalSimprintsResultDao
+
+    companion object {
+
+        @Volatile
+        private var INSTANCE: LocalSimprintsIntentDatabase? = null
+
+        fun getInstance(context: Context): LocalSimprintsIntentDatabase =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+            }
+
+        private fun buildDatabase(context: Context) =
+            Room.databaseBuilder(
+                context,
+                LocalSimprintsIntentDatabase::class.java,
+                "localDb-intents-db"
+            )
+                .addCallback(object : Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        ioThread {
+                            getInstance(context).localSimprintsIntentDao()
+                                .saveIntentsList(defaultIntentList)
+                        }
+                    }
+                })
+                .addMigrations(MIGRATION_1_2)
+                .build()
+    }
 }
 
 val MIGRATION_1_2 = object : Migration(1, 2) {

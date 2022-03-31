@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <data>
+
         <variable
-                name="position"
-                type="java.lang.Integer"/>
+            name="position"
+            type="java.lang.Integer" />
+
         <variable
-                name="viewModel"
-                type="com.simprints.simprintsidtester.fragments.edit.IntentEditViewModel"/>
+            name="viewModel"
+            type="com.simprints.simprintsidtester.fragments.edit.IntentEditViewModel" />
     </data>
 
-    <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <EditText
-                android:id="@+id/intent_extra_key"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:hint="Key"
-                android:inputType="text"
-                android:maxLines="1"
-                android:text="@{viewModel.getIntentArguments(position).key}"
-                android:onTextChanged="@{(text, s, e, c) -> viewModel.onIntentArgumentKeyChange(text, position)}"
-                android:layout_height="wrap_content"/>
+            android:id="@+id/intent_extra_key"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Key"
+            android:inputType="text"
+            android:maxLines="1"
+            android:onTextChanged="@{(text, s, e, c) -> viewModel.onIntentArgumentKeyChange(text, position)}"
+            android:text="@{viewModel.getIntentArguments(position).key}" />
 
-        <EditText android:id="@+id/intent_extra_value"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:hint="Value"
-                  android:inputType="text"
-                  android:maxLines="1"
-                  android:text="@{viewModel.getIntentArguments(position).value}"
-                  android:onTextChanged="@{(text, s, e, c) -> viewModel.onIntentArgumentValueChange(text, position)}"
-                  android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/intent_extra_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Value"
+            android:inputType="text"
+            android:maxLines="1"
+            android:onTextChanged="@{(text, s, e, c) -> viewModel.onIntentArgumentValueChange(text, position)}"
+            android:text="@{viewModel.getIntentArguments(position).value}" />
     </LinearLayout>
 </layout>

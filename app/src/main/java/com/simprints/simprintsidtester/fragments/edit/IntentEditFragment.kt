@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -17,6 +19,7 @@ import com.simprints.simprintsidtester.fragments.ui.WrapContentLinearLayoutManag
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@ExperimentalMaterialApi
 class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents {
 
     private val intentEditViewModel by viewModel<IntentEditViewModel>()
@@ -32,7 +35,7 @@ class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         intentEditViewModel.intent = simprintsIntent
         intentEditViewModel.viewEditEvents.setEventReceiver(this, this)
 
@@ -46,6 +49,24 @@ class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents 
             }
         }
         return binding.root
+    }
+
+    override fun onDeleteButtonClicked() {
+        AlertDialog.Builder(requireContext()).apply {
+            setTitle("Sophisticated Salmon says:")
+            setMessage("Are you sure you want to delete this intent?")
+            setCancelable(false)
+                .setPositiveButton(
+                    "Yes"
+                ) { _, _ ->
+                    intentEditViewModel.userConfirmedDelete()
+                }
+                .setNegativeButton(
+                    "No"
+                ) { dialog, _ ->
+                    dialog.cancel()
+                }
+        }.create().show()
     }
 
     override fun notifyIntentArgumentAdded(position: Int) {

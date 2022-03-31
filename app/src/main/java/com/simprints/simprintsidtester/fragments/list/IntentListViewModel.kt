@@ -17,7 +17,6 @@ class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource
     val viewListEvents = LiveMessageEvent<ViewListIntentEvents>()
 
     override fun getCount(): Int = intentsList.size
-    fun getSimprintsIntentAt(position: Int) = intentsList[position]
 
     fun getSimprintsIntents() = intentsDao.getIntents()
 

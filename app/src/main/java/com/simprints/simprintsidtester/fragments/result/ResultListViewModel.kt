@@ -13,16 +13,14 @@ class ResultListViewModel(private val resultDataSource: LocalSimprintsResultData
     private val mainResultList: MutableList<SimprintsResult> = mutableListOf()
 
     init {
-        init()
-    }
+        viewModelScope.launch {
+            val results: List<SimprintsResult> = resultDataSource.getResults()
 
-    private fun init() = viewModelScope.launch {
-        val results: List<SimprintsResult> = resultDataSource.getResults()
+            mainResultList.clear()
+            mainResultList.addAll(results)
 
-        mainResultList.clear()
-        mainResultList.addAll(results)
-
-        resultLiveData.value = mainResultList
+            resultLiveData.value = mainResultList
+        }
     }
 
     fun getResults(): LiveData<List<SimprintsResult>> = resultLiveData

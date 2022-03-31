@@ -60,6 +60,8 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
             }
         }
 
+        binding.viewModel = intentListViewModel
+
         setHasOptionsMenu(true)
         return binding.root
     }

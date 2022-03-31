@@ -19,9 +19,9 @@ val defaultIntentList = listOf(
             name = "Enrol in SID",
             action = "com.simprints.id.REGISTER",
             extra = mutableListOf(
-                IntentArgument(key = "projectId", value = "project-id"),
-                IntentArgument(key = "userId", value = "user-id"),
-                IntentArgument(key = "moduleId", value = "module-id")
+                IntentArgument(key = "projectId", value = "someProjectId"),
+                IntentArgument(key = "userId", value = "someUserId"),
+                IntentArgument(key = "moduleId", value = "someModuleId")
             )
         )
     ),
@@ -30,9 +30,9 @@ val defaultIntentList = listOf(
             name = "Identify in SID",
             action = "com.simprints.id.IDENTIFY",
             extra = mutableListOf(
-                IntentArgument(key = "projectId", value = "project-id"),
-                IntentArgument(key = "userId", value = "user-id"),
-                IntentArgument(key = "moduleId", value = "module-id")
+                IntentArgument(key = "projectId", value = "someProjectId"),
+                IntentArgument(key = "userId", value = "someUserId"),
+                IntentArgument(key = "moduleId", value = "someModuleId")
             )
         )
     ),
@@ -41,9 +41,10 @@ val defaultIntentList = listOf(
             name = "Confirm in SID",
             action = "com.simprints.id.CONFIRM_IDENTITY",
             extra = mutableListOf(
-                IntentArgument(key = "projectId", value = "project-id"),
-                IntentArgument(key = "userId", value = "user-id"),
-                IntentArgument(key = "moduleId", value = "module-id")
+                IntentArgument(key = "projectId", value = "someProjectId"),
+                IntentArgument(key = "userId", value = "someUserId"),
+                IntentArgument(key = "moduleId", value = "someModuleId"),
+                IntentArgument(key = "selectedGuid", value = "someGuid")
             )
         )
     ),
@@ -52,24 +53,12 @@ val defaultIntentList = listOf(
             name = "Verify in SID",
             action = "com.simprints.id.VERIFY",
             extra = mutableListOf(
-                IntentArgument(key = "projectId", value = "project-id"),
-                IntentArgument(key = "userId", value = "user-id"),
-                IntentArgument(key = "moduleId", value = "module-id")
+                IntentArgument(key = "projectId", value = "someProjectId"),
+                IntentArgument(key = "userId", value = "someUserId"),
+                IntentArgument(key = "moduleId", value = "someModuleId"),
+                IntentArgument(key = "verifyGuid", value = "someGuid")
             )
         )
     )
 )
 
-private val commonExtras = mutableListOf(
-    IntentArgument(key = "projectId", value = "project-id"),
-    IntentArgument(key = "userId", value = "user-id"),
-    IntentArgument(key = "moduleId", value = "module-id")
-)
-
-private val confirmIdentityExtras = commonExtras.apply {
-    add(IntentArgument(key = "selectedGuid", value = "guid-here"))
-}
-
-private val verifyExtras = commonExtras.apply {
-    add(IntentArgument(key = "verifyGuid", value = "guid-here"))
-}

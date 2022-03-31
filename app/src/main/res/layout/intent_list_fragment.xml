@@ -1,35 +1,33 @@
-<layout xmlns:tools="http://schemas.android.com/tools"
-        xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <data>
+
         <variable
-                name="viewModel"
-                type="com.simprints.simprintsidtester.fragments.list.IntentListViewModel"/>
+            name="viewModel"
+            type="com.simprints.simprintsidtester.fragments.list.IntentListViewModel" />
     </data>
 
     <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/intentsList"
-                android:name="com.simprints.simprintsidtester.fragments.edit.ItemFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                tools:context=".fragments.list.IntentListFragment"
-                tools:listitem="@layout/intent_list_item"/>
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/composeIntentsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/addIntent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentRight="true"
-                android:src="@android:drawable/ic_input_add"
-                android:tint="@android:color/white"
-                android:layout_margin="16dp"
-                android:layout_alignParentEnd="true"
-                android:onClick="@{viewModel::userDidWantToCreateANewIntent}"/>
+            android:id="@+id/addIntent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="16dp"
+            android:onClick="@{viewModel::userDidWantToCreateANewIntent}"
+            android:src="@android:drawable/ic_input_add"
+            android:tint="@android:color/white" />
     </RelativeLayout>
 </layout>

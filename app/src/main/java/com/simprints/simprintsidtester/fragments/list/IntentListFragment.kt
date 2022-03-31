@@ -2,52 +2,66 @@ package com.simprints.simprintsidtester.fragments.list
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.simprints.simprintsidtester.R
+import com.simprints.simprintsidtester.compose.IntentList
 import com.simprints.simprintsidtester.databinding.IntentListFragmentBinding
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel.ViewListIntentEvents
-import com.simprints.simprintsidtester.fragments.ui.RecyclerViewAdapter
-import com.simprints.simprintsidtester.fragments.ui.WrapContentLinearLayoutManager
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import org.koin.android.viewmodel.ext.android.viewModel
 
+@ExperimentalMaterialApi
 class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     private var listener: UserListActions? = null
     private val intentListViewModel: IntentListViewModel by viewModel()
     private lateinit var binding: IntentListFragmentBinding
-    private lateinit var adapter: RecyclerViewAdapter<IntentListViewModel>
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        intentListViewModel.getSimprintsIntents().observe(viewLifecycleOwner) {
-            it?.let {
-                intentListViewModel.addIntents(it)
-                adapter.notifyDataSetChanged()
-            }
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.intent_list_fragment, container, false)
-        intentListViewModel.viewListEvents.setEventReceiver(this, this)
-        with(binding) {
-            context?.let {
-                viewModel = intentListViewModel
-                adapter = RecyclerViewAdapter(intentListViewModel, R.layout.intent_list_item)
-                intentsList.layoutManager = WrapContentLinearLayoutManager(it)
-                intentsList.adapter = adapter
+    ): View {
+        binding = DataBindingUtil.inflate<IntentListFragmentBinding?>(
+            inflater,
+            R.layout.intent_list_fragment,
+            container,
+            false
+        ).apply {
+            composeIntentsList.apply {
+                // Dispose the Composition when the view's LifecycleOwner
+                // is destroyed
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                )
+                setContent {
+                    MdcTheme {
+                        IntentList(intentListViewModel = intentListViewModel)
+                    }
+                }
             }
-            setHasOptionsMenu(true)
-            return root
         }
+
+        intentListViewModel.viewListEvents.setEventReceiver(this, this)
+        intentListViewModel.getSimprintsIntents().observe(viewLifecycleOwner) {
+            it?.let {
+                intentListViewModel.addIntents(it)
+            }
+        }
+
+        setHasOptionsMenu(true)
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -66,10 +80,6 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     override fun onListFragmentInteraction(intent: SimprintsIntent) {
         listener?.onListFragmentInteraction(intent)
-    }
-
-    override fun updateListView() {
-        adapter.notifyDataSetChanged()
     }
 
     override fun onAttach(context: Context) {

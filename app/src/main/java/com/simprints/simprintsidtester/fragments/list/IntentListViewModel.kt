@@ -7,7 +7,6 @@ import com.simprints.simprintsidtester.fragments.LiveMessageEvent
 import com.simprints.simprintsidtester.fragments.ui.ViewModelForAdapter
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -34,7 +33,6 @@ class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource
             viewModelScope.launch {
                 intentsDao.update(it)
             }
-            viewListEvents.sendEvent { updateListView() }
         }
     }
 
@@ -59,7 +57,6 @@ class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource
     }
 
     interface ViewListIntentEvents {
-        fun updateListView()
         fun onCreateIntent(newIntent: SimprintsIntent)
         fun onListFragmentInteraction(intent: SimprintsIntent)
     }

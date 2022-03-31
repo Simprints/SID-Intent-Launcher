@@ -16,60 +16,60 @@ fun ioThread(f: () -> Unit) {
 val defaultIntentList = listOf(
     LocalSimprintsIntent(
         intent = SimprintsIntent(
-            name = "Enrol",
+            name = "Enrol in SID",
             action = "com.simprints.id.REGISTER",
             extra = mutableListOf(
-                IntentArgument(key = "projectId", value = "your-project-id-here"),
-                IntentArgument(key = "userId", value = "your-user-id-here"),
-                IntentArgument(key = "moduleId", value = "your-module-id-here")
+                IntentArgument(key = "projectId", value = "project-id"),
+                IntentArgument(key = "userId", value = "user-id"),
+                IntentArgument(key = "moduleId", value = "module-id")
             )
         )
     ),
     LocalSimprintsIntent(
         intent = SimprintsIntent(
-            name = "Identify",
+            name = "Identify in SID",
             action = "com.simprints.id.IDENTIFY",
             extra = mutableListOf(
-                IntentArgument(key = "projectId", value = "your-project-id-here"),
-                IntentArgument(key = "userId", value = "your-user-id-here"),
-                IntentArgument(key = "moduleId", value = "your-module-id-here")
+                IntentArgument(key = "projectId", value = "project-id"),
+                IntentArgument(key = "userId", value = "user-id"),
+                IntentArgument(key = "moduleId", value = "module-id")
             )
         )
     ),
     LocalSimprintsIntent(
         intent = SimprintsIntent(
-            name = "Confirm",
+            name = "Confirm in SID",
             action = "com.simprints.id.CONFIRM_IDENTITY",
             extra = mutableListOf(
-                IntentArgument(key = "projectId", value = "your-project-id-here"),
-                IntentArgument(key = "userId", value = "your-user-id-here"),
-                IntentArgument(key = "moduleId", value = "your-module-id-here")
+                IntentArgument(key = "projectId", value = "project-id"),
+                IntentArgument(key = "userId", value = "user-id"),
+                IntentArgument(key = "moduleId", value = "module-id")
             )
         )
     ),
     LocalSimprintsIntent(
         intent = SimprintsIntent(
-            name = "Verify",
+            name = "Verify in SID",
             action = "com.simprints.id.VERIFY",
             extra = mutableListOf(
-                IntentArgument(key = "projectId", value = "your-project-id-here"),
-                IntentArgument(key = "userId", value = "your-user-id-here"),
-                IntentArgument(key = "moduleId", value = "your-module-id-here")
+                IntentArgument(key = "projectId", value = "project-id"),
+                IntentArgument(key = "userId", value = "user-id"),
+                IntentArgument(key = "moduleId", value = "module-id")
             )
         )
     )
 )
 
 private val commonExtras = mutableListOf(
-    IntentArgument(key = "projectId", value = "your-project-id-here"),
-    IntentArgument(key = "userId", value = "your-user-id-here"),
-    IntentArgument(key = "moduleId", value = "your-module-id-here")
+    IntentArgument(key = "projectId", value = "project-id"),
+    IntentArgument(key = "userId", value = "user-id"),
+    IntentArgument(key = "moduleId", value = "module-id")
 )
 
 private val confirmIdentityExtras = commonExtras.apply {
-    add(IntentArgument(key = "selectedGuid", value = "guid-goes-here"))
+    add(IntentArgument(key = "selectedGuid", value = "guid-here"))
 }
 
 private val verifyExtras = commonExtras.apply {
-    add(IntentArgument(key = "verifyGuid", value = "guid-goes-here"))
+    add(IntentArgument(key = "verifyGuid", value = "guid-here"))
 }

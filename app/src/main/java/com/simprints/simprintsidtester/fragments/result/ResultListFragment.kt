@@ -7,13 +7,9 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.simprints.simprintsidtester.R
-import com.simprints.simprintsidtester.fragments.ui.SimpleListAdapter
-import com.simprints.simprintsidtester.model.domain.SimprintsResult
-import kotlinx.android.synthetic.main.result_list_fragment.*
-import kotlinx.android.synthetic.main.result_list_item.view.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.simprints.simprintsidtester.compose.ResultList
 import com.simprints.simprintsidtester.databinding.ResultListFragmentBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultListFragment : Fragment() {
     private val resultListViewModel: ResultListViewModel by viewModel()

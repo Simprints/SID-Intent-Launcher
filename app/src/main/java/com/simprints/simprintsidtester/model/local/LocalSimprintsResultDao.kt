@@ -11,7 +11,7 @@ interface LocalSimprintsResultDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(intent: LocalSimprintsResult)
 
-    @Query("SELECT * FROM LocalSimprintsResult")
+    @Query("SELECT * FROM LocalSimprintsResult order by dateTimeSent desc ")
     suspend fun getResults(): List<LocalSimprintsResult>
 
 }

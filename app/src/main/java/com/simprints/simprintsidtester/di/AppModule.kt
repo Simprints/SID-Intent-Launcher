@@ -6,14 +6,10 @@ import com.simprints.simprintsidtester.fragments.integration.IntegrationViewMode
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel
 import com.simprints.simprintsidtester.fragments.result.ResultListViewModel
 import com.simprints.simprintsidtester.model.BundleTypeAdapterFactory
-import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
-import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSourceImpl
-import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDatabase
-import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
-import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSourceImpl
+import com.simprints.simprintsidtester.model.local.*
+import com.simprints.simprintsidtester.model.store.ProjectDataCache
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
-
 import org.koin.dsl.module
 
 val appModule = module {
@@ -30,8 +26,10 @@ val appModule = module {
     single<LocalSimprintsIntentDataSource> { LocalSimprintsIntentDataSourceImpl(get()) }
     single<LocalSimprintsResultDataSource> { LocalSimprintsResultDataSourceImpl(get()) }
 
+    single { ProjectDataCache(androidContext()) }
+
     viewModel { IntentListViewModel(get()) }
     viewModel { IntentEditViewModel(get(), get(), get()) }
     viewModel { ResultListViewModel(get()) }
-    viewModel { IntegrationViewModel(get(), get()) }
+    viewModel { IntegrationViewModel(get(), get(), get()) }
 }

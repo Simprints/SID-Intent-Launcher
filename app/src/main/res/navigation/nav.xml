@@ -45,7 +45,7 @@
     <fragment
         android:id="@+id/integrationFragment"
         android:name="com.simprints.simprintsidtester.fragments.integration.IntegrationFragment"
-        android:label="LibSimprints integration"
+        android:label="Integration"
         tools:layout="@layout/integration_fragment" >
     </fragment>
 

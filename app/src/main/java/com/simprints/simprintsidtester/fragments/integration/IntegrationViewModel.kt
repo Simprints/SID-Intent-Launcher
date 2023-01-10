@@ -13,12 +13,14 @@ import com.simprints.simprintsidtester.model.domain.IntentArgument
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import com.simprints.simprintsidtester.model.domain.SimprintsResult
 import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
+import com.simprints.simprintsidtester.model.store.ProjectDataCache
 import kotlinx.coroutines.launch
 import java.util.*
 
 class IntegrationViewModel(
     private val resultDao: LocalSimprintsResultDataSource,
     private val gson: Gson,
+    private val projectDataCache: ProjectDataCache,
 ) : ViewModel() {
 
     // UI State
@@ -108,6 +110,29 @@ class IntegrationViewModel(
             )
             resultDao.update(simprintsResult)
         }
+    }
+
+    // Data cached actions
+
+    fun loadCachedState() {
+        viewModelScope.launch {
+            projectId = projectDataCache.getProjectId()
+            userId = projectDataCache.getUserId()
+            moduleId = projectDataCache.getModuleId()
+            guid = projectDataCache.getGuid()
+        }
+    }
+
+    fun save() {
+        viewModelScope.launch { projectDataCache.save(projectId, userId, moduleId, guid) }
+    }
+
+    fun clear() {
+        viewModelScope.launch { projectDataCache.clear() }
+        projectId = ""
+        userId = ""
+        moduleId = ""
+        guid = ""
     }
 
     interface IntegrationIntentEvents {

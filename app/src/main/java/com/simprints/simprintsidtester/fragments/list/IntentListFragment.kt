@@ -20,8 +20,6 @@ import com.simprints.simprintsidtester.compose.IntentList
 import com.simprints.simprintsidtester.databinding.IntentListFragmentBinding
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel.ViewListIntentEvents
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -111,4 +109,3 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
         fun onListFragmentInteraction(intent: SimprintsIntent)
     }
 }
-

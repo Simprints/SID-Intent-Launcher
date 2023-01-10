@@ -2,6 +2,7 @@ package com.simprints.simprintsidtester.di
 
 import com.google.gson.GsonBuilder
 import com.simprints.simprintsidtester.fragments.edit.IntentEditViewModel
+import com.simprints.simprintsidtester.fragments.integration.IntegrationViewModel
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel
 import com.simprints.simprintsidtester.fragments.result.ResultListViewModel
 import com.simprints.simprintsidtester.model.BundleTypeAdapterFactory
@@ -32,4 +33,5 @@ val appModule = module {
     viewModel { IntentListViewModel(get()) }
     viewModel { IntentEditViewModel(get(), get(), get()) }
     viewModel { ResultListViewModel(get()) }
+    viewModel { IntegrationViewModel(get(), get()) }
 }

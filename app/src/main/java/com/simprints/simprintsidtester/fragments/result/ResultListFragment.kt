@@ -7,14 +7,18 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.simprints.simprintsidtester.R
-import com.simprints.simprintsidtester.fragments.result.compose.ResultListScreen
 import com.simprints.simprintsidtester.databinding.ResultListFragmentBinding
+import com.simprints.simprintsidtester.fragments.result.compose.ResultListScreen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ResultListFragment : Fragment() {
     private val resultListViewModel: ResultListViewModel by viewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val binding = ResultListFragmentBinding.inflate(layoutInflater).apply {
             composeResultList.apply {
                 // Dispose the Composition when the view's LifecycleOwner

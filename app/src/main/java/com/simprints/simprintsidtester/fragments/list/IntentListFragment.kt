@@ -2,12 +2,7 @@ package com.simprints.simprintsidtester.fragments.list
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.databinding.DataBindingUtil
@@ -16,9 +11,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.simprints.simprintsidtester.R
-import com.simprints.simprintsidtester.fragments.list.compose.IntentListScreen
 import com.simprints.simprintsidtester.databinding.IntentListFragmentBinding
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel.ViewListIntentEvents
+import com.simprints.simprintsidtester.fragments.list.compose.IntentListScreen
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -48,7 +43,10 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
                 )
                 setContent {
                     MdcTheme {
-                        IntentListScreen(intentListViewModel = intentListViewModel)
+                        IntentListScreen(
+                            intentListViewModel = intentListViewModel,
+                            onIntegrationClick = ::openIntegrationScreen,
+                        )
                     }
                 }
             }
@@ -67,6 +65,10 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
         return binding.root
     }
 
+    private fun openIntegrationScreen() {
+        findNavController().navigate(R.id.action_intent_list_to_integrationFragment)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.intent_list_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -74,7 +76,7 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return NavigationUI.onNavDestinationSelected(item, findNavController()) ||
-                super.onOptionsItemSelected(item)
+            super.onOptionsItemSelected(item)
     }
 
     override fun onCreateIntent(newIntent: SimprintsIntent) {

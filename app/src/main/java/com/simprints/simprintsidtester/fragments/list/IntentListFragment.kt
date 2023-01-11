@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.simprints.simprintsidtester.R
-import com.simprints.simprintsidtester.compose.IntentList
+import com.simprints.simprintsidtester.fragments.list.compose.IntentListScreen
 import com.simprints.simprintsidtester.databinding.IntentListFragmentBinding
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel.ViewListIntentEvents
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
@@ -48,7 +48,7 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
                 )
                 setContent {
                     MdcTheme {
-                        IntentList(intentListViewModel = intentListViewModel)
+                        IntentListScreen(intentListViewModel = intentListViewModel)
                     }
                 }
             }

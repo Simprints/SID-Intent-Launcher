@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.simprints.simprintsidtester.R
-import com.simprints.simprintsidtester.compose.ResultList
+import com.simprints.simprintsidtester.fragments.result.compose.ResultListScreen
 import com.simprints.simprintsidtester.databinding.ResultListFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -24,7 +24,7 @@ class ResultListFragment : Fragment() {
                 )
                 setContent {
                     MdcTheme {
-                        ResultList(resultListViewModel = resultListViewModel)
+                        ResultListScreen(resultListViewModel = resultListViewModel)
                     }
                 }
             }

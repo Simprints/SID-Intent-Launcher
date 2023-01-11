@@ -1,4 +1,4 @@
-package com.simprints.simprintsidtester.compose
+package com.simprints.simprintsidtester.fragments.result.compose
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.simprints.simprintsidtester.R
 import com.simprints.simprintsidtester.databinding.IntegrationFragmentBinding
+import com.simprints.simprintsidtester.fragments.integration.compose.IntegrationFormScreen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IntegrationFragment : Fragment(), IntegrationViewModel.IntegrationIntentEvents {

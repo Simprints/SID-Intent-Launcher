@@ -1,6 +1,7 @@
 package com.simprints.simprintsidtester.fragments.list.compose
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,7 +41,9 @@ fun IntentListScreen(
                     modifier = Modifier
                 )
             } else {
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.fillMaxHeight(),
+                ) {
                     itemsIndexed(intentList) { index, item ->
                         IntentItem(
                             simprintsIntent = item,

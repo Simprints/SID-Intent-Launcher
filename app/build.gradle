@@ -70,7 +70,7 @@ dependencies {
     implementation "androidx.compose.foundation:foundation"
     implementation "androidx.compose.runtime:runtime-livedata"
     // This should be removed once completely migrated to compose
-    implementation "com.google.android.material:compose-theme-adapter:1.2.1"
+    implementation "com.google.accompanist:accompanist-themeadapter-material:0.28.0"
 
     def koin_version = '3.2.2'
     implementation "io.insert-koin:koin-core:$koin_version"

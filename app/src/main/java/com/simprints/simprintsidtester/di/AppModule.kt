@@ -8,13 +8,22 @@ import com.simprints.simprintsidtester.fragments.result.ResultListViewModel
 import com.simprints.simprintsidtester.model.BundleTypeAdapterFactory
 import com.simprints.simprintsidtester.model.local.*
 import com.simprints.simprintsidtester.model.store.ProjectDataCache
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
+
+    // Builder for application-wide coroutine scope
+    factory<Job> { SupervisorJob() }
+    factory { CoroutineScope(Dispatchers.IO + get<Job>()) }
+
     single {
-        LocalSimprintsIntentDatabase.getInstance(androidContext())
+        LocalSimprintsIntentDatabase.getInstance(androidContext(), get())
     }
     single {
         GsonBuilder().setPrettyPrinting().registerTypeAdapterFactory(BundleTypeAdapterFactory())

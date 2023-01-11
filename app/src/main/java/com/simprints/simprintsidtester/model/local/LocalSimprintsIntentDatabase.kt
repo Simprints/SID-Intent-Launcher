@@ -1,16 +1,13 @@
 package com.simprints.simprintsidtester.model.local
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
+import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.simprints.simprintsidtester.model.domain.IntentArgument
+import kotlinx.coroutines.*
 
 @Database(entities = [LocalSimprintsIntent::class, LocalSimprintsResult::class], version = 2)
 @TypeConverters(GithubTypeConverters::class)
@@ -24,12 +21,12 @@ abstract class LocalSimprintsIntentDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: LocalSimprintsIntentDatabase? = null
 
-        fun getInstance(context: Context): LocalSimprintsIntentDatabase =
+        fun getInstance(context: Context, scope: CoroutineScope): LocalSimprintsIntentDatabase =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
+                buildDatabase(context, scope).also { INSTANCE = it }
             }
 
-        private fun buildDatabase(context: Context) =
+        private fun buildDatabase(context: Context, scope: CoroutineScope) =
             Room.databaseBuilder(
                 context,
                 LocalSimprintsIntentDatabase::class.java,
@@ -37,8 +34,8 @@ abstract class LocalSimprintsIntentDatabase : RoomDatabase() {
             )
                 .addCallback(object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
-                        ioThread {
-                            getInstance(context).localSimprintsIntentDao()
+                        scope.launch {
+                            getInstance(context, scope).localSimprintsIntentDao()
                                 .saveIntentsList(defaultIntentList)
                         }
                     }

@@ -6,8 +6,11 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 
 class ProjectDataCache(
@@ -21,14 +24,15 @@ class ProjectDataCache(
     private val keyModuleId = stringPreferencesKey("module_id")
     private val keyGuid = stringPreferencesKey("guid")
 
-    suspend fun save(projectId: String, userId: String, moduleId: String, guid: String) {
-        context.projectCache.edit {
-            it[keyProjectId] = projectId
-            it[keyUserId] = userId
-            it[keyModuleId] = moduleId
-            it[keyGuid] = guid
+    suspend fun save(projectId: String, userId: String, moduleId: String, guid: String) =
+        withContext(Dispatchers.IO) {
+            context.projectCache.edit {
+                it[keyProjectId] = projectId
+                it[keyUserId] = userId
+                it[keyModuleId] = moduleId
+                it[keyGuid] = guid
+            }
         }
-    }
 
     suspend fun getProjectId(): String = getFirstValue(keyProjectId)
 
@@ -40,10 +44,11 @@ class ProjectDataCache(
 
     private suspend fun getFirstValue(id: Preferences.Key<String>) = context.projectCache.data
         .map { it[id] }
+        .flowOn(Dispatchers.IO)
         .firstOrNull()
         .orEmpty()
 
-    suspend fun clear() {
+    suspend fun clear() = withContext(Dispatchers.IO) {
         context.projectCache.edit { it.clear() }
     }
 }

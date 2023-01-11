@@ -2,16 +2,6 @@ package com.simprints.simprintsidtester.model.local
 
 import com.simprints.simprintsidtester.model.domain.IntentArgument
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
-import java.util.concurrent.Executors
-
-private val IO_EXECUTOR = Executors.newSingleThreadExecutor()
-
-/**
- * Utility method to run blocks on a dedicated background thread, used for io/database work.
- */
-fun ioThread(f: () -> Unit) {
-    IO_EXECUTOR.execute(f)
-}
 
 val defaultIntentList = listOf(
     LocalSimprintsIntent(
@@ -61,4 +51,3 @@ val defaultIntentList = listOf(
         )
     )
 )
-

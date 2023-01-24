@@ -1,5 +1,6 @@
 package com.simprints.simprintsidtester.fragments.integration
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,19 +66,19 @@ class IntegrationViewModel(
     fun enroll() = viewEditEvents.sendEvent {
         SimHelper(projectId, userId).register(moduleId)
             .also { cacheIntent(it) }
-            .let { startActivityForResult(it, REQUEST_CODE) }
+            .let { tryStartIntent(this, it) }
     }
 
     fun verify() = viewEditEvents.sendEvent {
         SimHelper(projectId, userId).verify(moduleId, guid)
             .also { cacheIntent(it) }
-            .let { startActivityForResult(it, REQUEST_CODE) }
+            .let { tryStartIntent(this, it) }
     }
 
     fun identify() = viewEditEvents.sendEvent {
         SimHelper(projectId, userId).identify(moduleId)
             .also { cacheIntent(it) }
-            .let { startActivityForResult(it, REQUEST_CODE) }
+            .let { tryStartIntent(this, it) }
     }
 
     private fun cacheIntent(intent: Intent) {
@@ -96,6 +97,14 @@ class IntegrationViewModel(
                 }
                 ?: mutableListOf(),
         )
+    }
+
+    private fun tryStartIntent(events: IntegrationIntentEvents, intent: Intent) {
+        try {
+            events.startActivityForResult(intent, REQUEST_CODE)
+        } catch (e: ActivityNotFoundException) {
+            result = "SID is not installed"
+        }
     }
 
     fun saveResult(resultCode: Int, data: Intent?) {

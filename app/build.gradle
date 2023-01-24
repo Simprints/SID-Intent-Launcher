@@ -7,7 +7,6 @@ apply plugin: "kotlin-parcelize"
 android {
     compileSdkVersion 33
     defaultConfig {
-        ndkVersion = "24.0.7956693-beta2"
         applicationId "com.simprints.simprintsidtester"
         minSdkVersion 21
         targetSdkVersion 33

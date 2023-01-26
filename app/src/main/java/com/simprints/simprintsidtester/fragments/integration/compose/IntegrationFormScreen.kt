@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simprints.simprintsidtester.fragments.integration.IntegrationViewModel
@@ -50,6 +51,7 @@ private fun IntegrationForm(
     result: String = "",
 ) {
     val resultScroll = rememberScrollState()
+    val focusManager = LocalFocusManager.current
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -60,6 +62,7 @@ private fun IntegrationForm(
         PropertyField(
             "Project ID",
             projectId,
+            focusManager,
             onProjectIdChange,
             modifier = Modifier.fillMaxWidth(),
         )
@@ -68,6 +71,7 @@ private fun IntegrationForm(
             PropertyField(
                 "User ID",
                 userId,
+                focusManager,
                 onUserIdChange,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -76,6 +80,7 @@ private fun IntegrationForm(
             PropertyField(
                 "Module ID",
                 moduleId,
+                focusManager,
                 onModuleIdChange,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -86,6 +91,7 @@ private fun IntegrationForm(
         PropertyField(
             "GUID (for verification only)",
             guid,
+            focusManager,
             onGuidChange,
             modifier = Modifier.fillMaxWidth(),
         )

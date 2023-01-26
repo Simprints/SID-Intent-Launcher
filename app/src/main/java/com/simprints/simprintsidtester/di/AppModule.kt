@@ -2,22 +2,28 @@ package com.simprints.simprintsidtester.di
 
 import com.google.gson.GsonBuilder
 import com.simprints.simprintsidtester.fragments.edit.IntentEditViewModel
+import com.simprints.simprintsidtester.fragments.integration.IntegrationViewModel
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel
 import com.simprints.simprintsidtester.fragments.result.ResultListViewModel
 import com.simprints.simprintsidtester.model.BundleTypeAdapterFactory
-import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
-import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSourceImpl
-import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDatabase
-import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
-import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSourceImpl
+import com.simprints.simprintsidtester.model.local.*
+import com.simprints.simprintsidtester.model.store.ProjectDataCache
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
-
 import org.koin.dsl.module
 
 val appModule = module {
+
+    // Builder for application-wide coroutine scope
+    factory<Job> { SupervisorJob() }
+    factory { CoroutineScope(Dispatchers.IO + get<Job>()) }
+
     single {
-        LocalSimprintsIntentDatabase.getInstance(androidContext())
+        LocalSimprintsIntentDatabase.getInstance(androidContext(), get())
     }
     single {
         GsonBuilder().setPrettyPrinting().registerTypeAdapterFactory(BundleTypeAdapterFactory())
@@ -29,7 +35,10 @@ val appModule = module {
     single<LocalSimprintsIntentDataSource> { LocalSimprintsIntentDataSourceImpl(get()) }
     single<LocalSimprintsResultDataSource> { LocalSimprintsResultDataSourceImpl(get()) }
 
+    single { ProjectDataCache(androidContext()) }
+
     viewModel { IntentListViewModel(get()) }
     viewModel { IntentEditViewModel(get(), get(), get()) }
     viewModel { ResultListViewModel(get()) }
+    viewModel { IntegrationViewModel(get(), get(), get()) }
 }

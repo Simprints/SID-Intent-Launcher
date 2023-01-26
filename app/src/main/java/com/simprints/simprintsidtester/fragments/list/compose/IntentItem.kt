@@ -1,4 +1,4 @@
-package com.simprints.simprintsidtester.compose
+package com.simprints.simprintsidtester.fragments.list.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

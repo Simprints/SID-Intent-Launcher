@@ -2,26 +2,21 @@ package com.simprints.simprintsidtester.fragments.list
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.google.android.material.composethemeadapter.MdcTheme
+import com.google.accompanist.themeadapter.material.MdcTheme
 import com.simprints.simprintsidtester.R
-import com.simprints.simprintsidtester.compose.IntentList
 import com.simprints.simprintsidtester.databinding.IntentListFragmentBinding
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel.ViewListIntentEvents
+import com.simprints.simprintsidtester.fragments.list.compose.IntentListScreen
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -50,7 +45,10 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
                 )
                 setContent {
                     MdcTheme {
-                        IntentList(intentListViewModel = intentListViewModel)
+                        IntentListScreen(
+                            intentListViewModel = intentListViewModel,
+                            onIntegrationClick = ::openIntegrationScreen,
+                        )
                     }
                 }
             }
@@ -65,18 +63,26 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
 
         binding.viewModel = intentListViewModel
 
-        setHasOptionsMenu(true)
+        setupMenu()
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.intent_list_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
+    private fun setupMenu() = requireActivity().addMenuProvider(
+        object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.intent_list_menu, menu)
+            }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item, findNavController()) ||
-                super.onOptionsItemSelected(item)
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return NavigationUI.onNavDestinationSelected(menuItem, findNavController())
+            }
+        },
+        viewLifecycleOwner,
+        Lifecycle.State.RESUMED,
+    )
+
+    private fun openIntegrationScreen() {
+        findNavController().navigate(R.id.action_intent_list_to_integrationFragment)
     }
 
     override fun onCreateIntent(newIntent: SimprintsIntent) {
@@ -111,4 +117,3 @@ class IntentListFragment : Fragment(), ViewListIntentEvents {
         fun onListFragmentInteraction(intent: SimprintsIntent)
     }
 }
-

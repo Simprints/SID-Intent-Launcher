@@ -20,6 +20,14 @@
             android:id="@+id/action_intent_list_to_simprintsResultFragment"
             app:destination="@id/resultListFragment" />
 
+        <action
+            android:id="@+id/action_intent_list_to_integrationFragment"
+            app:destination="@id/integrationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+
     </fragment>
     <fragment
             android:id="@+id/edit_intent_fragment"
@@ -37,4 +45,12 @@
         android:name="com.simprints.simprintsidtester.fragments.result.ResultListFragment"
         android:label="Result list"
         tools:layout="@layout/result_list_fragment" />
+
+    <fragment
+        android:id="@+id/integrationFragment"
+        android:name="com.simprints.simprintsidtester.fragments.integration.IntegrationFragment"
+        android:label="Integration"
+        tools:layout="@layout/integration_fragment" >
+    </fragment>
+
 </navigation>

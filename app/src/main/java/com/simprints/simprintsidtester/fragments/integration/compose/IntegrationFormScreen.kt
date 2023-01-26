@@ -3,6 +3,7 @@ package com.simprints.simprintsidtester.fragments.integration.compose
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -124,16 +125,17 @@ private fun IntegrationForm(
                     .weight(1f),
             ) { Text("Verify") }
         }
-
-        Text(
-            text = result,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(4.dp)
-                .background(Color.LightGray.copy(alpha = 0.2f))
-                .padding(4.dp)
-                .verticalScroll(resultScroll)
-        )
+        SelectionContainer {
+            Text(
+                text = result,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(4.dp)
+                    .background(Color.LightGray.copy(alpha = 0.2f))
+                    .padding(4.dp)
+                    .verticalScroll(resultScroll)
+            )
+        }
     }
 }

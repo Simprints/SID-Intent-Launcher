@@ -1,0 +1,40 @@
+# Deploy APK to Releases section
+name: Deploy to Releases
+on:
+    push:
+        # Triggers on push of version tag (e.g., "v2023.12.1")
+        tags:
+            - 'v*'
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: 'Release tag'
+                type: string
+                required: true
+
+jobs:
+    deploy-release:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write # A write permission For Auto tagging the releases
+
+        env:
+            TAG: ${{ github.ref }} || ${{ github.event.inputs.tag }}
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v4
+                with:
+                    java-version: 17
+                    distribution: 'temurin'
+
+            -   name: Build and upload debug apk
+                env:
+                    GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: |
+                    ./gradlew packageDebugUniversalApk
+                    gh release create "${{ github.ref }}" ./app/build/outputs/universal_apk/debug/*.apk

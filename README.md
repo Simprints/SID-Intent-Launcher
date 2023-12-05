@@ -1,9 +1,12 @@
 # Intents-Launcher
+
 Android app to store and launch intents with params.
 
-# How to use it with SimprintsID
+Universal APKs are available in the [releases](https://github.com/Simprints/SID-Intent-Launcher/releases) section of this repository..
 
-## Enrol
+## How to use it with SimprintsID
+
+### Enrol
 Action: com.simprints.id.REGISTER
 
 Mandatory keys:
@@ -11,7 +14,7 @@ Mandatory keys:
 - userId
 - moduleId
 
-## Identify
+### Identify
 Action: com.simprints.id.IDENTIFY
 
 Mandatory keys:
@@ -19,7 +22,7 @@ Mandatory keys:
 - userId
 - moduleId
 
-## Confirm identification
+### Confirm identification
 Action: com.simprints.id.CONFIRM_IDENTITY
 
 Mandatory keys:
@@ -28,7 +31,7 @@ Mandatory keys:
 - moduleId
 - selectedGuid (should be one of the Guids returned from Identify)
 
-## Verify
+### Verify
 Action: com.simprints.id.VERIFY
 
 Mandatory Keys:
@@ -36,3 +39,12 @@ Mandatory Keys:
 - userId
 - moduleId
 - verifyGuid (should be Guid that exists in the database)
+
+## Building a new APK
+
+There are two ways to release a new APK:
+
+1. Push a new tag that starts with "v" (e.g. "v2023.12.1").
+2. Manually trigger the GitHub Action "Deploy to Releases.
+
+In both cases new universal APK will be build and uploaded to the releases section of this repository.

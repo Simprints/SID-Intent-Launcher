@@ -1,0 +1,26 @@
+# Deploy APK to Releases section
+name: Deploy to Releases
+on:
+    push:
+        # Triggers on push of version tag in format 'year.month.build' (e.g., "2023.12.1")
+        tags:
+            - '[0-9]{4}.[0-9]{2}.[0-9]+'
+
+jobs:
+    deploy-release:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v4
+            -   name: Set up JDK 17
+                uses: actions/setup-java@v4
+                with:
+                    java-version: 17
+                    distribution: 'temurin'
+
+            -   name: Build and upload debug apk
+                if: ${{ inputs.buildType == 'dev' }}
+                run: |
+                    ./gradlew id:packageDebugUniversalApk
+                    gh release create "${{ github.ref }}" ./app/build/outputs/apk/release/*-release.apk

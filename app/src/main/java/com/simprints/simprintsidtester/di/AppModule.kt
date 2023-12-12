@@ -1,44 +1,38 @@
 package com.simprints.simprintsidtester.di
 
+import android.content.Context
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.simprints.simprintsidtester.fragments.edit.IntentEditViewModel
-import com.simprints.simprintsidtester.fragments.integration.IntegrationViewModel
-import com.simprints.simprintsidtester.fragments.list.IntentListViewModel
-import com.simprints.simprintsidtester.fragments.result.ResultListViewModel
 import com.simprints.simprintsidtester.model.BundleTypeAdapterFactory
-import com.simprints.simprintsidtester.model.local.*
-import com.simprints.simprintsidtester.model.store.ProjectDataCache
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
+import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDatabase
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-val appModule = module {
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
 
-    // Builder for application-wide coroutine scope
-    factory<Job> { SupervisorJob() }
-    factory { CoroutineScope(Dispatchers.IO + get<Job>()) }
+    @Singleton
+    @Provides
+    fun provideDb(@ApplicationContext context: Context): LocalSimprintsIntentDatabase =
+        LocalSimprintsIntentDatabase.getInstance(context)
 
-    single {
-        LocalSimprintsIntentDatabase.getInstance(androidContext(), get())
-    }
-    single {
-        GsonBuilder().setPrettyPrinting().registerTypeAdapterFactory(BundleTypeAdapterFactory())
-            .create()
-    }
+    @Provides
+    fun provideIntentsDao(db: LocalSimprintsIntentDatabase) = db.localSimprintsIntentDao()
 
-    single { get<LocalSimprintsIntentDatabase>().localSimprintsIntentDao() }
-    single { get<LocalSimprintsIntentDatabase>().localSimprintsResultDao() }
-    single<LocalSimprintsIntentDataSource> { LocalSimprintsIntentDataSourceImpl(get()) }
-    single<LocalSimprintsResultDataSource> { LocalSimprintsResultDataSourceImpl(get()) }
+    @Provides
+    fun provideResultsDao(db: LocalSimprintsIntentDatabase) = db.localSimprintsResultDao()
 
-    single { ProjectDataCache(androidContext()) }
-
-    viewModel { IntentListViewModel(get()) }
-    viewModel { IntentEditViewModel(get(), get(), get()) }
-    viewModel { ResultListViewModel(get()) }
-    viewModel { IntegrationViewModel(get(), get(), get()) }
+    @Singleton
+    @Provides
+    fun provideGson(): Gson = GsonBuilder()
+        .setPrettyPrinting()
+        .registerTypeAdapterFactory(
+            BundleTypeAdapterFactory()
+        )
+        .create()
 }

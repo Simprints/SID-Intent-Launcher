@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.google.gson.Gson
 import com.simprints.simprintsidtester.MainActivity
@@ -16,16 +17,19 @@ import com.simprints.simprintsidtester.R
 import com.simprints.simprintsidtester.databinding.IntentEditFragmentBinding
 import com.simprints.simprintsidtester.fragments.ui.RecyclerViewAdapter
 import com.simprints.simprintsidtester.fragments.ui.WrapContentLinearLayoutManager
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 @ExperimentalMaterialApi
 class IntentEditFragment : Fragment(), IntentEditViewModel.ViewEditIntentEvents {
 
-    private val intentEditViewModel by viewModel<IntentEditViewModel>()
-    private val gson: Gson by inject()
+    private val intentEditViewModel: IntentEditViewModel by viewModels()
     private lateinit var binding: IntentEditFragmentBinding
     private lateinit var adapter: RecyclerViewAdapter<IntentEditViewModel>
+
+    @Inject
+    lateinit var gson: Gson
 
     private val simprintsIntent
         get() = arguments?.let {

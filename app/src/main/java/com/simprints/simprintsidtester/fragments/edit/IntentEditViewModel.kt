@@ -13,13 +13,16 @@ import com.simprints.simprintsidtester.model.domain.SimprintsResult
 import com.simprints.simprintsidtester.model.domain.toIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
 import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Date
+import javax.inject.Inject
 
-class IntentEditViewModel(
+@HiltViewModel
+class IntentEditViewModel @Inject constructor(
     private val intentsDao: LocalSimprintsIntentDataSource,
     private val resultDao: LocalSimprintsResultDataSource,
-    private val gson: Gson
+    private val gson: Gson,
 ) : ViewModel(), ViewModelForAdapter {
 
     companion object {

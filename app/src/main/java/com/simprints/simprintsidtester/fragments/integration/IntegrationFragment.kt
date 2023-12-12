@@ -2,22 +2,29 @@ package com.simprints.simprintsidtester.fragments.integration
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import com.google.accompanist.themeadapter.material.MdcTheme
 import com.simprints.simprintsidtester.R
 import com.simprints.simprintsidtester.databinding.IntegrationFragmentBinding
 import com.simprints.simprintsidtester.fragments.integration.compose.IntegrationFormScreen
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class IntegrationFragment : Fragment(), IntegrationViewModel.IntegrationIntentEvents {
 
     private lateinit var binding: IntegrationFragmentBinding
-    private val viewModel: IntegrationViewModel by viewModel()
+    private val viewModel: IntegrationViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -1,13 +1,27 @@
 package com.simprints.simprintsidtester.model.local
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
+
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
+import javax.inject.Inject
 
-interface LocalSimprintsIntentDataSource {
+open class LocalSimprintsIntentDataSource @Inject constructor(
+    private val localSimprintsIntentDao: LocalSimprintsIntentDao,
+) {
 
-    fun getIntents(): LiveData<List<SimprintsIntent>>
-    fun getById(id: String): LiveData<SimprintsIntent?>
-    suspend fun deleteUncompletedSimprintsIntent()
-    suspend fun delete(intent: SimprintsIntent)
-    suspend fun update(intent: SimprintsIntent)
+    fun getIntents(): LiveData<List<SimprintsIntent>> = localSimprintsIntentDao
+        .getIntents().map { intents -> intents.map { it.toDomainClass() } }
+
+    fun getById(id: String): LiveData<SimprintsIntent?> = localSimprintsIntentDao
+        .getById(id).map { intent -> intent?.toDomainClass() }
+
+    suspend fun update(intent: SimprintsIntent) =
+        localSimprintsIntentDao.save(LocalSimprintsIntent(intent))
+
+    suspend fun delete(intent: SimprintsIntent) =
+        localSimprintsIntentDao.delete(LocalSimprintsIntent(intent))
+
+    suspend fun deleteUncompletedSimprintsIntent() =
+        localSimprintsIntentDao.deleteUncompletedSimprintsIntent()
 }

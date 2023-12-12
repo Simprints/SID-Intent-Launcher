@@ -7,11 +7,15 @@ import com.simprints.simprintsidtester.fragments.LiveMessageEvent
 import com.simprints.simprintsidtester.fragments.ui.ViewModelForAdapter
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
 import com.simprints.simprintsidtester.model.local.LocalSimprintsIntentDataSource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
+import javax.inject.Inject
 
-class IntentListViewModel(private val intentsDao: LocalSimprintsIntentDataSource) : ViewModel(),
-    ViewModelForAdapter {
+@HiltViewModel
+class IntentListViewModel @Inject constructor(
+    private val intentsDao: LocalSimprintsIntentDataSource,
+) : ViewModel(), ViewModelForAdapter {
 
     private val intentsList: MutableList<SimprintsIntent> = mutableListOf()
     val viewListEvents = LiveMessageEvent<ViewListIntentEvents>()

@@ -17,8 +17,9 @@ import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSourc
 import com.simprints.simprintsidtester.model.store.ProjectDataCache
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class IntegrationViewModel(
+class IntegrationViewModel @Inject constructor(
     private val resultDao: LocalSimprintsResultDataSource,
     private val gson: Gson,
     private val projectDataCache: ProjectDataCache,

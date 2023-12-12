@@ -2,12 +2,18 @@ package com.simprints.simprintsidtester.fragments.list
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -17,14 +23,15 @@ import com.simprints.simprintsidtester.databinding.IntentListFragmentBinding
 import com.simprints.simprintsidtester.fragments.list.IntentListViewModel.ViewListIntentEvents
 import com.simprints.simprintsidtester.fragments.list.compose.IntentListScreen
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @ExperimentalMaterialApi
+@AndroidEntryPoint
 class IntentListFragment : Fragment(), ViewListIntentEvents {
 
     private var listener: UserListActions? = null
-    private val intentListViewModel: IntentListViewModel by viewModel()
+    private val intentListViewModel: IntentListViewModel by viewModels()
     private lateinit var binding: IntentListFragmentBinding
 
     override fun onCreateView(

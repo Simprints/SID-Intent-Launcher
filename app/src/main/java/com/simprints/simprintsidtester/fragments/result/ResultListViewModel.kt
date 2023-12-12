@@ -6,9 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.simprints.simprintsidtester.model.domain.SimprintsResult
 import com.simprints.simprintsidtester.model.local.LocalSimprintsResultDataSource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ResultListViewModel(private val resultDataSource: LocalSimprintsResultDataSource) : ViewModel() {
+@HiltViewModel
+class ResultListViewModel @Inject constructor(
+    private val resultDataSource: LocalSimprintsResultDataSource,
+) : ViewModel() {
+
     private val resultLiveData: MutableLiveData<List<SimprintsResult>> = MutableLiveData()
     private val mainResultList: MutableList<SimprintsResult> = mutableListOf()
 

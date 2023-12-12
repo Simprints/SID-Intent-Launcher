@@ -1,9 +1,12 @@
 plugins {
     id("com.android.application")
+
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
-    id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
+
+    id("dagger.hilt.android.plugin")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -53,8 +56,8 @@ dependencies {
     implementation(libs.simprints)
 
     implementation(libs.coroutines)
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
+    implementation(libs.hilt.core)
+    kapt(libs.hilt.compiler)
 
     // Compose
     implementation(platform(libs.compose.bom))

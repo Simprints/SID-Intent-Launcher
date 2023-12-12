@@ -10,7 +10,9 @@ import com.simprints.simprintsidtester.databinding.ActivityMainBinding
 import com.simprints.simprintsidtester.fragments.list.IntentListFragment
 import com.simprints.simprintsidtester.fragments.list.IntentListFragmentDirections.Companion.openEditIntentFragment
 import com.simprints.simprintsidtester.model.domain.SimprintsIntent
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 @ExperimentalMaterialApi
 class MainActivity : AppCompatActivity(), IntentListFragment.UserListActions {
 

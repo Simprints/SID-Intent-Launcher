@@ -1,13 +1,16 @@
 package com.simprints.simprintsidtester.model.local
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.simprints.simprintsidtester.model.domain.IntentArgument
-import kotlinx.coroutines.*
 
 @Database(entities = [LocalSimprintsIntent::class, LocalSimprintsResult::class], version = 2)
 @TypeConverters(GithubTypeConverters::class)
@@ -21,12 +24,10 @@ abstract class LocalSimprintsIntentDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: LocalSimprintsIntentDatabase? = null
 
-        fun getInstance(context: Context, scope: CoroutineScope): LocalSimprintsIntentDatabase =
-            INSTANCE ?: synchronized(this) {
-                buildDatabase(context, scope).also { INSTANCE = it }
-            }
+        fun getInstance(context: Context): LocalSimprintsIntentDatabase =
+            INSTANCE ?: synchronized(this) { buildDatabase(context).also { INSTANCE = it } }
 
-        private fun buildDatabase(context: Context, scope: CoroutineScope) =
+        private fun buildDatabase(context: Context) =
             Room.databaseBuilder(
                 context,
                 LocalSimprintsIntentDatabase::class.java,
@@ -34,10 +35,7 @@ abstract class LocalSimprintsIntentDatabase : RoomDatabase() {
             )
                 .addCallback(object : Callback() {
                     override fun onCreate(db: SupportSQLiteDatabase) {
-                        scope.launch {
-                            getInstance(context, scope).localSimprintsIntentDao()
-                                .saveIntentsList(defaultIntentList)
-                        }
+                        getInstance(context).localSimprintsIntentDao().saveIntentsList(defaultIntentList)
                     }
                 })
                 .addMigrations(MIGRATION_1_2)

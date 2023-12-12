@@ -117,7 +117,7 @@ class IntentEditViewModel(
     }
 
     interface ViewEditIntentEvents {
-        fun startActivityForResult(intent: Intent?, requestCode: Int)
+        fun startActivityForResult(intent: Intent, requestCode: Int)
         fun finish()
         fun notifyIntentArgumentAdded(position: Int)
         fun onDeleteButtonClicked()

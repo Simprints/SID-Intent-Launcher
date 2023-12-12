@@ -146,7 +146,7 @@ class IntegrationViewModel(
 
     interface IntegrationIntentEvents {
 
-        fun startActivityForResult(intent: Intent?, requestCode: Int)
+        fun startActivityForResult(intent: Intent, requestCode: Int)
     }
 
     companion object {

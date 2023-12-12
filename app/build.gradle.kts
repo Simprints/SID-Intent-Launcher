@@ -61,11 +61,16 @@ dependencies {
 
     // Compose
     implementation(platform(libs.compose.bom))
+    implementation(libs.compose.activity)
     implementation(libs.compose.ui)
     implementation(libs.compose.material)
-    implementation(libs.compose.tooling)
     implementation(libs.compose.foundation)
+    implementation(libs.compose.graphics)
+    implementation(libs.compose.preview)
     implementation(libs.compose.liveData)
+    implementation(libs.compose.navigation)
+    debugImplementation(libs.compose.tooling)
+
     implementation(libs.accompanist.themeAdapter)
 
     // Other UI

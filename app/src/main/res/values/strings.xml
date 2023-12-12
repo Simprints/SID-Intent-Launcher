@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">SimprintsIDTester</string>
-    <string name="action_to_add_new_intent">Action to add new intent</string>
+    <string name="app_name">SID Intent Launcher</string>
 </resources>

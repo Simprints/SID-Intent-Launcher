@@ -4,7 +4,7 @@
 
         <variable
             name="viewModel"
-            type="com.simprints.simprintsidtester.fragments.edit.IntentEditViewModel" />
+            type="com.simprints.intentlauncher.fragments.edit.IntentEditViewModel" />
     </data>
 
     <LinearLayout

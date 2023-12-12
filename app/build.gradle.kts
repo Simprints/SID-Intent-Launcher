@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    namespace = "com.simprints.simprintsidtester"
+    namespace = "com.simprints.intentlauncher"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.simprints.simprintsidtester"
+        applicationId = "com.simprints.intentlauncher"
         minSdk = 21
         targetSdk = 34
         versionCode = 4

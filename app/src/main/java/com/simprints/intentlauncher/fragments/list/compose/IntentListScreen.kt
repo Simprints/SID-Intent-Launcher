@@ -14,7 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.simprints.intentlauncher.compose.NothingToDisplay
+import com.simprints.intentlauncher.ui.composables.NothingToDisplay
 import com.simprints.intentlauncher.fragments.list.IntentListViewModel
 
 @ExperimentalMaterialApi
@@ -38,7 +38,6 @@ fun IntentListScreen(
             if (intentList.isEmpty()) {
                 NothingToDisplay(
                     text = "There is no content to display at the moment. Sophisticated Salmom says you need to add SID intents for you to go fishing. Happy fishing!",
-                    modifier = Modifier
                 )
             } else {
                 LazyColumn(

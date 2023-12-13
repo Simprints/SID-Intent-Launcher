@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import com.simprints.intentlauncher.compose.NothingToDisplay
+import com.simprints.intentlauncher.ui.composables.NothingToDisplay
 import com.simprints.intentlauncher.fragments.result.ResultListViewModel
 
 @Composable
@@ -30,7 +30,6 @@ fun ResultListScreen(
         if (results.isEmpty()) {
             NothingToDisplay(
                 text = "There is no content to display at the moment. Sophisticated Salmom says play around with the app for a bit and your fish will appear here. Happy fishing!",
-                modifier = Modifier
             )
         } else {
             LazyColumn {

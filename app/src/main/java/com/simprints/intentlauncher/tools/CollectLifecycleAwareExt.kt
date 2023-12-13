@@ -1,4 +1,4 @@
-package com.simprints.intentlauncher.ui.extensions
+package com.simprints.intentlauncher.tools
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State

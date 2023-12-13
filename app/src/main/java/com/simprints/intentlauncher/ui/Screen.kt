@@ -13,7 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.simprints.intentlauncher.R
 import com.simprints.intentlauncher.ui.intent.IntegrationScreen
-import com.simprints.intentlauncher.ui.details.ResultScreen
+import com.simprints.intentlauncher.ui.details.IntentDetailsScreen
 import com.simprints.intentlauncher.ui.history.HistoryScreen
 
 sealed class Screen(
@@ -52,5 +52,10 @@ fun NavGraphBuilder.rootNavGraph(navController: NavHostController) {
     composable(
         Screen.IntentDetails.route,
         arguments = Screen.IntentDetails.arguments,
-    ) { ResultScreen(navController) }
+    ) { backStackEntry ->
+        IntentDetailsScreen(
+            navController,
+            backStackEntry.arguments?.getString("intentId").orEmpty()
+        )
+    }
 }

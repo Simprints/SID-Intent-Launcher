@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simprints.intentlauncher.fragments.integration.IntegrationViewModel
-import com.simprints.intentlauncher.compose.PropertyField
+import com.simprints.intentlauncher.ui.composables.PropertyField
 
 
 @Composable

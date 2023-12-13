@@ -40,12 +40,11 @@ fun IntegrationScreen(
     val vm = hiltViewModel<IntentViewModel>()
     val viewState by vm.viewState.collectAsStateLifecycleAware()
 
-    val intentLauncher = rememberLauncherForActivityResult(GenericIntentContract()) {
-        vm.intentReceived(it)
-    }
-
     LaunchedEffect(key1 = vm) { vm.fetchCachedFieldValues() }
 
+    val intentLauncher = rememberLauncherForActivityResult(GenericIntentContract()) {
+        vm.intentResultReceived(it)
+    }
     EventEffect(
         event = viewState.showIntent,
         onConsumed = vm::intentShown,

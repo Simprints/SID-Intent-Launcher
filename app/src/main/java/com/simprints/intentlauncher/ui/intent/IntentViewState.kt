@@ -1,11 +1,14 @@
 package com.simprints.intentlauncher.ui.intent
 
 import android.content.Intent
-import com.simprints.intentlauncher.model.domain.SimprintsIntent
+import android.os.Parcelable
+import com.simprints.intentlauncher.model.domain.IntentCall
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
-import java.util.Date
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class IntentViewState(
     val projectId: String = "",
     val userId: String = "",
@@ -15,8 +18,8 @@ data class IntentViewState(
 
     val result: String = "",
 
-    val lastIntentSentTime: Date? = null,
-    val lastSentIntent: SimprintsIntent? = null,
+    val lastIntentCall: IntentCall? = null,
 
+    @IgnoredOnParcel
     val showIntent: StateEventWithContent<Intent> = consumed(),
-)
+) : Parcelable

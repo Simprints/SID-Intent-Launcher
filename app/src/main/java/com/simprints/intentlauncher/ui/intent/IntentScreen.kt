@@ -9,9 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +44,8 @@ fun IntegrationScreen(
         vm.intentReceived(it)
     }
 
+    LaunchedEffect(key1 = vm) { vm.fetchCachedFieldValues() }
+
     EventEffect(
         event = viewState.showIntent,
         onConsumed = vm::intentShown,
@@ -53,7 +60,11 @@ fun IntegrationScreen(
     ) {
         TopAppBar(
             title = { Text("Intent Launcher") },
-            // TODO actions
+            actions = {
+                IconButton(onClick = { vm.clearFields() }) {
+                    Icon(Icons.Filled.Delete, contentDescription = "Delete")
+                }
+            }
         )
         Column(
             modifier = Modifier
@@ -61,7 +72,6 @@ fun IntegrationScreen(
                 .fillMaxWidth()
                 .verticalScroll(scrollState)
         ) {
-
             CoreFieldsForm(
                 state = viewState,
                 focusManager = focusManager,
@@ -72,6 +82,7 @@ fun IntegrationScreen(
             BiometricFlowForm(
                 state = viewState,
                 focusManager = focusManager,
+                defaultExpanded = true,
                 onGuidChange = vm::updateGuid,
                 onEnroll = vm::enroll,
                 onIdentify = vm::identify,

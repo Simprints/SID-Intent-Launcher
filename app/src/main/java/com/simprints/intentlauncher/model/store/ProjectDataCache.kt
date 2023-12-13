@@ -13,8 +13,9 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class ProjectDataCache @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {

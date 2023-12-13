@@ -1,12 +1,11 @@
 [versions]
+kotlin = "1.9.21"
 pluginGradle = "8.2.0"
-pluginSaveArgs = "2.7.5"
+pluginKsp = "1.9.21-1.0.15"
 
 simprints = "2023.4.1"
 
-kotlin = "1.9.21"
 kotlinCoroutines = "1.7.3"
-koin = "3.2.2"
 hilt = "2.49"
 hiltCompose = "1.1.0"
 
@@ -15,15 +14,6 @@ composeActivity = "1.8.1"
 composeNavigation = "2.7.5"
 composeStateEvents = "2.0.3"
 accompanistThemeadapterMaterial = "0.28.0"
-navigation = "2.7.5"
-androidDataBindingCompiler = "3.3.1"
-androidxAppCompat = "1.6.1"
-androidxMaterial = "1.10.0"
-androidxCoreKtx = "1.12.0"
-androidxRecycler = "1.3.2"
-
-lifecycleRuntime = "2.6.2"
-lifecycleExtensions = "2.2.0"
 lifecycleViewmodelKtx = "2.6.2"
 
 room = "2.6.1"
@@ -54,17 +44,6 @@ compose-navigation = { module = "androidx.navigation:navigation-compose", versio
 compose-stateEvent = { module = "com.github.leonard-palm:compose-state-events", version.ref = "composeStateEvents" }
 
 accompanist-themeAdapter = { module = "com.google.accompanist:accompanist-themeadapter-material", version.ref = "accompanistThemeadapterMaterial" }
-navigation-fragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
-navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
-dataBinding-compiler = { module = "com.android.databinding:compiler", version.ref = "androidDataBindingCompiler" }
-android-appCompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppCompat" }
-android-material = { module = "com.google.android.material:material", version.ref = "androidxMaterial" }
-android-coreKtx = { module = "androidx.core:core-ktx", version.ref = "androidxCoreKtx" }
-android-recycler = { module = "androidx.recyclerview:recyclerview", version.ref = "androidxRecycler" }
-
-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntime" }
-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycleExtensions" }
-lifecycle-viewModel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 lifecycle-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelKtx" }
 
 room-core = { module = "androidx.room:room-ktx", version.ref = "room" }

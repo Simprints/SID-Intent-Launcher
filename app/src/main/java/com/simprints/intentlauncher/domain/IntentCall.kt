@@ -1,4 +1,4 @@
-package com.simprints.intentlauncher.model.domain
+package com.simprints.intentlauncher.domain
 
 import android.content.Intent
 import android.os.Parcelable

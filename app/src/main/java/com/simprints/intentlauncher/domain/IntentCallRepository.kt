@@ -1,10 +1,11 @@
-package com.simprints.intentlauncher.model.local
+package com.simprints.intentlauncher.domain
 
 import android.os.Bundle
 import com.google.gson.Gson
-import com.simprints.intentlauncher.model.domain.IntentCall
-import com.simprints.intentlauncher.model.domain.IntentFields
-import com.simprints.intentlauncher.model.domain.IntentResult
+import com.simprints.intentlauncher.data.db.IntentCallDao
+import com.simprints.intentlauncher.data.db.IntentCallEntity
+import com.simprints.intentlauncher.data.db.IntentFieldsEntity
+import com.simprints.intentlauncher.data.db.IntentResultEntity
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 

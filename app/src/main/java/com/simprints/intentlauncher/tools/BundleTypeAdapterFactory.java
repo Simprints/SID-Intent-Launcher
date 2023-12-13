@@ -1,4 +1,4 @@
-package com.simprints.intentlauncher.model;
+package com.simprints.intentlauncher.tools;
 
 import android.os.Bundle;
 import android.os.Parcelable;

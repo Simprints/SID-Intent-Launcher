@@ -1,4 +1,4 @@
-package com.simprints.intentlauncher.model.domain
+package com.simprints.intentlauncher.domain
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

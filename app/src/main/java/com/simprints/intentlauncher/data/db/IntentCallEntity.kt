@@ -1,4 +1,4 @@
-package com.simprints.intentlauncher.model.local
+package com.simprints.intentlauncher.data.db
 
 import androidx.room.Embedded
 import androidx.room.Entity

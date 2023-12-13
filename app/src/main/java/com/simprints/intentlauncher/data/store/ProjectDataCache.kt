@@ -1,4 +1,4 @@
-package com.simprints.intentlauncher.model.store
+package com.simprints.intentlauncher.data.store
 
 import android.content.Context
 import androidx.datastore.core.DataStore

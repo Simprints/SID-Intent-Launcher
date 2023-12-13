@@ -2,8 +2,8 @@ package com.simprints.intentlauncher.ui.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.simprints.intentlauncher.model.domain.IntentCall
-import com.simprints.intentlauncher.model.local.IntentCallRepository
+import com.simprints.intentlauncher.domain.IntentCall
+import com.simprints.intentlauncher.domain.IntentCallRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

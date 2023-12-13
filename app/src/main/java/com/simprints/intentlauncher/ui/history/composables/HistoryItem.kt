@@ -37,13 +37,14 @@ fun HistoryItem(
         ) {
             Text(
                 text = data.action,
-                style = AppTypography.body2,
-            )
-            Text(
-                text = data.timestamp,
-                style = AppTypography.body2,
+                style = AppTypography.subtitle2,
             )
             Spacer(modifier = Modifier.padding(4.dp))
+
+            Text(
+                text = data.timestamp,
+                style = AppTypography.caption,
+            )
             Text(
                 text = "${data.fields.projectId} - ${data.fields.moduleId} - ${data.fields.userId}",
                 style = AppTypography.caption,

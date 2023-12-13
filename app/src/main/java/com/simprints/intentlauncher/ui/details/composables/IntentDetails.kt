@@ -32,16 +32,16 @@ fun IntentDetails(
     ) {
         Text(
             text = data.action,
-            style = AppTypography.body1,
+            style = AppTypography.subtitle2,
         )
         Text(
             text = data.timestamp,
-            style = AppTypography.body2,
+            style = AppTypography.subtitle1,
         )
         Spacer(modifier = Modifier.padding(8.dp))
         Text(
             text = "Result: ${data.result?.mappedResultCode() ?: "No result"}",
-            style = AppTypography.body1,
+            style = AppTypography.subtitle1,
         )
         DividerWithTitle("Intent extras")
         SelectableCodeBlock(data.extra.entries.joinToString("\n") { "${it.key}: ${it.value}" })
@@ -54,7 +54,7 @@ fun IntentDetails(
         DividerWithTitle("Result")
         Text(
             text = data.result?.mappedResultCode() ?: "No result",
-            style = AppTypography.body1,
+            style = AppTypography.subtitle1,
         )
         SelectableCodeBlock(data.result?.json ?: "No result")
     }

@@ -57,11 +57,13 @@ dependencies {
 
     implementation(libs.coroutines)
     implementation(libs.hilt.core)
+    implementation(libs.hilt.compose)
     kapt(libs.hilt.compiler)
 
     // Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.activity)
+    implementation(libs.compose.animation)
     implementation(libs.compose.ui)
     implementation(libs.compose.material)
     implementation(libs.compose.foundation)
@@ -69,6 +71,7 @@ dependencies {
     implementation(libs.compose.preview)
     implementation(libs.compose.liveData)
     implementation(libs.compose.navigation)
+    implementation(libs.compose.stateEvent)
     debugImplementation(libs.compose.tooling)
 
     implementation(libs.accompanist.themeAdapter)
@@ -81,8 +84,11 @@ dependencies {
     implementation(libs.android.material)
     implementation(libs.android.coreKtx)
     implementation(libs.android.recycler)
+
+    implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.extensions)
     implementation(libs.lifecycle.viewModel)
+    implementation(libs.lifecycle.compose)
 
     // Data
     implementation(libs.room.core)

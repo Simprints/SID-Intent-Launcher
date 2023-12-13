@@ -55,13 +55,9 @@ class IntentViewModel @Inject constructor(
     }
 
     fun confirm() = updateViewState {
-        /*
-        TODO need to update SimHelper to not require the context in confirmIdentity first
         val intent = SimHelper(it.projectId, it.userId).confirmIdentity(it.sessionId, it.guid)
         cacheFields(it)
         copyWithCachedIntent(it, intent)
-        */
-        it
     }
 
     fun enrolLast() = updateViewState {

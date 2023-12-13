@@ -2,13 +2,13 @@
 pluginGradle = "8.2.0"
 pluginSaveArgs = "2.7.5"
 
-simprints = "2023.2.2"
+simprints = "2023.4.1"
 
 kotlin = "1.9.21"
 kotlinCoroutines = "1.7.3"
 koin = "3.2.2"
 hilt = "2.49"
-hiltCompose = "1.0.0"
+hiltCompose = "1.1.0"
 
 composeBom = "2023.10.01"
 composeActivity = "1.8.1"

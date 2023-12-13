@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
-import com.simprints.intentlauncher.compose.PropertyField
+import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.intent.IntentViewState
 
 

@@ -1,4 +1,4 @@
-package com.simprints.intentlauncher.ui.extensions
+package com.simprints.intentlauncher.tools
 
 import android.content.Context
 import android.content.Intent

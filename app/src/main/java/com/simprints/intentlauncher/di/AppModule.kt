@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.simprints.intentlauncher.model.BundleTypeAdapterFactory
-import com.simprints.intentlauncher.model.local.LocalSimprintsIntentDatabase
+import com.simprints.intentlauncher.model.local.IntentDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,14 +18,17 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDb(@ApplicationContext context: Context): LocalSimprintsIntentDatabase =
-        LocalSimprintsIntentDatabase.getInstance(context)
+    fun provideDb(@ApplicationContext context: Context): IntentDatabase =
+        IntentDatabase.getInstance(context)
 
     @Provides
-    fun provideIntentsDao(db: LocalSimprintsIntentDatabase) = db.localSimprintsIntentDao()
+    fun provideIntentsDao(db: IntentDatabase) = db.localSimprintsIntentDao()
 
     @Provides
-    fun provideResultsDao(db: LocalSimprintsIntentDatabase) = db.localSimprintsResultDao()
+    fun provideResultsDao(db: IntentDatabase) = db.localSimprintsResultDao()
+
+    @Provides
+    fun provideIntentCallEntityDao(db: IntentDatabase) = db.intentCallDao()
 
     @Singleton
     @Provides

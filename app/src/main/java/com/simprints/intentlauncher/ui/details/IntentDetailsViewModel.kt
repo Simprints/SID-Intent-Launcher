@@ -28,4 +28,8 @@ class IntentDetailsViewModel @Inject constructor(
     fun copyFieldsToStore(fields: IntentFields) = viewModelScope.launch {
         projectDataCache.save(fields.projectId, fields.userId, fields.moduleId, "")
     }
+
+    fun deleteIntent(intentId: String) = viewModelScope.launch {
+        intentRepository.deleteIntentCall(intentId)
+    }
 }

@@ -1,24 +1,18 @@
-package com.simprints.intentlauncher.model.local
+package com.simprints.intentlauncher.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
 
 @Database(
     entities = [
-        LocalSimprintsIntent::class,
-        LocalSimprintsResult::class,
         IntentCallEntity::class
     ],
-    version = 4,
+    version = 5,
 )
-@TypeConverters(IntentArgumentTypeConverters::class)
 abstract class IntentDatabase : RoomDatabase() {
 
-    abstract fun localSimprintsIntentDao(): LocalSimprintsIntentDao
-    abstract fun localSimprintsResultDao(): LocalSimprintsResultDao
     abstract fun intentCallDao(): IntentCallDao
 
     companion object {
@@ -39,4 +33,3 @@ abstract class IntentDatabase : RoomDatabase() {
                 .build()
     }
 }
-

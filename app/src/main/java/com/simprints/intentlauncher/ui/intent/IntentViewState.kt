@@ -2,7 +2,7 @@ package com.simprints.intentlauncher.ui.intent
 
 import android.content.Intent
 import android.os.Parcelable
-import com.simprints.intentlauncher.model.domain.IntentCall
+import com.simprints.intentlauncher.domain.IntentCall
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import kotlinx.parcelize.IgnoredOnParcel

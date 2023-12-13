@@ -12,9 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.simprints.intentlauncher.model.domain.IntentCall
-import com.simprints.intentlauncher.model.domain.IntentFields
-import com.simprints.intentlauncher.model.domain.IntentResult
+import com.simprints.intentlauncher.domain.IntentCall
+import com.simprints.intentlauncher.domain.IntentFields
+import com.simprints.intentlauncher.domain.IntentResult
 import com.simprints.intentlauncher.ui.composables.DividerWithTitle
 import com.simprints.intentlauncher.ui.composables.SelectableCodeBlock
 import com.simprints.intentlauncher.ui.theme.AppTypography
@@ -32,7 +32,7 @@ fun IntentDetails(
     ) {
         Text(
             text = data.action,
-            style = AppTypography.subtitle2,
+            style = AppTypography.subtitle1,
         )
         Text(
             text = data.timestamp,
@@ -51,11 +51,7 @@ fun IntentDetails(
         ) {
             Text(text = "Reuse intent fields")
         }
-        DividerWithTitle("Result")
-        Text(
-            text = data.result?.mappedResultCode() ?: "No result",
-            style = AppTypography.subtitle1,
-        )
+        DividerWithTitle("Result data")
         SelectableCodeBlock(data.result?.json ?: "No result")
     }
 }

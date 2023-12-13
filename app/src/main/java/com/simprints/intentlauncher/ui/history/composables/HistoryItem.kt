@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.simprints.intentlauncher.model.domain.IntentCall
-import com.simprints.intentlauncher.model.domain.IntentFields
-import com.simprints.intentlauncher.model.domain.IntentResult
+import com.simprints.intentlauncher.domain.IntentCall
+import com.simprints.intentlauncher.domain.IntentFields
+import com.simprints.intentlauncher.domain.IntentResult
 import com.simprints.intentlauncher.ui.theme.AppShapes
 import com.simprints.intentlauncher.ui.theme.AppTypography
 

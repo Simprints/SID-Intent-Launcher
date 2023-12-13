@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">SID Intent Launcher</string>
-    <string name="screen_intent">Create Intent</string>
-    <string name="screen_results">Results</string>
-    <string name="screen_result">Result</string>
+    <string name="screen_intent">Intent Launcher</string>
+    <string name="screen_history">History</string>
+    <string name="screen_details">IntentDetails</string>
 </resources>

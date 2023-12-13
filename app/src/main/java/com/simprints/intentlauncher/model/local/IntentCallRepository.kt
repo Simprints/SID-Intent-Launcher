@@ -3,6 +3,8 @@ package com.simprints.intentlauncher.model.local
 import android.os.Bundle
 import com.google.gson.Gson
 import com.simprints.intentlauncher.model.domain.IntentCall
+import com.simprints.intentlauncher.model.domain.IntentFields
+import com.simprints.intentlauncher.model.domain.IntentResult
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -23,32 +25,51 @@ class IntentCallRepository @Inject constructor(
                 timestamp = call.timestamp,
                 intentAction = call.action,
                 intentExtras = call.extra.asString(),
-                resultCode = resultCode,
-                resultReceived = resultJson,
+                fields = IntentFieldsEntity(
+                    projectId = call.fields.projectId,
+                    moduleId = call.fields.moduleId,
+                    userId = call.fields.userId,
+                ),
+                result = IntentResultEntity(
+                    code = resultCode,
+                    json = resultJson,
+                )
             )
         )
 
         return call.copy(
-            resultCode = resultCode,
-            resultReceived = resultJson,
-            resultSessionId = resultExtras?.getString("sessionId", null),
+            result = IntentResult(
+                code = resultCode,
+                json = resultJson,
+                sessionId = resultExtras?.getString("sessionId", null),
+            )
         )
     }
 
-    suspend fun getResult(id: String) = dao.get(id)?.let { entity ->
+    suspend fun getIntentCall(id: String) = dao.get(id)?.let { entity ->
         entityToDomain(entity)
     }
 
-    fun getAllResults() = dao.getAll().map { entities ->
+    fun getAllIntentCalls() = dao.getAll().map { entities ->
         entities.map { entityToDomain(it) }
     }
 
     private fun entityToDomain(entity: IntentCallEntity) = IntentCall(
+        id = entity.id,
         timestamp = entity.timestamp,
         action = entity.intentAction,
         extra = entity.intentExtras.fromString(),
-        resultCode = entity.resultCode,
-        resultReceived = entity.resultReceived,
+        fields = IntentFields(
+            projectId = entity.fields.projectId,
+            moduleId = entity.fields.moduleId,
+            userId = entity.fields.userId,
+        ),
+        result = entity.result?.let { result ->
+            IntentResult(
+                code = result.code,
+                json = result.json,
+            )
+        }
     )
 
     private fun Map<String, String>.asString(): String = entries

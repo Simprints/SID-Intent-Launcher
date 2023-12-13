@@ -1,4 +1,4 @@
-package com.simprints.intentlauncher.ui.results
+package com.simprints.intentlauncher.ui.details
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

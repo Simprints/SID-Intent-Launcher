@@ -12,7 +12,7 @@ import androidx.room.TypeConverters
         LocalSimprintsResult::class,
         IntentCallEntity::class
     ],
-    version = 3,
+    version = 4,
 )
 @TypeConverters(IntentArgumentTypeConverters::class)
 abstract class IntentDatabase : RoomDatabase() {

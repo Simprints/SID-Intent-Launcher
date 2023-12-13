@@ -54,6 +54,8 @@ class IntentCallRepository @Inject constructor(
         entities.map { entityToDomain(it) }
     }
 
+    suspend fun deleteIntentCall(id: String) = dao.delete(id)
+
     private fun entityToDomain(entity: IntentCallEntity) = IntentCall(
         id = entity.id,
         timestamp = entity.timestamp,

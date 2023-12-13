@@ -15,7 +15,6 @@ data class IntentViewState(
     val moduleId: String = "",
     val guid: String = "",
     val sessionId: String = "",
-
     val result: String = "",
 
     val lastIntentCall: IntentCall? = null,

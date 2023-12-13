@@ -1,5 +1,6 @@
 package com.simprints.intentlauncher.model.local
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.UUID
@@ -12,6 +13,20 @@ data class IntentCallEntity(
     val intentAction: String,
     val intentExtras: String,
 
-    val resultCode: Int,
-    val resultReceived: String,
+    @Embedded(prefix = "field_")
+    val fields: IntentFieldsEntity,
+
+    @Embedded(prefix = "result_")
+    val result: IntentResultEntity?,
+)
+
+data class IntentFieldsEntity(
+    val projectId: String,
+    val moduleId: String,
+    val userId: String,
+)
+
+data class IntentResultEntity(
+    val code: Int,
+    val json: String,
 )

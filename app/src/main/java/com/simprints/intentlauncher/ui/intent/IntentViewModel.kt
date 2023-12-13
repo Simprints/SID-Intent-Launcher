@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.simprints.intentlauncher.model.domain.IntentCall
+import com.simprints.intentlauncher.model.domain.IntentFields
 import com.simprints.intentlauncher.model.local.IntentCallRepository
 import com.simprints.intentlauncher.model.store.ProjectDataCache
 import com.simprints.libsimprints.SimHelper
@@ -76,7 +77,15 @@ class IntentViewModel @Inject constructor(
     }
 
     private fun copyWithCachedIntent(state: IntentViewState, intent: Intent) = state.copy(
-        lastIntentCall = IntentCall(Date(), intent),
+        lastIntentCall = IntentCall(
+            timestamp = Date(),
+            intent = intent,
+            fields = IntentFields(
+                projectId = state.projectId,
+                userId = state.userId,
+                moduleId = state.moduleId,
+            )
+        ),
         showIntent = triggered(intent),
     )
 
@@ -92,8 +101,9 @@ class IntentViewModel @Inject constructor(
         }
         updateViewState {
             it.copy(
-                result = "${updatedCall?.resultCode} \n ${updatedCall?.resultReceived}",
-                sessionId = updatedCall?.resultSessionId.orEmpty(),
+                result = updatedCall?.result?.simpleText().orEmpty(),
+                sessionId = updatedCall?.result?.sessionId.orEmpty(),
+                lastIntentCall = null,
             )
         }
     }

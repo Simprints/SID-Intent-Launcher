@@ -29,7 +29,7 @@ object AppModule {
     fun provideGson(): Gson = GsonBuilder()
         .setPrettyPrinting()
         .registerTypeAdapterFactory(
-            BundleTypeAdapterFactory()
+            BundleTypeAdapterFactory(),
         )
         .create()
 }

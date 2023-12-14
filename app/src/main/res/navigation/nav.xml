@@ -6,7 +6,7 @@
 
     <fragment
             android:id="@+id/intent_list"
-            android:name="com.simprints.simprintsidtester.fragments.list.IntentListFragment"
+            android:name="com.simprints.intentlauncher.fragments.list.IntentListFragment"
             android:label="Intent List"
             tools:layout="@layout/intent_list_fragment">
         <action
@@ -31,24 +31,24 @@
     </fragment>
     <fragment
             android:id="@+id/edit_intent_fragment"
-            android:name="com.simprints.simprintsidtester.fragments.edit.IntentEditFragment"
+            android:name="com.simprints.intentlauncher.fragments.edit.IntentEditFragment"
             android:label="Edit Intent Fragment"
             tools:layout="@layout/intent_edit_fragment">
         <argument
                 android:name="intent"
-                app:argType="com.simprints.simprintsidtester.model.domain.SimprintsIntent"
+                app:argType="com.simprints.intentlauncher.model.domain.SimprintsIntent"
                 app:nullable="true"/>
     </fragment>
 
     <fragment
         android:id="@+id/resultListFragment"
-        android:name="com.simprints.simprintsidtester.fragments.result.ResultListFragment"
+        android:name="com.simprints.intentlauncher.fragments.result.ResultListFragment"
         android:label="Result list"
         tools:layout="@layout/result_list_fragment" />
 
     <fragment
         android:id="@+id/integrationFragment"
-        android:name="com.simprints.simprintsidtester.fragments.integration.IntegrationFragment"
+        android:name="com.simprints.intentlauncher.fragments.integration.IntegrationFragment"
         android:label="Integration"
         tools:layout="@layout/integration_fragment" >
     </fragment>

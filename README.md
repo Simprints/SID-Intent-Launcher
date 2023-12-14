@@ -1,5 +1,7 @@
 # Intents-Launcher
 
+<img src="./app/src/main/ic_launcher-playstore.png" width="200" height="200">
+
 Android app to store and launch intents with params.
 
 Universal APKs are available in the [releases](https://github.com/Simprints/SID-Intent-Launcher/releases) section of this repository..

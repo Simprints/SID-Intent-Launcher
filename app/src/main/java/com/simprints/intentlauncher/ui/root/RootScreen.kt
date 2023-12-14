@@ -43,7 +43,7 @@ fun RootScreen() {
                             )
                         },
                         label = { Text(stringResource(screen.titleId)) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                        selected = currentDestination?.hierarchy?.any { it.route?.startsWith(screen.route) == true } == true,
                         onClick = {
                             navController.navigate(screen.route) {
                                 // Pop up to the start destination of the graph to

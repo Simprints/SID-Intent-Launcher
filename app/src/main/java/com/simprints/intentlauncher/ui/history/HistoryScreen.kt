@@ -36,7 +36,7 @@ fun HistoryScreen(
                 items(callList) { item ->
                     HistoryItem(
                         data = item,
-                        onClick = { navController.navigate("intent/$it") },
+                        onClick = { navController.navigate("history/$it") },
                     )
                 }
             }

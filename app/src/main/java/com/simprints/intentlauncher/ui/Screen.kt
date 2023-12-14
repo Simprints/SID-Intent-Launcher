@@ -36,7 +36,7 @@ sealed class Screen(
     )
 
     data object IntentDetails : Screen(
-        route = "intent/{intentId}",
+        route = "history/{intentId}",
         titleId = R.string.screen_details,
         arguments = listOf(
             navArgument("intentId") { type = NavType.StringType },

@@ -8,39 +8,32 @@ Universal APKs are available in the [releases](https://github.com/Simprints/SID-
 
 ## How to use it with SimprintsID
 
-### Enrol
-Action: com.simprints.id.REGISTER
+### Biometric flows
 
-Mandatory keys:
-- projectId
-- userId
-- moduleId
+1. Open the app (should be on "Intents Launcher" tab)
+1. Input mandatory fields on the top of the screen
+  - Project ID
+  - User ID
+  - Module ID
+1. Make sure that "BIOMETRIC FLOW INTENT" block is expanded
+1. Select the required action
+  - Note that for verification "GUID" field is mandatory
+1. Scroll down to see results
 
-### Identify
-Action: com.simprints.id.IDENTIFY
+### Follow up flow
 
-Mandatory keys:
-- projectId
-- userId
-- moduleId
+1. Execute "Identify" biometric flow
+1. Expand the "FOLLOW UP FLOW INTENT" block
+1. Verify that "Session ID" field has correct value from the last request
+1. Select required follow up action
+  - For confirmation of identity "GUID" field in biometric block is mandatory
+1. Scroll down to see results
 
-### Confirm identification
-Action: com.simprints.id.CONFIRM_IDENTITY
+### Reusing intent data
 
-Mandatory keys:
-- projectId
-- userId
-- moduleId
-- selectedGuid (should be one of the Guids returned from Identify)
-
-### Verify
-Action: com.simprints.id.VERIFY
-
-Mandatory Keys:
-- projectId
-- userId
-- moduleId
-- verifyGuid (should be Guid that exists in the database)
+1. Open "History" tab
+1. Select the intent call with required vales
+1. Press "Reuse intent fields" to make another intent with the same values
 
 ## Building a new APK
 

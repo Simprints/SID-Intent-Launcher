@@ -2,11 +2,10 @@ plugins {
     id("com.android.application")
 
     id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
     id("kotlin-parcelize")
 
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
-    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -24,16 +23,14 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
-    dataBinding {
-        enable = true
-    }
-
     buildFeatures {
-        viewBinding = true
         compose = true
     }
 
@@ -57,32 +54,30 @@ dependencies {
 
     implementation(libs.coroutines)
     implementation(libs.hilt.core)
-    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.compose)
+    ksp(libs.hilt.compiler)
 
     // Compose
     implementation(platform(libs.compose.bom))
+    implementation(libs.compose.activity)
+    implementation(libs.compose.animation)
     implementation(libs.compose.ui)
     implementation(libs.compose.material)
-    implementation(libs.compose.tooling)
     implementation(libs.compose.foundation)
+    implementation(libs.compose.graphics)
+    implementation(libs.compose.preview)
     implementation(libs.compose.liveData)
-    implementation(libs.accompanist.themeAdapter)
+    implementation(libs.compose.navigation)
+    implementation(libs.compose.stateEvent)
+    debugImplementation(libs.compose.tooling)
 
-    // Other UI
-    implementation(libs.navigation.fragment)
-    implementation(libs.navigation.ui)
-    kapt(libs.dataBinding.compiler)
-    implementation(libs.android.appCompat)
-    implementation(libs.android.material)
-    implementation(libs.android.coreKtx)
-    implementation(libs.android.recycler)
-    implementation(libs.lifecycle.extensions)
-    implementation(libs.lifecycle.viewModel)
+    implementation(libs.accompanist.themeAdapter)
+    implementation(libs.lifecycle.compose)
 
     // Data
     implementation(libs.room.core)
     implementation(libs.room.runtime)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
     implementation(libs.gson)
     implementation(libs.datastore)
 }

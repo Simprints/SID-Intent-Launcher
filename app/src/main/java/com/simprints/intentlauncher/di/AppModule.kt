@@ -24,6 +24,9 @@ object AppModule {
     @Provides
     fun provideIntentCallEntityDao(db: IntentDatabase) = db.intentCallDao()
 
+    @Provides
+    fun provideIntentPresetEntityDao(db: IntentDatabase) = db.intentPresetDao()
+
     @Singleton
     @Provides
     fun provideGson(): Gson = GsonBuilder()

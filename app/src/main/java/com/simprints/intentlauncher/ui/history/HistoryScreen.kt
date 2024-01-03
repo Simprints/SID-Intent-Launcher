@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
+import com.simprints.intentlauncher.ui.Screen
 import com.simprints.intentlauncher.ui.composables.NothingToDisplay
 import com.simprints.intentlauncher.ui.history.composables.HistoryItem
 
@@ -30,13 +31,13 @@ fun HistoryScreen(
     ) {
         TopAppBar(title = { Text("Intent History") })
         if (callList.isEmpty()) {
-            NothingToDisplay("No intent calls have been made yet.",)
+            NothingToDisplay("No intent calls have been made yet.")
         } else {
             LazyColumn {
                 items(callList) { item ->
                     HistoryItem(
                         data = item,
-                        onClick = { navController.navigate("history/$it") },
+                        onClick = { navController.navigate(Screen.IntentDetails.createRoute(it)) },
                     )
                 }
             }

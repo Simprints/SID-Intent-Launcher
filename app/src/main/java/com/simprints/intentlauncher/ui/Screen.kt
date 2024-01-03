@@ -41,7 +41,9 @@ sealed class Screen(
         arguments = listOf(
             navArgument("intentId") { type = NavType.StringType },
         ),
-    )
+    ) {
+        fun createRoute(intentId: String) = "history/$intentId"
+    }
 
     // TODO add custom intent screen
 }

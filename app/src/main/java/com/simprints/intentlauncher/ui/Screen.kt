@@ -2,6 +2,7 @@ package com.simprints.intentlauncher.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -15,6 +16,7 @@ import com.simprints.intentlauncher.R
 import com.simprints.intentlauncher.ui.intent.IntegrationScreen
 import com.simprints.intentlauncher.ui.details.IntentDetailsScreen
 import com.simprints.intentlauncher.ui.history.HistoryScreen
+import com.simprints.intentlauncher.ui.presets.PresetsScreen
 
 sealed class Screen(
     val route: String,
@@ -35,6 +37,12 @@ sealed class Screen(
         icon = Icons.Filled.List
     )
 
+    data object Presets : Screen(
+        route = "presets",
+        titleId = R.string.screen_presets,
+        icon = Icons.Filled.Favorite
+    )
+
     data object IntentDetails : Screen(
         route = "history/{intentId}",
         titleId = R.string.screen_details,
@@ -51,6 +59,7 @@ sealed class Screen(
 fun NavGraphBuilder.rootNavGraph(navController: NavHostController) {
     composable(Screen.Intent.route) { IntegrationScreen(navController) }
     composable(Screen.History.route) { HistoryScreen(navController) }
+    composable(Screen.Presets.route) { PresetsScreen(navController) }
     composable(
         Screen.IntentDetails.route,
         arguments = Screen.IntentDetails.arguments,

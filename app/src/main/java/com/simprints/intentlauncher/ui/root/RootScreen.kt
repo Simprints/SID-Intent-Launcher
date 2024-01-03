@@ -26,6 +26,7 @@ fun RootScreen() {
     val bottomNavItems = listOf(
         Screen.Intent,
         Screen.History,
+        Screen.Presets,
     )
 
     Scaffold(

@@ -2,5 +2,6 @@
     <string name="app_name">SID Intent Launcher</string>
     <string name="screen_intent">Intent Launcher</string>
     <string name="screen_history">History</string>
+    <string name="screen_presets">Presets</string>
     <string name="screen_details">IntentDetails</string>
 </resources>

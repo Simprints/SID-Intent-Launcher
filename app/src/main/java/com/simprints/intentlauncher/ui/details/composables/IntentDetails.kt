@@ -1,6 +1,7 @@
 package com.simprints.intentlauncher.ui.details.composables
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -23,6 +24,7 @@ import com.simprints.intentlauncher.ui.theme.AppTypography
 fun IntentDetails(
     data: IntentCall,
     onCopyFields: () -> Unit = {},
+    onSavePreset: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -45,11 +47,16 @@ fun IntentDetails(
         )
         DividerWithTitle("Intent extras")
         SelectableCodeBlock(data.extra.entries.joinToString("\n") { "${it.key}: ${it.value}" })
-        Button(
-            onClick = onCopyFields,
+        Row(
             modifier = Modifier.align(alignment = Alignment.End)
         ) {
-            Text(text = "Reuse intent fields")
+            Button(onClick = onCopyFields) {
+                Text(text = "Reuse intent fields")
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            Button(onClick = onSavePreset) {
+                Text(text = "Save as preset")
+            }
         }
         DividerWithTitle("Result data")
         SelectableCodeBlock(data.result?.json ?: "No result")

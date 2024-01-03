@@ -35,6 +35,16 @@ Universal APKs are available in the [releases](https://github.com/Simprints/SID-
 1. Select the intent call with required vales
 1. Press "Reuse intent fields" to make another intent with the same values
 
+### Presets
+
+Any previous intent call can be saved as a preset. To do that:
+1. Open "History" tab
+1. Select the intent call with required vales
+1. Press "Save as preset" and enter the name of the preset and press "Save"
+
+Saved preset will be available in the "Presets" tab for future use. Just press "Use preset" to fill 
+the fields with the values from the preset on the intent screen.
+
 ## Building a new APK
 
 There are two ways to release a new APK:

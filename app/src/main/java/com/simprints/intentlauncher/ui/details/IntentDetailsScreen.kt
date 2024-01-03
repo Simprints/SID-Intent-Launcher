@@ -21,6 +21,7 @@ import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.ui.Screen
 import com.simprints.intentlauncher.ui.composables.NavigateUpButton
 import com.simprints.intentlauncher.ui.composables.ShowInputFieldAlertDialog
+import com.simprints.intentlauncher.ui.composables.ToastLauncher
 import com.simprints.intentlauncher.ui.details.composables.IntentDetails
 
 @Composable
@@ -31,6 +32,9 @@ fun IntentDetailsScreen(
     val vm = hiltViewModel<IntentDetailsViewModel>()
 
     val showSaveDialog = remember { mutableStateOf(false) }
+
+    val showSaveToast = remember { mutableStateOf(false) }
+    ToastLauncher(showSaveToast,  "Preset saved")
 
     val intentData by vm.data.collectAsStateLifecycleAware()
     LaunchedEffect(key1 = vm) { vm.loadIntent(intentId) }
@@ -67,9 +71,8 @@ fun IntentDetailsScreen(
             label = { Text(text = "Preset name") },
             confirmButtonText = { Text(text = "Save") },
             onConfirm = {
-                vm.savePreset(intentData.fields)
-                // TODO navigate to presets tab
-                // navController.navigate(Screen.Intent.route)
+                vm.savePreset(it.ifEmpty { intentData.fields.projectId }, intentData.fields)
+                showSaveToast.value = true
             }
         )
     }

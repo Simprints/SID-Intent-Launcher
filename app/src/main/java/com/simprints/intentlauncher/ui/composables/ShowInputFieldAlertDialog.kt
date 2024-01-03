@@ -48,6 +48,7 @@ fun ShowInputFieldAlertDialog(
                     onClick = {
                         onConfirm(textFieldValue.value.text.trim())
                         openDialog.value = false
+                        textFieldValue.value = TextFieldValue()
                     },
                     content = confirmButtonText,
                 )

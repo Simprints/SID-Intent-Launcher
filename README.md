@@ -45,6 +45,17 @@ Any previous intent call can be saved as a preset. To do that:
 Saved preset will be available in the "Presets" tab for future use. Just press "Use preset" to fill 
 the fields with the values from the preset on the intent screen.
 
+### Custom intents
+
+When debugging integration different than LibSimprints custom intents can be used. To do that:
+1. On "Intent Launcher" press more icon and select "Custom intents"
+1. Input the intent action and extras
+   1. Extras must be in the format `key=value` one per line
+   1. There is no need to use quotes, commas or any other special characters
+1. Press launch
+1. Scroll down to see results
+   1. The call will also be added to history for future reference, but saving or reusing will not be available
+
 ## Building a new APK
 
 There are two ways to release a new APK:

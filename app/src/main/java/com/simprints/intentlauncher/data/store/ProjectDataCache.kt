@@ -54,4 +54,22 @@ class ProjectDataCache @Inject constructor(
     suspend fun clear() = withContext(Dispatchers.IO) {
         context.projectCache.edit { it.clear() }
     }
+
+    private val keyCustomAction = stringPreferencesKey("custom_action")
+    private val keyCustomExtras = stringPreferencesKey("custom_extras")
+
+    suspend fun saveCustomIntent(action: String, extras: String) = withContext(Dispatchers.IO) {
+        context.projectCache.edit {
+            it[keyCustomAction] = action
+            it[keyCustomExtras] = extras
+        }
+    }
+
+    suspend fun getCustomAction(): String = getFirstValue(keyCustomAction)
+
+    suspend fun getCustomExtras() = getFirstValue(keyCustomExtras)
+
+    suspend fun clearCustomIntent() = withContext(Dispatchers.IO) {
+        context.projectCache.edit { it.clear() }
+    }
 }

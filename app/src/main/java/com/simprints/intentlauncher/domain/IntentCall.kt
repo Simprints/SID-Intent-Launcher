@@ -16,6 +16,8 @@ data class IntentCall(
     val result: IntentResult? = null,
 ) : Parcelable {
 
+    constructor(timestamp: Date, intent: Intent) : this(timestamp, intent, IntentFields())
+
     constructor(timestamp: Date, intent: Intent, fields: IntentFields) : this(
         timestamp = timestamp.toIsoString(),
         action = intent.action.orEmpty(),

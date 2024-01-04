@@ -13,7 +13,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.simprints.intentlauncher.R
-import com.simprints.intentlauncher.ui.intent.IntegrationScreen
+import com.simprints.intentlauncher.ui.custom.CustomIntentScreen
+import com.simprints.intentlauncher.ui.intent.IntentScreen
 import com.simprints.intentlauncher.ui.details.IntentDetailsScreen
 import com.simprints.intentlauncher.ui.history.HistoryScreen
 import com.simprints.intentlauncher.ui.presets.PresetsScreen
@@ -53,11 +54,15 @@ sealed class Screen(
         fun createRoute(intentId: String) = "history/$intentId"
     }
 
-    // TODO add custom intent screen
+    data object CustomIntent : Screen(
+        route = "custom",
+        titleId = R.string.screen_custom_intent,
+        icon = Icons.Filled.Send
+    )
 }
 
 fun NavGraphBuilder.rootNavGraph(navController: NavHostController) {
-    composable(Screen.Intent.route) { IntegrationScreen(navController) }
+    composable(Screen.Intent.route) { IntentScreen(navController) }
     composable(Screen.History.route) { HistoryScreen(navController) }
     composable(Screen.Presets.route) { PresetsScreen(navController) }
     composable(
@@ -69,4 +74,5 @@ fun NavGraphBuilder.rootNavGraph(navController: NavHostController) {
             backStackEntry.arguments?.getString("intentId").orEmpty()
         )
     }
+    composable(Screen.CustomIntent.route) { CustomIntentScreen(navController) }
 }

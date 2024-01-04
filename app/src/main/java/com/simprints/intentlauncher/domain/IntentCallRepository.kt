@@ -1,25 +1,21 @@
 package com.simprints.intentlauncher.domain
 
-import android.os.Bundle
-import com.google.gson.Gson
 import com.simprints.intentlauncher.data.db.IntentCallDao
 import com.simprints.intentlauncher.data.db.IntentCallEntity
 import com.simprints.intentlauncher.data.db.IntentFieldsEntity
 import com.simprints.intentlauncher.data.db.IntentResultEntity
+import com.simprints.intentlauncher.domain.IntentResult.Companion.INVALID_CUSTOM_INTENT
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class IntentCallRepository @Inject constructor(
     private val dao: IntentCallDao,
-    private val gson: Gson,
 ) {
 
     suspend fun save(
         call: IntentCall,
-        resultCode: Int,
-        resultExtras: Bundle?,
+        result: IntentResult,
     ): IntentCall {
-        val resultJson = gson.toJson(resultExtras)
 
         dao.save(
             IntentCallEntity(
@@ -32,18 +28,14 @@ class IntentCallRepository @Inject constructor(
                     userId = call.fields.userId,
                 ),
                 result = IntentResultEntity(
-                    code = resultCode,
-                    json = resultJson,
+                    code = result.code ?: INVALID_CUSTOM_INTENT,
+                    json = result.json.orEmpty(),
                 )
             )
         )
 
         return call.copy(
-            result = IntentResult(
-                code = resultCode,
-                json = resultJson,
-                sessionId = resultExtras?.getString("sessionId", null),
-            )
+            result = result
         )
     }
 

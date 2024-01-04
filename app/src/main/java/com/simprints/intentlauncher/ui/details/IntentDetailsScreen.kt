@@ -33,8 +33,8 @@ fun IntentDetailsScreen(
 
     val showSaveDialog = remember { mutableStateOf(false) }
 
-    val showSaveToast = remember { mutableStateOf(false) }
-    ToastLauncher(showSaveToast,  "Preset saved")
+    val toastText = remember { mutableStateOf("") }
+    ToastLauncher(toastText)
 
     val intentData by vm.data.collectAsStateLifecycleAware()
     LaunchedEffect(key1 = vm) { vm.loadIntent(intentId) }
@@ -72,7 +72,7 @@ fun IntentDetailsScreen(
             confirmButtonText = { Text(text = "Save") },
             onConfirm = {
                 vm.savePreset(it.ifEmpty { intentData.fields.projectId }, intentData.fields)
-                showSaveToast.value = true
+                toastText.value = "Preset saved"
             }
         )
     }

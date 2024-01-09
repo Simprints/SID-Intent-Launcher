@@ -14,6 +14,7 @@ data class IntentResult(
 
     fun mappedResultCode(): String = when (code) {
         null -> "No result code"
+        INVALID_CUSTOM_INTENT -> "INVALID CUSTOM INTENT"
         Activity.RESULT_OK -> "OK"
         Constants.SIMPRINTS_CANCELLED -> "SIMPRINTS_CANCELLED"
         Constants.SIMPRINTS_MISSING_USER_ID -> "SIMPRINTS_MISSING_USER_ID"
@@ -56,5 +57,10 @@ data class IntentResult(
     }
 
     fun simpleText(): String = "${mappedResultCode()}\n$json"
+
+    companion object {
+
+        const val INVALID_CUSTOM_INTENT = 9999
+    }
 
 }

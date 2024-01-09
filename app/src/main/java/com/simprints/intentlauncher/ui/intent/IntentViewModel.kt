@@ -8,6 +8,7 @@ import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentFields
 import com.simprints.intentlauncher.domain.IntentCallRepository
 import com.simprints.intentlauncher.data.store.ProjectDataCache
+import com.simprints.intentlauncher.domain.IntentResultParser
 import com.simprints.libsimprints.SimHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.consumed
@@ -22,6 +23,7 @@ class IntentViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val projectDataCache: ProjectDataCache,
     private val intentCallRepository: IntentCallRepository,
+    private val intentResultParser: IntentResultParser,
 ) : ViewModel() {
 
     val viewState = savedStateHandle.getStateFlow(KEY_VIEW_STATE, IntentViewState())
@@ -87,18 +89,15 @@ class IntentViewModel @Inject constructor(
 
     fun intentResultReceived(result: Pair<Int, Intent?>) = viewModelScope.launch {
         val (code, intent) = result
+        val intentResult = intentResultParser(code, intent?.extras)
 
-        val updatedCall = viewState.value.lastIntentCall?.let {
-            intentCallRepository.save(
-                call = it,
-                resultCode = code,
-                resultExtras = intent?.extras,
-            )
+        viewState.value.lastIntentCall?.let {
+            intentCallRepository.save(call = it, result = intentResult)
         }
         updateViewState {
             it.copy(
-                result = updatedCall?.result?.simpleText().orEmpty(),
-                sessionId = updatedCall?.result?.sessionId.orEmpty(),
+                result = intentResult.simpleText(),
+                sessionId = intentResult.sessionId.orEmpty(),
                 lastIntentCall = null,
             )
         }

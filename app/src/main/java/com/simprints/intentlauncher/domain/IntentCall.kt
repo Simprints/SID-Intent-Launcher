@@ -2,6 +2,7 @@ package com.simprints.intentlauncher.domain
 
 import android.content.Intent
 import android.os.Parcelable
+import com.simprints.intentlauncher.tools.toIsoString
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
@@ -15,8 +16,10 @@ data class IntentCall(
     val result: IntentResult? = null,
 ) : Parcelable {
 
+    constructor(timestamp: Date, intent: Intent) : this(timestamp, intent, IntentFields())
+
     constructor(timestamp: Date, intent: Intent, fields: IntentFields) : this(
-        timestamp = timestamp.toString(),
+        timestamp = timestamp.toIsoString(),
         action = intent.action.orEmpty(),
         fields = fields,
         extra = intent.extras?.let { extras ->

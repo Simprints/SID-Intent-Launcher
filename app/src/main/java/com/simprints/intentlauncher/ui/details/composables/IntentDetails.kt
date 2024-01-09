@@ -47,15 +47,17 @@ fun IntentDetails(
         )
         DividerWithTitle("Intent extras")
         SelectableCodeBlock(data.extra.entries.joinToString("\n") { "${it.key}: ${it.value}" })
-        Row(
-            modifier = Modifier.align(alignment = Alignment.End)
-        ) {
-            Button(onClick = onCopyFields) {
-                Text(text = "Reuse intent fields")
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Button(onClick = onSavePreset) {
-                Text(text = "Save as preset")
+        if (data.fields.projectId.isNotBlank()) {
+            Row(
+                modifier = Modifier.align(alignment = Alignment.End)
+            ) {
+                Button(onClick = onCopyFields) {
+                    Text(text = "Reuse intent fields")
+                }
+                Spacer(modifier = Modifier.padding(8.dp))
+                Button(onClick = onSavePreset) {
+                    Text(text = "Save as preset")
+                }
             }
         }
         DividerWithTitle("Result data")
@@ -79,6 +81,26 @@ private fun IntentDetailsPreview() {
                 moduleId = "module",
                 userId = "user",
             ),
+            result = IntentResult(
+                code = -1,
+                json = """{"result": "success"}""",
+            ),
+        )
+    )
+}
+
+@Preview(showBackground = true, widthDp = 480, heightDp = 640)
+@Composable
+private fun IntentDetailsPreviewForCustomIntent() {
+    IntentDetails(
+        data = IntentCall(
+            timestamp = "2021-09-09 12:00:00",
+            action = "com.simprints.ACTION_VERIFY",
+            extra = mapOf(
+                "extra1" to "value1",
+                "extra2" to "value2",
+            ),
+            fields = IntentFields(),
             result = IntentResult(
                 code = -1,
                 json = """{"result": "success"}""",

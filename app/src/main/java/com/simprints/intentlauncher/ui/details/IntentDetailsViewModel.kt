@@ -2,10 +2,11 @@ package com.simprints.intentlauncher.ui.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.simprints.intentlauncher.domain.IntentCall
-import com.simprints.intentlauncher.domain.IntentFields
-import com.simprints.intentlauncher.domain.IntentCallRepository
 import com.simprints.intentlauncher.data.store.ProjectDataCache
+import com.simprints.intentlauncher.domain.IntentCall
+import com.simprints.intentlauncher.domain.IntentCallRepository
+import com.simprints.intentlauncher.domain.IntentFields
+import com.simprints.intentlauncher.domain.IntentPresetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class IntentDetailsViewModel @Inject constructor(
     private val projectDataCache: ProjectDataCache,
     private val intentRepository: IntentCallRepository,
+    private val presetRepository: IntentPresetRepository,
 ) : ViewModel() {
 
     private val _data = MutableStateFlow(IntentCall())
@@ -27,6 +29,10 @@ class IntentDetailsViewModel @Inject constructor(
 
     fun copyFieldsToStore(fields: IntentFields) = viewModelScope.launch {
         projectDataCache.save(fields.projectId, fields.userId, fields.moduleId, "")
+    }
+
+    fun savePreset(name: String, fields: IntentFields) = viewModelScope.launch {
+        presetRepository.save(name, fields)
     }
 
     fun deleteIntent(intentId: String) = viewModelScope.launch {

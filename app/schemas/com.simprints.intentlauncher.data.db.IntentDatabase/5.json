@@ -1,0 +1,82 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 5,
+    "identityHash": "29910138ddf37af77306216d78a9362e",
+    "entities": [
+      {
+        "tableName": "IntentCallEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `timestamp` TEXT NOT NULL, `intentAction` TEXT NOT NULL, `intentExtras` TEXT NOT NULL, `field_projectId` TEXT NOT NULL, `field_moduleId` TEXT NOT NULL, `field_userId` TEXT NOT NULL, `result_code` INTEGER, `result_json` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intentAction",
+            "columnName": "intentAction",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "intentExtras",
+            "columnName": "intentExtras",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fields.projectId",
+            "columnName": "field_projectId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fields.moduleId",
+            "columnName": "field_moduleId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fields.userId",
+            "columnName": "field_userId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "result.code",
+            "columnName": "result_code",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "result.json",
+            "columnName": "result_json",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '29910138ddf37af77306216d78a9362e')"
+    ]
+  }
+}

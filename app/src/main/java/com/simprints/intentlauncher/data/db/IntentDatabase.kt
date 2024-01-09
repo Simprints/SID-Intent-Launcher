@@ -1,19 +1,27 @@
 package com.simprints.intentlauncher.data.db
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        IntentCallEntity::class
+        IntentCallEntity::class,
+        IntentPresetEntity::class,
     ],
-    version = 5,
+    autoMigrations = [
+        AutoMigration(from = 5, to = 6),
+    ],
+    exportSchema = true,
+    version = 6,
 )
 abstract class IntentDatabase : RoomDatabase() {
 
     abstract fun intentCallDao(): IntentCallDao
+
+    abstract fun intentPresetDao(): IntentPresetDao
 
     companion object {
 

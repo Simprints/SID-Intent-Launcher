@@ -28,8 +28,8 @@ fun PresetsScreen(
     val vm = hiltViewModel<PresetsViewModel>()
     val presetList by vm.data.collectAsStateLifecycleAware()
 
-    val showDeleteToast = remember { mutableStateOf(false) }
-    ToastLauncher(showDeleteToast, "Preset deleted")
+    val toastText = remember { mutableStateOf("") }
+    ToastLauncher(toastText)
 
     Column(
         modifier = Modifier
@@ -59,7 +59,7 @@ fun PresetsScreen(
                         confirmButtonText = { Text(text = "Delete") },
                         onConfirm = {
                             vm.deletePreset(item)
-                            showDeleteToast.value = true
+                            toastText.value = "Preset deleted"
                         }
                     )
                 }

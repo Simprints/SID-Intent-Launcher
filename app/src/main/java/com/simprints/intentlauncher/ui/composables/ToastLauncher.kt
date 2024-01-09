@@ -8,16 +8,15 @@ import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun ToastLauncher(
-    showToast: MutableState<Boolean>,
-    text: String
+    toastText: MutableState<String>,
 ) {
     val context = LocalContext.current
 
     // This will be triggered when showToast.value becomes true
-    LaunchedEffect(key1 = showToast.value) {
-        if (showToast.value) {
-            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
-            showToast.value = false // Reset the state after showing the toast
+    LaunchedEffect(key1 = toastText.value) {
+        if (toastText.value.isNotEmpty()) {
+            Toast.makeText(context, toastText.value, Toast.LENGTH_SHORT).show()
+            toastText.value = "" // Reset the state after showing the toast
         }
     }
 }

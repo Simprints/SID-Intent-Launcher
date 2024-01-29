@@ -13,7 +13,7 @@ composeBom = "2023.10.01"
 composeActivity = "1.8.1"
 composeNavigation = "2.7.5"
 composeStateEvents = "2.0.3"
-accompanistThemeadapterMaterial = "0.32.0"
+accompanistThemeadapterMaterial = "0.34.0"
 lifecycleViewmodelKtx = "2.6.2"
 
 room = "2.6.1"

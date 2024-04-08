@@ -19,6 +19,7 @@ class IntentCallRepository @Inject constructor(
 
         dao.save(
             IntentCallEntity(
+                id = call.id,
                 timestamp = call.timestamp,
                 intentAction = call.action,
                 intentExtras = call.extra.asString(),

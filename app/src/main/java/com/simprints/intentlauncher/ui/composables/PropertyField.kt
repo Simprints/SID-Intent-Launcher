@@ -41,7 +41,7 @@ fun PropertyField(
             onNext = { focusManager.moveFocus(FocusDirection.Next) }
         ),
         modifier = modifier
-            .padding(8.dp, 4.dp)
+            .padding(vertical = 4.dp)
             .onKeyEvent {
                 if (it.key.keyCode == Key.Tab.keyCode) {
                     focusManager.moveFocus(FocusDirection.Next)

@@ -33,14 +33,14 @@ import java.util.Locale
 fun AccordionLayout(
     title: String,
     defaultExpanded: Boolean = true,
+    modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
     var isExpanded by remember { mutableStateOf(defaultExpanded) }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(4.dp)
             .border(1.dp, Color.Black.copy(alpha = 0.2f), shape = AppShapes.large)
     ) {
         Row(

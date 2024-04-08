@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.compose.animation)
     implementation(libs.compose.ui)
     implementation(libs.compose.material)
+    implementation(libs.compose.materialIcons)
     implementation(libs.compose.foundation)
     implementation(libs.compose.graphics)
     implementation(libs.compose.preview)

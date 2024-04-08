@@ -5,10 +5,11 @@ import android.os.Parcelable
 import com.simprints.intentlauncher.tools.toIsoString
 import kotlinx.parcelize.Parcelize
 import java.util.Date
+import java.util.UUID
 
 @Parcelize
 data class IntentCall(
-    val id: String = "",
+    val id: String = UUID.randomUUID().toString(),
     val timestamp: String = "",
     val action: String = "",
     val extra: Map<String, String> = emptyMap(),

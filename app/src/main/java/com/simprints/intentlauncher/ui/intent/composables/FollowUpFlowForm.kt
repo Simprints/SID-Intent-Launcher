@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
+import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.intent.IntentViewState
 
 @Composable
@@ -35,6 +35,7 @@ fun FollowUpFlowForm(
         Column(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
+                .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
                 .background(Color.White),
         ) {
             PropertyField(
@@ -45,21 +46,18 @@ fun FollowUpFlowForm(
                 modifier = Modifier.fillMaxWidth(),
             )
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
             ) {
                 Button(
                     onClick = onConfirm,
                     modifier = Modifier
-                        .padding(4.dp)
                         .weight(1f),
                 ) { Text("Confirm identity") }
                 Button(
                     onClick = onEnrolLast,
                     modifier = Modifier
-                        .padding(4.dp)
                         .weight(1f),
                 ) { Text("Enrol last") }
             }

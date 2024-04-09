@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
+import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.intent.IntentViewState
 
 
@@ -38,6 +38,7 @@ fun BiometricFlowForm(
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
                 .background(Color.White)
+                .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
                 .fillMaxWidth(),
         ) {
             PropertyField(
@@ -48,27 +49,23 @@ fun BiometricFlowForm(
                 modifier = Modifier.fillMaxWidth(),
             )
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
             ) {
                 Button(
                     onClick = onEnroll,
                     modifier = Modifier
-                        .padding(4.dp)
                         .weight(1f),
                 ) { Text("Enroll") }
                 Button(
                     onClick = onIdentify,
                     modifier = Modifier
-                        .padding(4.dp)
                         .weight(1f),
                 ) { Text("Identify") }
                 Button(
                     onClick = onVerify,
                     modifier = Modifier
-                        .padding(4.dp)
                         .weight(1f),
                 ) { Text("Verify") }
             }

@@ -3,6 +3,7 @@ package com.simprints.intentlauncher.di
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.ToNumberPolicy
 import com.simprints.intentlauncher.data.db.IntentDatabase
 import com.simprints.intentlauncher.tools.BundleTypeAdapterFactory
 import dagger.Module
@@ -30,6 +31,7 @@ object AppModule {
     @Singleton
     @Provides
     fun provideGson(): Gson = GsonBuilder()
+        .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
         .setPrettyPrinting()
         .registerTypeAdapterFactory(
             BundleTypeAdapterFactory(),

@@ -5,4 +5,5 @@
     <string name="screen_history">History</string>
     <string name="screen_presets">Presets</string>
     <string name="screen_details">Intent Details</string>
+    <string name="screen_response_events">Response Events</string>
 </resources>

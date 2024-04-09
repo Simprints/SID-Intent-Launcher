@@ -4,11 +4,13 @@ import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.simprints.intentlauncher.domain.IntentCall
-import com.simprints.intentlauncher.domain.IntentFields
-import com.simprints.intentlauncher.domain.IntentCallRepository
+import com.google.gson.Gson
 import com.simprints.intentlauncher.data.store.ProjectDataCache
+import com.simprints.intentlauncher.domain.IntentCall
+import com.simprints.intentlauncher.domain.IntentCallRepository
+import com.simprints.intentlauncher.domain.IntentFields
 import com.simprints.intentlauncher.domain.IntentResultParser
+import com.simprints.intentlauncher.tools.extractEventsFromJson
 import com.simprints.libsimprints.SimHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.consumed
@@ -24,6 +26,7 @@ class IntentViewModel @Inject constructor(
     private val projectDataCache: ProjectDataCache,
     private val intentCallRepository: IntentCallRepository,
     private val intentResultParser: IntentResultParser,
+    private val gson: Gson,
 ) : ViewModel() {
 
     val viewState = savedStateHandle.getStateFlow(KEY_VIEW_STATE, IntentViewState())
@@ -90,8 +93,9 @@ class IntentViewModel @Inject constructor(
     fun intentResultReceived(result: Pair<Int, Intent?>) = viewModelScope.launch {
         val (code, intent) = result
         val intentResult = intentResultParser(code, intent?.extras)
+        val lastIntentCall = viewState.value.lastIntentCall
 
-        viewState.value.lastIntentCall?.let {
+        lastIntentCall?.let {
             intentCallRepository.save(call = it, result = intentResult)
         }
         updateViewState {
@@ -99,6 +103,9 @@ class IntentViewModel @Inject constructor(
                 result = intentResult.simpleText(),
                 sessionId = intentResult.sessionId.orEmpty(),
                 lastIntentCall = null,
+                responseIntentId = lastIntentCall?.id,
+                responseJson = intentResult.json.orEmpty(),
+                events = intentResult.json?.extractEventsFromJson(gson).orEmpty(),
             )
         }
     }

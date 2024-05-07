@@ -5,7 +5,7 @@ pluginKsp = "1.9.21-1.0.15"
 
 simprints = "2024.1.1"
 
-kotlinCoroutines = "1.7.3"
+kotlinCoroutines = "1.8.0"
 hilt = "2.50"
 hiltCompose = "1.2.0"
 

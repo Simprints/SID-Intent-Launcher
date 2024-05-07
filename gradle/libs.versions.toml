@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.9.21"
-pluginGradle = "8.2.0"
+pluginGradle = "8.4.0"
 pluginKsp = "1.9.21-1.0.15"
 
 simprints = "2024.1.1"

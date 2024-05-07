@@ -11,7 +11,7 @@ hiltCompose = "1.2.0"
 
 composeBom = "2023.10.01"
 composeActivity = "1.8.1"
-composeNavigation = "2.7.5"
+composeNavigation = "2.7.7"
 composeStateEvents = "2.0.3"
 accompanistThemeadapterMaterial = "0.34.0"
 lifecycleViewmodelKtx = "2.6.2"

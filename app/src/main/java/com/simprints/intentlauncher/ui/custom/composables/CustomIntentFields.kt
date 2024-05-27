@@ -50,10 +50,7 @@ fun CustomIntentFields(
                 label = { Text("Extras") },
                 minLines = 5,
                 maxLines = 5,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Next) }
-                ),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
                 modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .fillMaxWidth()

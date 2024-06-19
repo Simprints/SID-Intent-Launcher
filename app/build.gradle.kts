@@ -22,8 +22,8 @@ android {
         applicationId = "com.simprints.intentlauncher"
         minSdk = 21
         targetSdk = 35
-        versionCode = 5
-        versionName = "2024.05.1"
+        versionCode = 6
+        versionName = "2024.06.1"
     }
 
     buildTypes {

@@ -126,6 +126,7 @@ obj/
 .idea/gradle.xml
 .idea/jarRepositories.xml
 .idea/navEditor.xml
+.kotlin/
 
 # OS-specific files
 .DS_Store?

@@ -11,6 +11,7 @@ import com.simprints.intentlauncher.domain.IntentCallRepository
 import com.simprints.intentlauncher.domain.IntentFields
 import com.simprints.intentlauncher.domain.IntentResultParser
 import com.simprints.intentlauncher.tools.extractEventsFromJson
+import com.simprints.libsimprints.Metadata
 import com.simprints.libsimprints.SimHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.consumed
@@ -37,24 +38,40 @@ class IntentViewModel @Inject constructor(
     fun updateProjectId(projectId: String) = updateViewState { it.copy(projectId = projectId) }
     fun updateUserId(userId: String) = updateViewState { it.copy(userId = userId) }
     fun updateModuleId(moduleId: String) = updateViewState { it.copy(moduleId = moduleId) }
+    fun updateMetadata(metadata: String) = updateViewState { it.copy(metadata = metadata) }
     fun updateGuid(guid: String) = updateViewState { it.copy(guid = guid) }
     fun updateSessionId(sessionId: String) = updateViewState { it.copy(sessionId = sessionId) }
     fun intentShown() = updateViewState { it.copy(showIntent = consumed()) }
 
     fun enroll() = updateViewState {
-        val intent = SimHelper(it.projectId, it.userId).register(it.moduleId)
+        val simHelper = SimHelper(it.projectId, it.userId)
+        val intent = if (it.metadata.isBlank()) {
+            simHelper.register(it.moduleId)
+        } else {
+            simHelper.register(it.moduleId, Metadata(it.metadata))
+        }
         cacheFields(it)
         copyWithCachedIntent(it, intent)
     }
 
     fun identify() = updateViewState {
-        val intent = SimHelper(it.projectId, it.userId).identify(it.moduleId)
+        val simHelper = SimHelper(it.projectId, it.userId)
+        val intent = if (it.metadata.isBlank()) {
+            simHelper.identify(it.moduleId)
+        } else {
+            simHelper.identify(it.moduleId, Metadata(it.metadata))
+        }
         cacheFields(it)
         copyWithCachedIntent(it, intent)
     }
 
     fun verify() = updateViewState {
-        val intent = SimHelper(it.projectId, it.userId).verify(it.moduleId, it.guid)
+        val simHelper = SimHelper(it.projectId, it.userId)
+        val intent = if (it.metadata.isBlank()) {
+            simHelper.verify(it.moduleId, it.guid)
+        } else {
+            simHelper.verify(it.moduleId, it.guid, Metadata(it.metadata))
+        }
         cacheFields(it)
         copyWithCachedIntent(it, intent)
     }
@@ -66,15 +83,24 @@ class IntentViewModel @Inject constructor(
     }
 
     fun enrolLast() = updateViewState {
-        val intent = SimHelper(it.projectId, it.userId)
-            .registerLastBiometrics(it.moduleId, it.sessionId)
-
+        val simHelper = SimHelper(it.projectId, it.userId)
+        val intent = if (it.metadata.isBlank()) {
+            simHelper.registerLastBiometrics(it.moduleId, it.sessionId)
+        } else {
+            simHelper.registerLastBiometrics(it.moduleId, it.sessionId, Metadata(it.metadata))
+        }
         cacheFields(it)
         copyWithCachedIntent(it, intent)
     }
 
     private fun cacheFields(state: IntentViewState) = viewModelScope.launch {
-        projectDataCache.save(state.projectId, state.userId, state.moduleId, state.guid)
+        projectDataCache.save(
+            projectId = state.projectId,
+            userId = state.userId,
+            moduleId = state.moduleId,
+            metadata = state.metadata,
+            guid = state.guid
+        )
     }
 
     private fun copyWithCachedIntent(state: IntentViewState, intent: Intent) = state.copy(
@@ -85,6 +111,7 @@ class IntentViewModel @Inject constructor(
                 projectId = state.projectId,
                 userId = state.userId,
                 moduleId = state.moduleId,
+                metadata = state.metadata,
             )
         ),
         showIntent = triggered(intent),
@@ -114,6 +141,7 @@ class IntentViewModel @Inject constructor(
         val projectId = projectDataCache.getProjectId()
         val userId = projectDataCache.getUserId()
         val moduleId = projectDataCache.getModuleId()
+        val metadata = projectDataCache.getMetadata()
         val guid = projectDataCache.getGuid()
 
         updateViewState {
@@ -121,6 +149,7 @@ class IntentViewModel @Inject constructor(
                 projectId = projectId,
                 userId = userId,
                 moduleId = moduleId,
+                metadata = metadata,
                 guid = guid,
             )
         }

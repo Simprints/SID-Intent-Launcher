@@ -14,6 +14,7 @@ data class IntentViewState(
     val projectId: String = "",
     val userId: String = "",
     val moduleId: String = "",
+    val metadata: String = "",
     val guid: String = "",
     val sessionId: String = "",
     val result: String = "",

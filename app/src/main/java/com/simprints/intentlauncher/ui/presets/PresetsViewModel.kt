@@ -29,7 +29,13 @@ class PresetsViewModel @Inject constructor(
     }
 
     fun usePreset(item: Preset) = viewModelScope.launch {
-        projectDataCache.save(item.fields.projectId, item.fields.userId, item.fields.moduleId, "")
+        projectDataCache.save(
+            projectId = item.fields.projectId,
+            userId = item.fields.userId,
+            moduleId = item.fields.moduleId,
+            metadata = item.fields.metadata,
+            guid = ""
+        )
     }
 
     fun deletePreset(item: Preset) = viewModelScope.launch {

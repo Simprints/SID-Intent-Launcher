@@ -107,6 +107,7 @@ fun IntentScreen(
                 onProjectIdChange = vm::updateProjectId,
                 onUserIdChange = vm::updateUserId,
                 onModuleIdChange = vm::updateModuleId,
+                onMetadataChange = vm::updateMetadata,
             )
             BiometricFlowForm(
                 state = viewState,

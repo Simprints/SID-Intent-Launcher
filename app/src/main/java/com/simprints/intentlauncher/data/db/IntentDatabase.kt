@@ -13,9 +13,10 @@ import androidx.room.RoomDatabase
     ],
     autoMigrations = [
         AutoMigration(from = 5, to = 6),
+        AutoMigration(from = 6, to = 7),
     ],
     exportSchema = true,
-    version = 6,
+    version = 7,
 )
 abstract class IntentDatabase : RoomDatabase() {
 

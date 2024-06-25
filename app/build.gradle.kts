@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
 
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("kotlin-parcelize")
 
     id("com.google.devtools.ksp")
@@ -15,14 +16,14 @@ room {
 
 android {
     namespace = "com.simprints.intentlauncher"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.simprints.intentlauncher"
         minSdk = 21
-        targetSdk = 34
-        versionCode = 5
-        versionName = "2024.05.1"
+        targetSdk = 35
+        versionCode = 6
+        versionName = "2024.06.1"
     }
 
     buildTypes {
@@ -33,10 +34,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-
-    buildFeatures {
-        compose = true
     }
 
     compileOptions {

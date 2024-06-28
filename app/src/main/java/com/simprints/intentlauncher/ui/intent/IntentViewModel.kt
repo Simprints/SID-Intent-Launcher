@@ -1,6 +1,7 @@
 package com.simprints.intentlauncher.ui.intent
 
 import android.content.Intent
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,7 @@ import com.simprints.intentlauncher.domain.IntentFields
 import com.simprints.intentlauncher.domain.IntentResultParser
 import com.simprints.intentlauncher.tools.extractEventsFromJson
 import com.simprints.libsimprints.Metadata
+import com.simprints.libsimprints.Metadata.InvalidMetadataException
 import com.simprints.libsimprints.SimHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.consumed
@@ -43,38 +45,38 @@ class IntentViewModel @Inject constructor(
     fun updateSessionId(sessionId: String) = updateViewState { it.copy(sessionId = sessionId) }
     fun intentShown() = updateViewState { it.copy(showIntent = consumed()) }
 
-    fun enroll() = updateViewState {
-        val simHelper = SimHelper(it.projectId, it.userId)
-        val intent = if (it.metadata.isBlank()) {
-            simHelper.register(it.moduleId)
-        } else {
-            simHelper.register(it.moduleId, Metadata(it.metadata))
+    private fun executeSimHelperAction(
+        actionWithoutMetadata: (SimHelper) -> Intent,
+        actionWithMetadata: (SimHelper, Metadata) -> Intent
+    ) = updateViewState { state ->
+        val simHelper = SimHelper(state.projectId, state.userId)
+        val intent = try {
+            if (state.metadata.isBlank()) {
+                actionWithoutMetadata(simHelper)
+            } else {
+                actionWithMetadata(simHelper, Metadata(state.metadata))
+            }
+        } catch (e: InvalidMetadataException) {
+            return@updateViewState state.copy(showWrongMetadataAlert = mutableStateOf(true))
         }
-        cacheFields(it)
-        copyWithCachedIntent(it, intent)
+        cacheFields(state)
+        copyWithCachedIntent(state, intent)
     }
 
-    fun identify() = updateViewState {
-        val simHelper = SimHelper(it.projectId, it.userId)
-        val intent = if (it.metadata.isBlank()) {
-            simHelper.identify(it.moduleId)
-        } else {
-            simHelper.identify(it.moduleId, Metadata(it.metadata))
-        }
-        cacheFields(it)
-        copyWithCachedIntent(it, intent)
-    }
+    fun enroll() = executeSimHelperAction(
+        { simHelper -> simHelper.register(viewState.value.moduleId) },
+        { simHelper, metadata -> simHelper.register(viewState.value.moduleId, metadata) }
+    )
 
-    fun verify() = updateViewState {
-        val simHelper = SimHelper(it.projectId, it.userId)
-        val intent = if (it.metadata.isBlank()) {
-            simHelper.verify(it.moduleId, it.guid)
-        } else {
-            simHelper.verify(it.moduleId, it.guid, Metadata(it.metadata))
-        }
-        cacheFields(it)
-        copyWithCachedIntent(it, intent)
-    }
+    fun identify() = executeSimHelperAction(
+        { simHelper -> simHelper.identify(viewState.value.moduleId) },
+        { simHelper, metadata -> simHelper.identify(viewState.value.moduleId, metadata) }
+    )
+
+    fun verify() = executeSimHelperAction(
+        { simHelper -> simHelper.verify(viewState.value.moduleId, viewState.value.guid) },
+        { simHelper, metadata -> simHelper.verify(viewState.value.moduleId, viewState.value.guid, metadata) }
+    )
 
     fun confirm() = updateViewState {
         val intent = SimHelper(it.projectId, it.userId).confirmIdentity(it.sessionId, it.guid)
@@ -82,16 +84,10 @@ class IntentViewModel @Inject constructor(
         copyWithCachedIntent(it, intent)
     }
 
-    fun enrolLast() = updateViewState {
-        val simHelper = SimHelper(it.projectId, it.userId)
-        val intent = if (it.metadata.isBlank()) {
-            simHelper.registerLastBiometrics(it.moduleId, it.sessionId)
-        } else {
-            simHelper.registerLastBiometrics(it.moduleId, it.sessionId, Metadata(it.metadata))
-        }
-        cacheFields(it)
-        copyWithCachedIntent(it, intent)
-    }
+    fun enrolLast() = executeSimHelperAction(
+        { simHelper -> simHelper.registerLastBiometrics(viewState.value.moduleId, viewState.value.sessionId) },
+        { simHelper, metadata -> simHelper.registerLastBiometrics(viewState.value.moduleId, viewState.value.sessionId, metadata) }
+    )
 
     private fun cacheFields(state: IntentViewState) = viewModelScope.launch {
         projectDataCache.save(

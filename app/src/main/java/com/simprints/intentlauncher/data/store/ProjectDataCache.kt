@@ -25,14 +25,21 @@ class ProjectDataCache @Inject constructor(
     private val keyProjectId = stringPreferencesKey("project_id")
     private val keyUserId = stringPreferencesKey("user_id")
     private val keyModuleId = stringPreferencesKey("module_id")
+    private val keyMetadata = stringPreferencesKey("metadata")
     private val keyGuid = stringPreferencesKey("guid")
 
-    suspend fun save(projectId: String, userId: String, moduleId: String, guid: String) =
-        withContext(Dispatchers.IO) {
+    suspend fun save(
+        projectId: String,
+        userId: String,
+        moduleId: String,
+        metadata: String,
+        guid: String,
+    ) = withContext(Dispatchers.IO) {
             context.projectCache.edit {
                 it[keyProjectId] = projectId
                 it[keyUserId] = userId
                 it[keyModuleId] = moduleId
+                it[keyMetadata] = metadata
                 it[keyGuid] = guid
             }
         }
@@ -42,6 +49,8 @@ class ProjectDataCache @Inject constructor(
     suspend fun getUserId() = getFirstValue(keyUserId)
 
     suspend fun getModuleId() = getFirstValue(keyModuleId)
+
+    suspend fun getMetadata() = getFirstValue(keyMetadata)
 
     suspend fun getGuid() = getFirstValue(keyGuid)
 

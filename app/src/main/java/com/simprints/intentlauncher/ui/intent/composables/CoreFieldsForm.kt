@@ -21,6 +21,7 @@ fun CoreFieldsForm(
     onProjectIdChange: (String) -> Unit = {},
     onUserIdChange: (String) -> Unit = {},
     onModuleIdChange: (String) -> Unit = {},
+    onMetadataChange: (String) -> Unit = {},
 ) {
     Column {
         PropertyField(
@@ -51,6 +52,13 @@ fun CoreFieldsForm(
                     .weight(1f),
             )
         }
+        PropertyField(
+            "Metadata",
+            state.metadata,
+            focusManager,
+            onMetadataChange,
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 

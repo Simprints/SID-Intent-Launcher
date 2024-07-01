@@ -27,6 +27,7 @@ class IntentCallRepository @Inject constructor(
                     projectId = call.fields.projectId,
                     moduleId = call.fields.moduleId,
                     userId = call.fields.userId,
+                    metadata = call.fields.metadata,
                 ),
                 result = IntentResultEntity(
                     code = result.code ?: INVALID_CUSTOM_INTENT,
@@ -59,6 +60,7 @@ class IntentCallRepository @Inject constructor(
             projectId = entity.fields.projectId,
             moduleId = entity.fields.moduleId,
             userId = entity.fields.userId,
+            metadata = entity.fields.metadata,
         ),
         result = entity.result?.let { result ->
             IntentResult(

@@ -18,11 +18,21 @@ class IntentPresetRepository @Inject constructor(
             projectId = fields.projectId,
             moduleId = fields.moduleId,
             userId = fields.userId,
+            metadata = fields.metadata,
         )
     )
 
     fun getPresets() = dao.getAll().map { entities ->
-        entities.map { Preset(it.id, it.name, IntentFields(it.projectId, it.moduleId, it.userId)) }
+        entities.map { Preset(
+            id = it.id,
+            name = it.name,
+            fields = IntentFields(
+                projectId = it.projectId,
+                moduleId = it.moduleId,
+                userId = it.userId,
+                metadata = it.metadata
+            )
+        ) }
     }
 
     suspend fun deletePreset(id: String) {

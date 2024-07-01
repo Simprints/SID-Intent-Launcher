@@ -8,4 +8,5 @@ data class IntentFields(
     val projectId: String = "",
     val moduleId: String = "",
     val userId: String = "",
+    val metadata: String = "",
 ) : Parcelable

@@ -2,6 +2,8 @@ package com.simprints.intentlauncher.ui.intent
 
 import android.content.Intent
 import android.os.Parcelable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.ui.intent.model.ResponseEvent
 import de.palm.composestateevents.StateEventWithContent
@@ -14,6 +16,7 @@ data class IntentViewState(
     val projectId: String = "",
     val userId: String = "",
     val moduleId: String = "",
+    val metadata: String = "",
     val guid: String = "",
     val sessionId: String = "",
     val result: String = "",
@@ -22,6 +25,8 @@ data class IntentViewState(
 
     val lastIntentCall: IntentCall? = null,
 
+    @IgnoredOnParcel
+    val showWrongMetadataAlert: MutableState<Boolean> = mutableStateOf(false),
     @IgnoredOnParcel
     val showIntent: StateEventWithContent<Intent> = consumed(),
     @IgnoredOnParcel

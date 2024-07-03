@@ -28,7 +28,13 @@ class IntentDetailsViewModel @Inject constructor(
     }
 
     fun copyFieldsToStore(fields: IntentFields) = viewModelScope.launch {
-        projectDataCache.save(fields.projectId, fields.userId, fields.moduleId, "")
+        projectDataCache.save(
+            projectId = fields.projectId,
+            userId = fields.userId,
+            moduleId = fields.moduleId,
+            metadata = fields.metadata,
+            guid = ""
+        )
     }
 
     fun savePreset(name: String, fields: IntentFields) = viewModelScope.launch {

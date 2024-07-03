@@ -1,5 +1,6 @@
 package com.simprints.intentlauncher.data.db
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -24,6 +25,8 @@ data class IntentFieldsEntity(
     val projectId: String,
     val moduleId: String,
     val userId: String,
+    @ColumnInfo(defaultValue = "")
+    val metadata: String,
 )
 
 data class IntentResultEntity(

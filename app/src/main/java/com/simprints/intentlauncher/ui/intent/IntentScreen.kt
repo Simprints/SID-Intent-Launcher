@@ -31,6 +31,7 @@ import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.ui.Screen
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
 import com.simprints.intentlauncher.ui.composables.SelectableCodeBlock
+import com.simprints.intentlauncher.ui.composables.ShowErrorAlert
 import com.simprints.intentlauncher.ui.intent.composables.BiometricFlowForm
 import com.simprints.intentlauncher.ui.intent.composables.CoreFieldsForm
 import com.simprints.intentlauncher.ui.intent.composables.FollowUpFlowForm
@@ -107,6 +108,7 @@ fun IntentScreen(
                 onProjectIdChange = vm::updateProjectId,
                 onUserIdChange = vm::updateUserId,
                 onModuleIdChange = vm::updateModuleId,
+                onMetadataChange = vm::updateMetadata,
             )
             BiometricFlowForm(
                 state = viewState,
@@ -138,4 +140,11 @@ fun IntentScreen(
             }
         }
     }
+    ShowErrorAlert(
+        openDialog = viewState.showWrongMetadataAlert,
+        title = { Text(text = "Wrong input") },
+        text = { Text(text = "Metadata field should contain valid JSON string") },
+        confirmButtonText = { Text(text = "OK") },
+        onConfirm = {}
+    )
 }

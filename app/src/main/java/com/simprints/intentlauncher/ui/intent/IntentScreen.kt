@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.simprints.intentlauncher.tools.GenericIntentContract
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.ui.Screen
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
@@ -36,6 +35,7 @@ import com.simprints.intentlauncher.ui.intent.composables.BiometricFlowForm
 import com.simprints.intentlauncher.ui.intent.composables.CoreFieldsForm
 import com.simprints.intentlauncher.ui.intent.composables.FollowUpFlowForm
 import com.simprints.intentlauncher.ui.intent.composables.ResponseEventsForm
+import com.simprints.libsimprints.contracts.SimprintsContract
 import de.palm.composestateevents.EventEffect
 
 
@@ -48,7 +48,7 @@ fun IntentScreen(
 
     LaunchedEffect(key1 = vm) { vm.fetchCachedFieldValues() }
 
-    val intentLauncher = rememberLauncherForActivityResult(GenericIntentContract()) {
+    val intentLauncher = rememberLauncherForActivityResult(SimprintsContract()) {
         vm.intentResultReceived(it)
     }
     EventEffect(

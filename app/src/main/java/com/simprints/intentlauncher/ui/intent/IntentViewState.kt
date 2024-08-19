@@ -1,11 +1,11 @@
 package com.simprints.intentlauncher.ui.intent
 
-import android.content.Intent
 import android.os.Parcelable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.ui.intent.model.ResponseEvent
+import com.simprints.libsimprints.contracts.SimprintsRequest
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import kotlinx.parcelize.IgnoredOnParcel
@@ -28,7 +28,7 @@ data class IntentViewState(
     @IgnoredOnParcel
     val showWrongMetadataAlert: MutableState<Boolean> = mutableStateOf(false),
     @IgnoredOnParcel
-    val showIntent: StateEventWithContent<Intent> = consumed(),
+    val showIntent: StateEventWithContent<SimprintsRequest> = consumed(),
     @IgnoredOnParcel
     val events: List<ResponseEvent> = emptyList(),
 ) : Parcelable

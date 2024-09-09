@@ -14,7 +14,7 @@ composeActivity = "1.9.1"
 composeNavigation = "2.7.7"
 composeStateEvents = "2.2.0"
 accompanistThemeadapterMaterial = "0.34.0"
-lifecycleViewmodelKtx = "2.8.4"
+lifecycleViewmodelKtx = "2.8.5"
 
 room = "2.6.1"
 gson = "2.11.0"

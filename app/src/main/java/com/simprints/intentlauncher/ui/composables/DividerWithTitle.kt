@@ -14,9 +14,7 @@ import com.simprints.intentlauncher.ui.theme.AppTypography
 import java.util.Locale
 
 @Composable
-fun DividerWithTitle(
-    title: String,
-) {
+fun DividerWithTitle(title: String) {
     Row(
         modifier = Modifier.padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,

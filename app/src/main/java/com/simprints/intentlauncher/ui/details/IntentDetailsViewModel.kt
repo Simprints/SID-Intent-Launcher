@@ -19,7 +19,6 @@ class IntentDetailsViewModel @Inject constructor(
     private val intentRepository: IntentCallRepository,
     private val presetRepository: IntentPresetRepository,
 ) : ViewModel() {
-
     private val _data = MutableStateFlow(IntentCall())
     val data: StateFlow<IntentCall> = _data
 
@@ -33,11 +32,14 @@ class IntentDetailsViewModel @Inject constructor(
             userId = fields.userId,
             moduleId = fields.moduleId,
             metadata = fields.metadata,
-            guid = ""
+            guid = "",
         )
     }
 
-    fun savePreset(name: String, fields: IntentFields) = viewModelScope.launch {
+    fun savePreset(
+        name: String,
+        fields: IntentFields,
+    ) = viewModelScope.launch {
         presetRepository.save(name, fields)
     }
 

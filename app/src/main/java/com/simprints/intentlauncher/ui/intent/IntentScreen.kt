@@ -38,11 +38,8 @@ import com.simprints.intentlauncher.ui.intent.composables.ResponseEventsForm
 import com.simprints.libsimprints.contracts.SimprintsContract
 import de.palm.composestateevents.EventEffect
 
-
 @Composable
-fun IntentScreen(
-    navController: NavHostController,
-) {
+fun IntentScreen(navController: NavHostController) {
     val vm = hiltViewModel<IntentViewModel>()
     val viewState by vm.viewState.collectAsStateLifecycleAware()
 
@@ -62,24 +59,25 @@ fun IntentScreen(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         TopAppBar(
             title = { Text("Intent Launcher") },
             actions = {
                 IconButton(
-                    onClick = { menuExpanded.value = true }) {
+                    onClick = { menuExpanded.value = true },
+                ) {
                     Icon(Icons.Filled.MoreVert, contentDescription = "More")
                 }
                 DropdownMenu(
                     expanded = menuExpanded.value,
-                    onDismissRequest = { menuExpanded.value = false }
+                    onDismissRequest = { menuExpanded.value = false },
                 ) {
                     DropdownMenuItem(
                         onClick = {
                             menuExpanded.value = false
                             vm.clearFields()
-                        }
+                        },
                     ) {
                         Text("Clear fields")
                     }
@@ -87,12 +85,12 @@ fun IntentScreen(
                         onClick = {
                             menuExpanded.value = false
                             navController.navigate(Screen.CustomIntent.route)
-                        }
+                        },
                     ) {
                         Text("Custom Intent")
                     }
                 }
-            }
+            },
         )
         Column(
             modifier = Modifier
@@ -100,7 +98,7 @@ fun IntentScreen(
                 .fillMaxWidth()
                 .verticalScroll(scrollState)
                 .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             CoreFieldsForm(
                 state = viewState,
@@ -130,7 +128,7 @@ fun IntentScreen(
                 state = viewState,
                 onClick = { intentId ->
                     navController.navigate(Screen.ResponseEventDetails.createRoute(intentId))
-                }
+                },
             )
             AccordionLayout(
                 title = "Result",
@@ -145,6 +143,6 @@ fun IntentScreen(
         title = { Text(text = "Wrong input") },
         text = { Text(text = "Metadata field should contain valid JSON string") },
         confirmButtonText = { Text(text = "OK") },
-        onConfirm = {}
+        onConfirm = {},
     )
 }

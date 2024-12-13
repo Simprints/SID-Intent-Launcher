@@ -14,8 +14,7 @@ val AppColorScheme = lightColors(
     secondary = Color(0xFFCC6300),
 )
 
-val AppTypography = Typography(
-)
+val AppTypography = Typography()
 
 val AppShapes = Shapes(
     small = RoundedCornerShape(4.dp),
@@ -24,9 +23,7 @@ val AppShapes = Shapes(
 )
 
 @Composable
-fun ApplicationTheme(
-    content: @Composable () -> Unit,
-) {
+fun ApplicationTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colors = AppColorScheme,
         typography = AppTypography,

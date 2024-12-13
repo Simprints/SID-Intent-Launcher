@@ -11,12 +11,10 @@ import javax.inject.Inject
 class IntentCallRepository @Inject constructor(
     private val dao: IntentCallDao,
 ) {
-
     suspend fun save(
         call: IntentCall,
         result: IntentResult,
     ): IntentCall {
-
         dao.save(
             IntentCallEntity(
                 id = call.id,
@@ -32,12 +30,12 @@ class IntentCallRepository @Inject constructor(
                 result = IntentResultEntity(
                     code = result.code ?: INVALID_CUSTOM_INTENT,
                     json = result.json.orEmpty(),
-                )
-            )
+                ),
+            ),
         )
 
         return call.copy(
-            result = result
+            result = result,
         )
     }
 
@@ -67,7 +65,7 @@ class IntentCallRepository @Inject constructor(
                 code = result.code,
                 json = result.json,
             )
-        }
+        },
     )
 
     private fun Map<String, String>.asString(): String = entries

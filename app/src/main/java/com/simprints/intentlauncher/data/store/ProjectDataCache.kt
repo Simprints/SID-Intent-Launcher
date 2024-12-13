@@ -19,7 +19,6 @@ import javax.inject.Singleton
 class ProjectDataCache @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
-
     private val Context.projectCache: DataStore<Preferences> by preferencesDataStore(name = "projectCache")
 
     private val keyProjectId = stringPreferencesKey("project_id")
@@ -35,14 +34,14 @@ class ProjectDataCache @Inject constructor(
         metadata: String,
         guid: String,
     ) = withContext(Dispatchers.IO) {
-            context.projectCache.edit {
-                it[keyProjectId] = projectId
-                it[keyUserId] = userId
-                it[keyModuleId] = moduleId
-                it[keyMetadata] = metadata
-                it[keyGuid] = guid
-            }
+        context.projectCache.edit {
+            it[keyProjectId] = projectId
+            it[keyUserId] = userId
+            it[keyModuleId] = moduleId
+            it[keyMetadata] = metadata
+            it[keyGuid] = guid
         }
+    }
 
     suspend fun getProjectId(): String = getFirstValue(keyProjectId)
 
@@ -67,7 +66,10 @@ class ProjectDataCache @Inject constructor(
     private val keyCustomAction = stringPreferencesKey("custom_action")
     private val keyCustomExtras = stringPreferencesKey("custom_extras")
 
-    suspend fun saveCustomIntent(action: String, extras: String) = withContext(Dispatchers.IO) {
+    suspend fun saveCustomIntent(
+        action: String,
+        extras: String,
+    ) = withContext(Dispatchers.IO) {
         context.projectCache.edit {
             it[keyCustomAction] = action
             it[keyCustomExtras] = extras

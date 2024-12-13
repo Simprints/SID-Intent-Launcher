@@ -42,13 +42,13 @@ fun SortingOptionsDialog(
                 EventSortingOption.DateAsc -> EventSortingItem(
                     text = "By creation date",
                     secondaryText = "Ascending",
-                    icon = Icons.Filled.AccessTime
+                    icon = Icons.Filled.AccessTime,
                 )
 
                 EventSortingOption.AsReceivedInResponse -> EventSortingItem(
                     text = "As in response",
                     secondaryText = "In the same order received from the SID",
-                    icon = Icons.Filled.SystemUpdate
+                    icon = Icons.Filled.SystemUpdate,
                 )
             }
             ListItem(
@@ -61,9 +61,9 @@ fun SortingOptionsDialog(
                     Icon(
                         optionItem.icon,
                         contentDescription = null,
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier.size(40.dp),
                     )
-                }
+                },
             )
         }
     }
@@ -73,12 +73,12 @@ fun SortingOptionsDialog(
 @Composable
 fun SortingOptionsDialogPreview() {
     Box(
-        modifier = Modifier.background(MaterialTheme.colors.surface)
+        modifier = Modifier.background(MaterialTheme.colors.surface),
     ) {
         SortingOptionsDialog(
             current = EventSortingOption.entries.first(),
             options = EventSortingOption.entries,
-            onOptionSelected = {}
+            onOptionSelected = {},
         )
     }
 }

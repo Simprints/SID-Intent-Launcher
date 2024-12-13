@@ -22,9 +22,7 @@ data class IntentViewState(
     val result: String = "",
     val responseJson: String = "",
     val responseIntentId: String? = null,
-
     val lastIntentCall: IntentCall? = null,
-
     @IgnoredOnParcel
     val showWrongMetadataAlert: MutableState<Boolean> = mutableStateOf(false),
     @IgnoredOnParcel

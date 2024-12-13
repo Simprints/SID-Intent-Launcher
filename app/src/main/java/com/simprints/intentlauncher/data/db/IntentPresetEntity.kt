@@ -9,7 +9,6 @@ import java.util.UUID
 data class IntentPresetEntity(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val timestamp: String,
-
     val name: String,
     val projectId: String,
     val moduleId: String,

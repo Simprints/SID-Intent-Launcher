@@ -36,7 +36,7 @@ fun ShowBasicAlertDialog(
                 TextButton(onClick = { openDialog.value = false }) {
                     Text("Dismiss")
                 }
-            }
+            },
         )
     }
 }

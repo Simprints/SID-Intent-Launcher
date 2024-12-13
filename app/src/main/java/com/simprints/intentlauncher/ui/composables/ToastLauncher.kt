@@ -7,9 +7,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.platform.LocalContext
 
 @Composable
-fun ToastLauncher(
-    toastText: MutableState<String>,
-) {
+fun ToastLauncher(toastText: MutableState<String>) {
     val context = LocalContext.current
 
     // This will be triggered when showToast.value becomes true

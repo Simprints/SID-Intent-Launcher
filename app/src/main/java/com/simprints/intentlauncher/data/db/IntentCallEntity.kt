@@ -10,13 +10,10 @@ import java.util.UUID
 data class IntentCallEntity(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val timestamp: String,
-
     val intentAction: String,
     val intentExtras: String,
-
     @Embedded(prefix = "field_")
     val fields: IntentFieldsEntity,
-
     @Embedded(prefix = "result_")
     val result: IntentResultEntity?,
 )

@@ -39,7 +39,7 @@ fun ShowInputFieldAlertDialog(
                     TextField(
                         value = textFieldValue.value,
                         onValueChange = { newValue -> textFieldValue.value = newValue },
-                        label = label
+                        label = label,
                     )
                 }
             },
@@ -57,7 +57,7 @@ fun ShowInputFieldAlertDialog(
                 TextButton(onClick = { openDialog.value = false }) {
                     Text("Dismiss")
                 }
-            }
+            },
         )
     }
 }

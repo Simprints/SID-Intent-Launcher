@@ -18,13 +18,13 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
     @Assisted private val intentId: String,
     @Assisted val initialSoftInputMode: Int,
     private val intentCallRepository: IntentCallRepository,
-    private val gson: Gson
+    private val gson: Gson,
 ) : ViewModel() {
     @AssistedFactory
     interface Factory {
         fun create(
             intentId: String,
-            initialSoftInputMode: Int
+            initialSoftInputMode: Int,
         ): ResponseEventsScreenViewModel
     }
 
@@ -33,23 +33,28 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
             events = emptyList(),
             totalEvents = 0,
             query = "",
-            sorting = EventSortingOption.DateAsc
+            sorting = EventSortingOption.DateAsc,
         )
     private val allEventsFlow: MutableStateFlow<List<ResponseEvent>?> = MutableStateFlow(null)
     private val searchQueryFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     private val sortFlow: MutableStateFlow<EventSortingOption> =
         MutableStateFlow(initialViewState.sorting)
     val state = combine(allEventsFlow, sortFlow, searchQueryFlow) { allEvents, sorting, query ->
-        val events = allEvents ?: intentCallRepository.getIntentCall(intentId)
-            ?.result?.json.extractEventsFromJson(gson).also { allEventsFlow.value = it }
+        val events = allEvents ?: intentCallRepository
+            .getIntentCall(intentId)
+            ?.result
+            ?.json
+            .extractEventsFromJson(gson)
+            .also { allEventsFlow.value = it }
         val filteredEvents = events.filter { event ->
             if (query.isNullOrEmpty()) {
                 true
             } else {
-                event.id.contains(query, ignoreCase = true) || event.type.contains(
-                    query,
-                    ignoreCase = true
-                )
+                event.id.contains(query, ignoreCase = true) ||
+                    event.type.contains(
+                        query,
+                        ignoreCase = true,
+                    )
             }
         }
         val sortedEvents = when (sorting) {
@@ -60,7 +65,7 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
             events = sortedEvents,
             totalEvents = events.size,
             query = query.orEmpty(),
-            sorting = sorting
+            sorting = sorting,
         )
     }
 
@@ -72,19 +77,15 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
         searchQueryFlow.value = query
     }
 
-    fun serializeEventToJson(event: ResponseEvent): String? {
-        return try {
-            gson.toJson(event)
-        } catch (e: Exception) {
-            null
-        }
+    fun serializeEventToJson(event: ResponseEvent): String? = try {
+        gson.toJson(event)
+    } catch (e: Exception) {
+        null
     }
 
-    fun serializePayloadToJson(event: ResponseEvent): String? {
-        return try {
-            gson.toJson(event.payload)
-        } catch (e: Exception) {
-            null
-        }
+    fun serializePayloadToJson(event: ResponseEvent): String? = try {
+        gson.toJson(event.payload)
+    } catch (e: Exception) {
+        null
     }
 }

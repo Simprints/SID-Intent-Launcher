@@ -56,8 +56,10 @@ fun CustomIntentFields(
                     .onKeyEvent {
                         if (it.key.keyCode == Key.Tab.keyCode) {
                             focusManager.moveFocus(FocusDirection.Next)
-                            true //true -> consumed
-                        } else false
+                            true // true -> consumed
+                        } else {
+                            false
+                        }
                     },
             )
             Text(
@@ -82,6 +84,6 @@ private fun CustomIntentFieldsPreview() {
         state = CustomIntentViewState(
             action = "com.intent.action",
             extras = "key=value\nkey2=value2",
-        )
+        ),
     )
 }

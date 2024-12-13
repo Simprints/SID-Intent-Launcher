@@ -11,7 +11,6 @@ data class IntentResult(
     val json: String? = null,
     val sessionId: String? = null,
 ) : Parcelable {
-
     fun mappedResultCode(): String = when (code) {
         null -> "No result code"
         INVALID_CUSTOM_INTENT -> "INVALID CUSTOM INTENT"
@@ -35,8 +34,6 @@ data class IntentResult(
     fun simpleText(): String = "${mappedResultCode()}\n$json"
 
     companion object {
-
         const val INVALID_CUSTOM_INTENT = 9999
     }
-
 }

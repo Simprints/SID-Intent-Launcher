@@ -59,16 +59,16 @@ fun RootScreen() {
                                 // Restore state when reselecting a previously selected item
                                 restoreState = true
                             }
-                        }
+                        },
                     )
                 }
             }
-        }
+        },
     ) { innerPadding ->
         NavHost(
             navController,
             startDestination = Screen.Intent.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
         ) { rootNavGraph(navController) }
     }
 }

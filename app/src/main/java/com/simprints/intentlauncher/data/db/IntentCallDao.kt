@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IntentCallDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun save(intent: IntentCallEntity)
 

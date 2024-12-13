@@ -16,11 +16,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
     @Singleton
     @Provides
-    fun provideDb(@ApplicationContext context: Context): IntentDatabase =
-        IntentDatabase.getInstance(context)
+    fun provideDb(
+        @ApplicationContext context: Context,
+    ): IntentDatabase = IntentDatabase.buildDatabase(context)
 
     @Provides
     fun provideIntentCallEntityDao(db: IntentDatabase) = db.intentCallDao()
@@ -35,6 +35,5 @@ object AppModule {
         .setPrettyPrinting()
         .registerTypeAdapterFactory(
             BundleTypeAdapterFactory(),
-        )
-        .create()
+        ).create()
 }

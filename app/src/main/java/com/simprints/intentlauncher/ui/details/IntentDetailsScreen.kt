@@ -42,7 +42,7 @@ fun IntentDetailsScreen(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         TopAppBar(
             title = { Text("Intent details") },
@@ -52,10 +52,11 @@ fun IntentDetailsScreen(
                     onClick = {
                         vm.deleteIntent(intentId)
                         navController.navigateUp()
-                    }) {
+                    },
+                ) {
                     Icon(Icons.Filled.Delete, contentDescription = "Delete")
                 }
-            }
+            },
         )
         IntentDetails(
             data = intentData,
@@ -63,7 +64,7 @@ fun IntentDetailsScreen(
                 vm.copyFieldsToStore(intentData.fields)
                 navController.navigate(Screen.Intent.route)
             },
-            onSavePreset = { showSaveDialog.value = true }
+            onSavePreset = { showSaveDialog.value = true },
         )
         ShowInputFieldAlertDialog(
             openDialog = showSaveDialog,
@@ -73,7 +74,7 @@ fun IntentDetailsScreen(
             onConfirm = {
                 vm.savePreset(it.ifEmpty { intentData.fields.projectId }, intentData.fields)
                 toastText.value = "Preset saved"
-            }
+            },
         )
     }
 }

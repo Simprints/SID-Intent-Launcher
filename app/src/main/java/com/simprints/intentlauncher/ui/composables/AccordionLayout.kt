@@ -41,7 +41,7 @@ fun AccordionLayout(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, Color.Black.copy(alpha = 0.2f), shape = AppShapes.large)
+            .border(1.dp, Color.Black.copy(alpha = 0.2f), shape = AppShapes.large),
     ) {
         Row(
             modifier = Modifier
@@ -53,16 +53,15 @@ fun AccordionLayout(
         ) {
             Text(
                 text = title.uppercase(Locale.getDefault()),
-                style = AppTypography.caption
+                style = AppTypography.caption,
             )
             Icon(
                 imageVector = if (isExpanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                 contentDescription = "Expand/Collapse",
                 modifier = Modifier
-                    .size(24.dp)
+                    .size(24.dp),
             )
         }
-
 
         AnimatedVisibility(visible = isExpanded) {
             content()
@@ -82,7 +81,7 @@ private fun AccordionLayoutPreviewOpen() {
             modifier = Modifier
                 .background(Color.Green)
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(8.dp),
         )
     }
 }
@@ -99,7 +98,7 @@ private fun AccordionLayoutPreviewClosed() {
             modifier = Modifier
                 .background(Color.Green)
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(8.dp),
         )
     }
 }

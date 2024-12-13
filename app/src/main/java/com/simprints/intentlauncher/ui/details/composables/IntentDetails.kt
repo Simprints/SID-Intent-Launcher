@@ -30,7 +30,7 @@ fun IntentDetails(
     Column(
         modifier = Modifier
             .padding(8.dp)
-            .verticalScroll(scrollState)
+            .verticalScroll(scrollState),
     ) {
         Text(
             text = data.action,
@@ -49,7 +49,7 @@ fun IntentDetails(
         SelectableCodeBlock(data.extra.entries.joinToString("\n") { "${it.key}: ${it.value}" })
         if (data.fields.projectId.isNotBlank()) {
             Row(
-                modifier = Modifier.align(alignment = Alignment.End)
+                modifier = Modifier.align(alignment = Alignment.End),
             ) {
                 Button(onClick = onCopyFields) {
                     Text(text = "Reuse intent fields")
@@ -85,7 +85,7 @@ private fun IntentDetailsPreview() {
                 code = -1,
                 json = """{"result": "success"}""",
             ),
-        )
+        ),
     )
 }
 
@@ -105,6 +105,6 @@ private fun IntentDetailsPreviewForCustomIntent() {
                 code = -1,
                 json = """{"result": "success"}""",
             ),
-        )
+        ),
     )
 }

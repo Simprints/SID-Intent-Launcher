@@ -28,12 +28,12 @@ fun HistoryItem(
         elevation = 2.dp,
         modifier = modifier
             .padding(4.dp)
-            .clickable { onClick(data.id) }
+            .clickable { onClick(data.id) },
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .padding(horizontal = 8.dp, vertical = 4.dp),
         ) {
             Text(
                 text = data.action,

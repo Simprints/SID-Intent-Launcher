@@ -8,7 +8,6 @@ import javax.inject.Inject
 class IntentResultParser @Inject constructor(
     private val gson: Gson,
 ) {
-
     operator fun invoke(
         resultCode: Int,
         resultExtras: Bundle?,
@@ -22,9 +21,7 @@ class IntentResultParser @Inject constructor(
         )
     }
 
-    operator fun invoke(
-        response: SimprintsResponse,
-    ): IntentResult {
+    operator fun invoke(response: SimprintsResponse): IntentResult {
         val resultJson = gson.toJson(response)
 
         return IntentResult(

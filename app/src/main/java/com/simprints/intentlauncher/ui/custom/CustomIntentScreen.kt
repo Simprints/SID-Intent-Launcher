@@ -29,9 +29,7 @@ import com.simprints.intentlauncher.ui.custom.composables.CustomIntentFields
 import de.palm.composestateevents.EventEffect
 
 @Composable
-fun CustomIntentScreen(
-    navController: NavHostController,
-) {
+fun CustomIntentScreen(navController: NavHostController) {
     val vm = hiltViewModel<CustomIntentViewModel>()
     val viewState by vm.viewState.collectAsStateLifecycleAware()
 
@@ -57,22 +55,23 @@ fun CustomIntentScreen(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         TopAppBar(
             title = { Text("Custom intent") },
             actions = {
                 IconButton(
-                    onClick = { vm.clearFields() }) {
+                    onClick = { vm.clearFields() },
+                ) {
                     Icon(Icons.Filled.Delete, contentDescription = "Clear")
                 }
-            }
+            },
         )
         Column(
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
-                .verticalScroll(scrollState)
+                .verticalScroll(scrollState),
         ) {
             CustomIntentFields(
                 viewState,

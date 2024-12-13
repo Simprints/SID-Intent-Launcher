@@ -22,9 +22,7 @@ import com.simprints.intentlauncher.ui.composables.ToastLauncher
 import com.simprints.intentlauncher.ui.presets.composables.PresetItem
 
 @Composable
-fun PresetsScreen(
-    navController: NavHostController,
-) {
+fun PresetsScreen(navController: NavHostController) {
     val vm = hiltViewModel<PresetsViewModel>()
     val presetList by vm.data.collectAsStateLifecycleAware()
 
@@ -34,7 +32,7 @@ fun PresetsScreen(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         TopAppBar(title = { Text("Presets") })
         if (presetList.isEmpty()) {
@@ -60,7 +58,7 @@ fun PresetsScreen(
                         onConfirm = {
                             vm.deletePreset(item)
                             toastText.value = "Preset deleted"
-                        }
+                        },
                     )
                 }
             }

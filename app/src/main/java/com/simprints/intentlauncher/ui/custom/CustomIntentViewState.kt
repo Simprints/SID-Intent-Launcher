@@ -13,9 +13,7 @@ data class CustomIntentViewState(
     val action: String = "",
     val extras: String = "",
     val result: String = "",
-
     val lastIntentCall: IntentCall? = null,
-
     @IgnoredOnParcel
     val showIntent: StateEventWithContent<Intent> = consumed(),
-): Parcelable
+) : Parcelable

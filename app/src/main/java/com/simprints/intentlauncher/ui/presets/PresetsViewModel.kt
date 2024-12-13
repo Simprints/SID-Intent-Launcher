@@ -16,7 +16,6 @@ class PresetsViewModel @Inject constructor(
     private val presetRepo: IntentPresetRepository,
     private val projectDataCache: ProjectDataCache,
 ) : ViewModel() {
-
     private val _data = MutableStateFlow<List<Preset>>(emptyList())
     val data: StateFlow<List<Preset>> = _data
 
@@ -34,7 +33,7 @@ class PresetsViewModel @Inject constructor(
             userId = item.fields.userId,
             moduleId = item.fields.moduleId,
             metadata = item.fields.metadata,
-            guid = ""
+            guid = "",
         )
     }
 

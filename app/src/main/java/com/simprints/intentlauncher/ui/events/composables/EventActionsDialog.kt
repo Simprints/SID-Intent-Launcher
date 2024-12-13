@@ -45,9 +45,9 @@ fun EventActionsDialog(
                 Icon(
                     Icons.Rounded.ContentCopy,
                     contentDescription = "Copy ID",
-                    modifier = iconModifier
+                    modifier = iconModifier,
                 )
-            }
+            },
         )
         ListItem(
             modifier = Modifier.clickable { onCopyEventJson(event) },
@@ -56,9 +56,9 @@ fun EventActionsDialog(
                 Icon(
                     Icons.Rounded.DataObject,
                     contentDescription = "Copy full Event JSON",
-                    modifier = iconModifier
+                    modifier = iconModifier,
                 )
-            }
+            },
         )
         ListItem(
             modifier = Modifier.clickable { onCopyPayloadJson(event) },
@@ -67,19 +67,18 @@ fun EventActionsDialog(
                 Icon(
                     Icons.Rounded.PostAdd,
                     contentDescription = "Copy payload JSON",
-                    modifier = iconModifier
+                    modifier = iconModifier,
                 )
-            }
+            },
         )
     }
 }
-
 
 @Preview
 @Composable
 fun EventActionsDialogPreview() {
     Box(
-        modifier = Modifier.background(MaterialTheme.colors.surface)
+        modifier = Modifier.background(MaterialTheme.colors.surface),
     ) {
         EventActionsDialog(
             event = eventMock,

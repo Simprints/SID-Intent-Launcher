@@ -20,7 +20,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.ripple
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -42,21 +41,21 @@ fun ResponseEventItem(
     event: ResponseEvent,
     position: Int,
     modifier: Modifier = Modifier,
-    onOptionsClick: (ResponseEvent) -> Unit
+    onOptionsClick: (ResponseEvent) -> Unit,
 ) {
     val captionStyle = AppTypography.caption.copy(color = Color.Black.copy(alpha = 0.7f))
     Card(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 8.dp)
+                .padding(all = 8.dp),
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     "$position. ${event.type}",
@@ -68,47 +67,47 @@ fun ResponseEventItem(
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = ripple(bounded = false),
-                            onClick = { onOptionsClick(event) }
+                            onClick = { onOptionsClick(event) },
                         ),
                     shape = CircleShape,
                     color = Color.Transparent,
-                    contentColor = MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high)
+                    contentColor = MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high),
                 ) {
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             Icons.Filled.MoreVert,
                             contentDescription = "Event actions",
-                            tint = AppColorScheme.onBackground
+                            tint = AppColorScheme.onBackground,
                         )
                     }
                 }
             }
             Divider(
-                modifier = Modifier.padding(bottom = 4.dp)
+                modifier = Modifier.padding(bottom = 4.dp),
             )
             Text(
                 "id: ${event.id}",
-                style = captionStyle
+                style = captionStyle,
             )
             Text(
                 "Created at: ${Date(event.createdAtMs)}",
-                style = captionStyle
+                style = captionStyle,
             )
             Text(
                 "Project id: ${event.projectId}",
-                style = captionStyle
+                style = captionStyle,
             )
             Text(
                 "Scope id: ${event.scopeId}",
-                style = captionStyle
+                style = captionStyle,
             )
             AccordionLayout(
                 title = "payload",
                 defaultExpanded = false,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier.padding(top = 4.dp),
             ) {
                 Column(
-                    modifier = Modifier.padding(8.dp, end = 8.dp, bottom = 8.dp)
+                    modifier = Modifier.padding(8.dp, end = 8.dp, bottom = 8.dp),
                 ) {
                     PayloadEntry(event.payload, style = captionStyle)
                 }
@@ -117,12 +116,11 @@ fun ResponseEventItem(
     }
 }
 
-
 @Composable
 private fun PayloadEntry(
     payloadMap: Map<String, Any>,
     paddingStart: Dp = 0.dp,
-    style: TextStyle
+    style: TextStyle,
 ) {
     val paddingStep = 4.dp
     for ((key, value) in payloadMap) {
@@ -131,18 +129,18 @@ private fun PayloadEntry(
             PayloadEntry(
                 payloadMap = value as Map<String, Any>,
                 paddingStart = paddingStart + paddingStep,
-                style = style
+                style = style,
             )
             Text(
                 "}",
                 style = style,
-                modifier = Modifier.padding(start = paddingStart)
+                modifier = Modifier.padding(start = paddingStart),
             )
         } else {
             Text(
                 "$key: $value",
                 style = style,
-                modifier = Modifier.padding(start = paddingStart)
+                modifier = Modifier.padding(start = paddingStart),
             )
         }
     }
@@ -154,6 +152,6 @@ fun ResponseEventItemPreview() {
     ResponseEventItem(
         event = eventMock,
         position = 1,
-        onOptionsClick = {}
+        onOptionsClick = {},
     )
 }

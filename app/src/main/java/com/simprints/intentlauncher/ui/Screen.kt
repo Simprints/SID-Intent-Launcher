@@ -26,23 +26,22 @@ sealed class Screen(
     val arguments: List<NamedNavArgument> = emptyList(),
     val icon: ImageVector? = null,
 ) {
-
     data object Intent : Screen(
         route = "intent",
         titleId = R.string.screen_intent,
-        icon = Icons.Filled.Send
+        icon = Icons.Filled.Send,
     )
 
     data object History : Screen(
         route = "history",
         titleId = R.string.screen_history,
-        icon = Icons.Filled.List
+        icon = Icons.Filled.List,
     )
 
     data object Presets : Screen(
         route = "presets",
         titleId = R.string.screen_presets,
-        icon = Icons.Filled.Favorite
+        icon = Icons.Filled.Favorite,
     )
 
     data object IntentDetails : Screen(
@@ -58,7 +57,7 @@ sealed class Screen(
     data object CustomIntent : Screen(
         route = "custom",
         titleId = R.string.screen_custom_intent,
-        icon = Icons.Filled.Send
+        icon = Icons.Filled.Send,
     )
 
     data object ResponseEventDetails : Screen(
@@ -68,8 +67,7 @@ sealed class Screen(
             navArgument("intentId") { type = NavType.StringType },
         ),
     ) {
-        fun createRoute(intentId: String) =
-            if (intentId.isEmpty()) "responseEvents/null" else "responseEvents/$intentId"
+        fun createRoute(intentId: String) = if (intentId.isEmpty()) "responseEvents/null" else "responseEvents/$intentId"
     }
 }
 
@@ -83,17 +81,17 @@ fun NavGraphBuilder.rootNavGraph(navController: NavHostController) {
     ) { backStackEntry ->
         IntentDetailsScreen(
             navController,
-            backStackEntry.arguments?.getString("intentId").orEmpty()
+            backStackEntry.arguments?.getString("intentId").orEmpty(),
         )
     }
     composable(Screen.CustomIntent.route) { CustomIntentScreen(navController) }
     composable(
         Screen.ResponseEventDetails.route,
-        arguments = Screen.ResponseEventDetails.arguments
+        arguments = Screen.ResponseEventDetails.arguments,
     ) { backStackEntry ->
         ResponseEventsScreen(
             navController,
-            intentId = backStackEntry.arguments?.getString("intentId").orEmpty()
+            intentId = backStackEntry.arguments?.getString("intentId").orEmpty(),
         )
     }
 }

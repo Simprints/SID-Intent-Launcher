@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.intent.IntentViewState
 
-
 @Composable
 fun CoreFieldsForm(
     state: IntentViewState,

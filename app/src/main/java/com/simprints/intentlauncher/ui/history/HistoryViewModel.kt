@@ -14,7 +14,6 @@ import javax.inject.Inject
 class HistoryViewModel @Inject constructor(
     private val intentRepository: IntentCallRepository,
 ) : ViewModel() {
-
     private val _data = MutableStateFlow<List<IntentCall>>(emptyList())
     val data: StateFlow<List<IntentCall>> = _data
 

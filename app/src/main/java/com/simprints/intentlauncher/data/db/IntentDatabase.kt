@@ -19,26 +19,17 @@ import androidx.room.RoomDatabase
     version = 7,
 )
 abstract class IntentDatabase : RoomDatabase() {
-
     abstract fun intentCallDao(): IntentCallDao
 
     abstract fun intentPresetDao(): IntentPresetDao
 
     companion object {
-
-        @Volatile
-        private var INSTANCE: IntentDatabase? = null
-
-        fun getInstance(context: Context): IntentDatabase =
-            INSTANCE ?: synchronized(this) { buildDatabase(context).also { INSTANCE = it } }
-
-        private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(
+        fun buildDatabase(context: Context) = Room
+            .databaseBuilder(
                 context,
                 IntentDatabase::class.java,
-                "localDb-intents-db"
-            )
-                .fallbackToDestructiveMigration()
-                .build()
+                "localDb-intents-db",
+            ).fallbackToDestructiveMigration()
+            .build()
     }
 }

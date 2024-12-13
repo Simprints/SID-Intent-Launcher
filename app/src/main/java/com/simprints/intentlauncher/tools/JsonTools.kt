@@ -28,7 +28,6 @@ fun String?.extractEventsFromJson(gson: Gson): List<ResponseEvent> {
                 createdAtMs = createdAtMs,
                 payload = jsonEventEntry["payload"] as Map<String, Any>,
             )
-
         }
     } catch (e: Exception) {
         e.printStackTrace()

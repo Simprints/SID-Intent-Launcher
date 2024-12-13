@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
-
 @HiltViewModel
 class IntentViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
@@ -31,23 +30,27 @@ class IntentViewModel @Inject constructor(
     private val intentResultParser: IntentResultParser,
     private val gson: Gson,
 ) : ViewModel() {
-
     val viewState = savedStateHandle.getStateFlow(KEY_VIEW_STATE, IntentViewState())
+
     private fun updateViewState(update: (IntentViewState) -> IntentViewState) {
         savedStateHandle[KEY_VIEW_STATE] = update(viewState.value)
     }
 
     fun updateProjectId(projectId: String) = updateViewState { it.copy(projectId = projectId) }
+
     fun updateUserId(userId: String) = updateViewState { it.copy(userId = userId) }
+
     fun updateModuleId(moduleId: String) = updateViewState { it.copy(moduleId = moduleId) }
+
     fun updateMetadata(metadata: String) = updateViewState { it.copy(metadata = metadata) }
+
     fun updateGuid(guid: String) = updateViewState { it.copy(guid = guid) }
+
     fun updateSessionId(sessionId: String) = updateViewState { it.copy(sessionId = sessionId) }
+
     fun intentShown() = updateViewState { it.copy(showIntent = consumed()) }
 
-    private fun executeSimHelperAction(
-        createRequest: (IntentViewState) -> SimprintsRequest,
-    ) = updateViewState { state ->
+    private fun executeSimHelperAction(createRequest: (IntentViewState) -> SimprintsRequest) = updateViewState { state ->
         val request = try {
             createRequest(state)
         } catch (_: InvalidMetadataException) {
@@ -62,7 +65,7 @@ class IntentViewModel @Inject constructor(
             viewState.projectId,
             viewState.userId,
             viewState.moduleId,
-            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) }
+            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
         )
     }
 
@@ -71,7 +74,7 @@ class IntentViewModel @Inject constructor(
             viewState.projectId,
             viewState.userId,
             viewState.moduleId,
-            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) }
+            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
         )
     }
 
@@ -80,7 +83,7 @@ class IntentViewModel @Inject constructor(
             viewState.projectId,
             viewState.userId,
             viewState.moduleId,
-            viewState.guid
+            viewState.guid,
         )
     }
 
@@ -89,7 +92,7 @@ class IntentViewModel @Inject constructor(
             viewState.projectId,
             viewState.userId,
             viewState.sessionId,
-            viewState.guid
+            viewState.guid,
         )
     }
 
@@ -98,7 +101,7 @@ class IntentViewModel @Inject constructor(
             viewState.projectId,
             viewState.userId,
             viewState.moduleId,
-            viewState.sessionId
+            viewState.sessionId,
         )
     }
 
@@ -108,24 +111,26 @@ class IntentViewModel @Inject constructor(
             userId = state.userId,
             moduleId = state.moduleId,
             metadata = state.metadata,
-            guid = state.guid
+            guid = state.guid,
         )
     }
 
-    private fun copyWithCachedIntent(state: IntentViewState, request: SimprintsRequest) =
-        state.copy(
-            lastIntentCall = IntentCall(
-                timestamp = Date(),
-                intent = request.toIntent(),
-                fields = IntentFields(
-                    projectId = state.projectId,
-                    userId = state.userId,
-                    moduleId = state.moduleId,
-                    metadata = state.metadata,
-                )
+    private fun copyWithCachedIntent(
+        state: IntentViewState,
+        request: SimprintsRequest,
+    ) = state.copy(
+        lastIntentCall = IntentCall(
+            timestamp = Date(),
+            intent = request.toIntent(),
+            fields = IntentFields(
+                projectId = state.projectId,
+                userId = state.userId,
+                moduleId = state.moduleId,
+                metadata = state.metadata,
             ),
-            showIntent = triggered(request),
-        )
+        ),
+        showIntent = triggered(request),
+    )
 
     fun intentResultReceived(result: SimprintsResponse) = viewModelScope.launch {
         val intentResult = intentResultParser(result)
@@ -170,7 +175,6 @@ class IntentViewModel @Inject constructor(
     }
 
     companion object {
-
         private const val KEY_VIEW_STATE = "view_state"
     }
 }

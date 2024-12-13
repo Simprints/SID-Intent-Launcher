@@ -24,9 +24,7 @@ import com.simprints.intentlauncher.ui.theme.AppShapes
 import com.simprints.intentlauncher.ui.theme.AppTypography
 
 @Composable
-fun SelectableCodeBlock(
-    text: String,
-) {
+fun SelectableCodeBlock(text: String) {
     val clipboardManager = LocalClipboardManager.current
     val annotatedText = textWithAnnotatedGuids(text)
 
@@ -51,7 +49,7 @@ fun SelectableCodeBlock(
                         clipboardManager.setText(AnnotatedString(annotation.item))
                         toastText.value = "${annotation.item} copied to clipboard"
                     }
-            }
+            },
         )
     }
 }
@@ -82,25 +80,27 @@ private fun textWithAnnotatedGuids(text: String) = buildAnnotatedString {
 @Composable
 private fun SelectableCodeBlockPreview() {
     Column(
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(8.dp),
     ) {
         SelectableCodeBlock(text = "Text")
         Spacer(modifier = Modifier.padding(8.dp))
         SelectableCodeBlock(
-            text = """
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Donec euismod, nisl eget aliquam ultricies, 
-            nisl nisl aliquet nisl, nec aliquam nisl nisl nec.
-            """.trimIndent()
+            text =
+                """
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                Donec euismod, nisl eget aliquam ultricies, 
+                nisl nisl aliquet nisl, nec aliquam nisl nisl nec.
+                """.trimIndent(),
         )
         Spacer(modifier = Modifier.padding(8.dp))
         SelectableCodeBlock(
-            text = """
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            b72f5b4a-7fe2-40f4-8b23-87c92fb01e93 sadfas 
-            52de9f4b-a38b-468b-87dd-bfa7254c0f4f,17733282-9fd3-4e9c-b222-c948fbefcf83 asdwer
-            nisl nisl aliquet nisl, nec aliquam nisl nisl nec.
-            """.trimIndent()
+            text =
+                """
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                b72f5b4a-7fe2-40f4-8b23-87c92fb01e93 sadfas 
+                52de9f4b-a38b-468b-87dd-bfa7254c0f4f,17733282-9fd3-4e9c-b222-c948fbefcf83 asdwer
+                nisl nisl aliquet nisl, nec aliquam nisl nisl nec.
+                """.trimIndent(),
         )
     }
 }

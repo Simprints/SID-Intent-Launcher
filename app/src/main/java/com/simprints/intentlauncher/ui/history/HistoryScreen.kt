@@ -18,16 +18,14 @@ import com.simprints.intentlauncher.ui.composables.NothingToDisplay
 import com.simprints.intentlauncher.ui.history.composables.HistoryItem
 
 @Composable
-fun HistoryScreen(
-    navController: NavHostController,
-) {
+fun HistoryScreen(navController: NavHostController) {
     val vm = hiltViewModel<HistoryViewModel>()
     val callList by vm.data.collectAsStateLifecycleAware()
 
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         TopAppBar(title = { Text("Intent History") })
         if (callList.isEmpty()) {

@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ResponseEventsScreen(
     navController: NavHostController,
-    intentId: String
+    intentId: String,
 ) {
     val window = (LocalContext.current as? Activity)?.window
     val clipboardManager = LocalClipboardManager.current
@@ -68,7 +68,7 @@ fun ResponseEventsScreen(
             factory.create(
                 intentId = intentId,
                 initialSoftInputMode = window?.attributes?.softInputMode?.takeUnless { it == 0 }
-                    ?: WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+                    ?: WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
             )
         }
     val viewState by vm.state.collectAsStateLifecycleAware(initial = vm.initialViewState)
@@ -106,7 +106,7 @@ fun ResponseEventsScreen(
                     modalSheetState = modalSheetState,
                     scope = scope,
                     viewModel = vm,
-                    sortingOptions = dialogType.sortingOptions
+                    sortingOptions = dialogType.sortingOptions,
                 )
 
                 is EventDialogType.EventOptions -> EventActionsDialogWrapper(
@@ -115,15 +115,15 @@ fun ResponseEventsScreen(
                     scope = scope,
                     viewModel = vm,
                     clipboardManager = clipboardManager,
-                    toastTextState = toastTextState
+                    toastTextState = toastTextState,
                 )
             }
         },
-        sheetBackgroundColor = MaterialTheme.colors.surface
+        sheetBackgroundColor = MaterialTheme.colors.surface,
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             val eventCountText = when {
                 viewState.events.size == viewState.totalEvents -> "${viewState.events.size}"
@@ -138,20 +138,21 @@ fun ResponseEventsScreen(
                             eventDialogType =
                                 EventDialogType.SortingOptions(sortingOptions = EventSortingOption.entries)
                             scope.launch { modalSheetState.show() }
-                        }) {
+                        },
+                    ) {
                         Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = "Sort options")
                     }
-                }
+                },
             )
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxSize(),
                 ) {
                     items(viewState.events.size) { i ->
                         val event = viewState.events[i]
@@ -163,7 +164,7 @@ fun ResponseEventsScreen(
                         ResponseEventItem(
                             modifier = modifier.padding(horizontal = 8.dp),
                             event = event,
-                            position = i
+                            position = i,
                         ) {
                             eventDialogType = EventDialogType.EventOptions(event = it)
                             scope.launch { modalSheetState.show() }
@@ -175,7 +176,7 @@ fun ResponseEventsScreen(
                 modifier = Modifier
                     .background(Color.White)
                     .padding(bottom = 8.dp, start = 8.dp, end = 8.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 PropertyField(
                     "Search",
@@ -205,7 +206,8 @@ fun EventActionsDialogWrapper(
     BackHandler(enabled = modalSheetState.isVisible) {
         scope.launch { modalSheetState.hide() }
     }
-    EventActionsDialog(event = event,
+    EventActionsDialog(
+        event = event,
         onCopyId = { id ->
             clipboardManager.setText(AnnotatedString(id))
             toastTextState.value = "$id copied to clipboard"
@@ -230,7 +232,7 @@ fun EventActionsDialogWrapper(
                 toastTextState.value = "Paylaod JSON copied to clipboard"
             }
             scope.launch { modalSheetState.hide() }
-        }
+        },
     )
 }
 
@@ -241,7 +243,7 @@ fun SortingOptionsDialogWrapper(
     modalSheetState: ModalBottomSheetState,
     scope: CoroutineScope,
     viewModel: ResponseEventsScreenViewModel,
-    sortingOptions: List<EventSortingOption>
+    sortingOptions: List<EventSortingOption>,
 ) {
     BackHandler(enabled = modalSheetState.isVisible) {
         scope.launch { modalSheetState.hide() }
@@ -252,6 +254,6 @@ fun SortingOptionsDialogWrapper(
         onOptionSelected = { sortingOption ->
             viewModel.setSorting(sortingOption)
             scope.launch { modalSheetState.hide() }
-        }
+        },
     )
 }

@@ -7,5 +7,5 @@ data class ResponseEventsViewState(
     val events: List<ResponseEvent>,
     val totalEvents: Int,
     val query: String,
-    val sorting: EventSortingOption
+    val sorting: EventSortingOption,
 )

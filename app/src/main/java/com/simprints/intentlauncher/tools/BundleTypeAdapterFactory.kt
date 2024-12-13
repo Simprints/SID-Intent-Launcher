@@ -14,8 +14,10 @@ import kotlin.math.ceil
 
 @Suppress("UNCHECKED_CAST")
 class BundleTypeAdapterFactory : TypeAdapterFactory {
-
-    override fun <T : Any?> create(gson: Gson, type: TypeToken<T>): TypeAdapter<T>? {
+    override fun <T : Any?> create(
+        gson: Gson,
+        type: TypeToken<T>,
+    ): TypeAdapter<T>? {
         if (!Bundle::class.java.isAssignableFrom(type.rawType)) {
             return null
         }
@@ -23,9 +25,13 @@ class BundleTypeAdapterFactory : TypeAdapterFactory {
     }
 }
 
-private class BundleTypeAdapter(private val gson: Gson) : TypeAdapter<Bundle>() {
-
-    override fun write(writer: JsonWriter, bundle: Bundle?) {
+private class BundleTypeAdapter(
+    private val gson: Gson,
+) : TypeAdapter<Bundle>() {
+    override fun write(
+        writer: JsonWriter,
+        bundle: Bundle?,
+    ) {
         if (bundle == null) {
             writer.nullValue()
             return
@@ -74,24 +80,23 @@ private class BundleTypeAdapter(private val gson: Gson) : TypeAdapter<Bundle>() 
         }
     }
 
-    private fun readObject(reader: JsonReader): List<Pair<String, Any?>> =
-        mutableListOf<Pair<String, Any?>>().also { objects ->
-            reader.beginObject()
-            while (reader.peek() != JsonToken.END_OBJECT) {
-                when (reader.peek()) {
-                    JsonToken.NAME -> {
-                        val name = reader.nextName()
-                        val value: Any? = readValue(reader)
+    private fun readObject(reader: JsonReader): List<Pair<String, Any?>> = mutableListOf<Pair<String, Any?>>().also { objects ->
+        reader.beginObject()
+        while (reader.peek() != JsonToken.END_OBJECT) {
+            when (reader.peek()) {
+                JsonToken.NAME -> {
+                    val name = reader.nextName()
+                    val value: Any? = readValue(reader)
 
-                        objects.add(name to value)
-                    }
-
-                    JsonToken.END_OBJECT -> {}
-                    else -> {}
+                    objects.add(name to value)
                 }
+
+                JsonToken.END_OBJECT -> {}
+                else -> {}
             }
-            reader.endObject()
         }
+        reader.endObject()
+    }
 
     private fun readValue(reader: JsonReader): Any? = when (reader.peek()) {
         JsonToken.BEGIN_ARRAY -> readArray(reader)
@@ -115,7 +120,9 @@ private class BundleTypeAdapter(private val gson: Gson) : TypeAdapter<Bundle>() 
         val longValue = doubleValue.toLong()
         return if (longValue >= Int.MIN_VALUE && longValue <= Int.MAX_VALUE) {
             longValue.toInt()
-        } else longValue
+        } else {
+            longValue
+        }
     }
 
     private fun readArray(reader: JsonReader): List<Any?> = mutableListOf<Any?>().also { list ->

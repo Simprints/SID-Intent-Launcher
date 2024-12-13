@@ -10,8 +10,10 @@ import javax.inject.Inject
 class IntentPresetRepository @Inject constructor(
     private val dao: IntentPresetDao,
 ) {
-
-    suspend fun save(name: String, fields: IntentFields) = dao.save(
+    suspend fun save(
+        name: String,
+        fields: IntentFields,
+    ) = dao.save(
         IntentPresetEntity(
             name = name,
             timestamp = Date().toIsoString(),
@@ -19,20 +21,22 @@ class IntentPresetRepository @Inject constructor(
             moduleId = fields.moduleId,
             userId = fields.userId,
             metadata = fields.metadata,
-        )
+        ),
     )
 
     fun getPresets() = dao.getAll().map { entities ->
-        entities.map { Preset(
-            id = it.id,
-            name = it.name,
-            fields = IntentFields(
-                projectId = it.projectId,
-                moduleId = it.moduleId,
-                userId = it.userId,
-                metadata = it.metadata
+        entities.map {
+            Preset(
+                id = it.id,
+                name = it.name,
+                fields = IntentFields(
+                    projectId = it.projectId,
+                    moduleId = it.moduleId,
+                    userId = it.userId,
+                    metadata = it.metadata,
+                ),
             )
-        ) }
+        }
     }
 
     suspend fun deletePreset(id: String) {

@@ -30,12 +30,11 @@ fun PresetItem(
         shape = AppShapes.medium,
         elevation = 2.dp,
         modifier = modifier.padding(4.dp),
-
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 8.dp)
+                .padding(horizontal = 8.dp, vertical = 8.dp),
         ) {
             Text(
                 text = data.name,
@@ -51,12 +50,12 @@ fun PresetItem(
             Spacer(modifier = Modifier.padding(4.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 TextButton(onClick = { onDelete(data) }) {
                     Text(
                         text = "Delete",
-                        color = AppColorScheme.error
+                        color = AppColorScheme.error,
                     )
                 }
                 TextButton(onClick = { onUse(data) }) { Text(text = "Use preset") }

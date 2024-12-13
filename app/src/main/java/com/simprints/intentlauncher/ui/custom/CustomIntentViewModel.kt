@@ -23,8 +23,8 @@ class CustomIntentViewModel @Inject constructor(
     private val intentCallRepository: IntentCallRepository,
     private val intentResultParser: IntentResultParser,
 ) : ViewModel() {
-
     val viewState = savedStateHandle.getStateFlow(KEY_VIEW_STATE, CustomIntentViewState())
+
     private fun updateViewState(update: (CustomIntentViewState) -> CustomIntentViewState) {
         savedStateHandle[KEY_VIEW_STATE] = update(viewState.value)
     }
@@ -42,7 +42,9 @@ class CustomIntentViewModel @Inject constructor(
     }
 
     fun updateAction(newAction: String) = updateViewState { it.copy(action = newAction) }
+
     fun updateExtras(newExtras: String) = updateViewState { it.copy(extras = newExtras) }
+
     fun intentShown() = updateViewState { it.copy(showIntent = consumed()) }
 
     fun clearFields() = viewModelScope.launch {
@@ -92,7 +94,6 @@ class CustomIntentViewModel @Inject constructor(
     }
 
     companion object {
-
         private const val KEY_VIEW_STATE = "view_state"
     }
 }

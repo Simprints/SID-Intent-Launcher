@@ -19,7 +19,6 @@ import com.simprints.intentlauncher.ui.composables.AccordionLayout
 import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.intent.IntentViewState
 
-
 @Composable
 fun BiometricFlowForm(
     state: IntentViewState,
@@ -51,7 +50,7 @@ fun BiometricFlowForm(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Button(
                     onClick = onEnroll,

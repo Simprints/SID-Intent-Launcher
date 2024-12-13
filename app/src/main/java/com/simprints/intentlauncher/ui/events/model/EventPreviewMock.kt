@@ -16,8 +16,8 @@ internal val eventMock = ResponseEvent(
             "nested key 2" to mapOf(
                 "second nested key 1" to "second nested value 1 with very long sentence",
                 "second nested key 2" to "second nested value 2",
-            )
+            ),
         ),
-        "key 4" to "value 4"
-    )
+        "key 4" to "value 4",
+    ),
 )

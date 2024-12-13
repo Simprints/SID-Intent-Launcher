@@ -43,22 +43,22 @@ fun ResponseEventsForm(
                     if (state.events.isNotEmpty() && state.responseIntentId != null) {
                         onClick(state.responseIntentId)
                     }
-                }
+                },
         ) {
             Text(
                 "Events captured: ${state.events.size}",
-                modifier = Modifier.padding(all = 8.dp)
+                modifier = Modifier.padding(all = 8.dp),
             )
             if (state.events.isNotEmpty()) {
                 Box(
                     modifier = Modifier
                         .background(shape = CircleShape, color = AppColorScheme.background)
-                        .padding(all = 8.dp)
+                        .padding(all = 8.dp),
                 ) {
                     Icon(
                         Icons.AutoMirrored.Filled.KeyboardArrowRight,
                         contentDescription = null,
-                        tint = AppColorScheme.onBackground
+                        tint = AppColorScheme.onBackground,
                     )
                 }
             }

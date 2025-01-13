@@ -6,7 +6,7 @@ pluginKsp = "2.0.0-1.0.22"
 simprints = "2025.1.2-SNAPSHOT"
 
 kotlinCoroutines = "1.10.1"
-hilt = "2.54"
+hilt = "2.55"
 hiltCompose = "1.2.0"
 
 composeBom = "2024.12.01"

@@ -10,7 +10,7 @@ hilt = "2.55"
 hiltCompose = "1.2.0"
 
 composeBom = "2024.12.01"
-composeActivity = "1.9.3"
+composeActivity = "1.10.0"
 composeNavigation = "2.8.5"
 composeStateEvents = "2.2.0"
 accompanistThemeadapterMaterial = "0.36.0"

@@ -27,7 +27,8 @@ fun CoreFieldsForm(
             "Project ID",
             state.projectId,
             focusManager,
-            onProjectIdChange,
+            testTag = "projectId",
+            onChange = onProjectIdChange,
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -36,7 +37,8 @@ fun CoreFieldsForm(
                 "User ID",
                 state.userId,
                 focusManager,
-                onUserIdChange,
+                testTag = "userId",
+                onChange = onUserIdChange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
@@ -45,7 +47,8 @@ fun CoreFieldsForm(
                 "Module ID",
                 state.moduleId,
                 focusManager,
-                onModuleIdChange,
+                testTag = "moduleId",
+                onChange = onModuleIdChange,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
@@ -55,7 +58,8 @@ fun CoreFieldsForm(
             "Metadata",
             state.metadata,
             focusManager,
-            onMetadataChange,
+            testTag = "metadata",
+            onChange = onMetadataChange,
             modifier = Modifier.fillMaxWidth(),
         )
     }

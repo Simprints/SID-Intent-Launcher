@@ -182,6 +182,7 @@ fun ResponseEventsScreen(
                     "Search",
                     viewState.query,
                     LocalFocusManager.current,
+                    testTag = "search",
                     onChange = {
                         vm.setSearchQuery(it)
                     },

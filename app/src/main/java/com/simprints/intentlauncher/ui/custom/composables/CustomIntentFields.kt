@@ -40,7 +40,8 @@ fun CustomIntentFields(
                 "Action",
                 state.action,
                 focusManager,
-                onActionChange,
+                testTag = "customAction",
+                onChange = onActionChange,
                 modifier = Modifier.fillMaxWidth(),
             )
             OutlinedTextField(

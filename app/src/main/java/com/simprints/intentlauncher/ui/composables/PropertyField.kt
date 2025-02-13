@@ -21,12 +21,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.simprints.intentlauncher.tools.testAccessibleTag
 
 @Composable
 fun PropertyField(
     label: String,
     value: String,
     focusManager: FocusManager,
+    testTag: String,
     onChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -40,6 +42,7 @@ fun PropertyField(
             onNext = { focusManager.moveFocus(FocusDirection.Next) },
         ),
         modifier = modifier
+            .testAccessibleTag(testTag)
             .padding(vertical = 4.dp)
             .onKeyEvent {
                 if (it.key.keyCode == Key.Tab.keyCode) {
@@ -59,6 +62,7 @@ private fun PropertyFieldPreview() {
         PropertyField(
             label = "Label",
             value = "",
+            testTag = "label",
             focusManager = LocalFocusManager.current,
             onChange = {},
         )
@@ -66,6 +70,7 @@ private fun PropertyFieldPreview() {
         PropertyField(
             label = "Label",
             value = "value",
+            testTag = "label",
             focusManager = LocalFocusManager.current,
             onChange = {},
         )

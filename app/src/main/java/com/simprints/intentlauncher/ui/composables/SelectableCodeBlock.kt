@@ -20,6 +20,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.simprints.intentlauncher.tools.testAccessibleTag
 import com.simprints.intentlauncher.ui.theme.AppShapes
 import com.simprints.intentlauncher.ui.theme.AppTypography
 
@@ -40,7 +41,8 @@ fun SelectableCodeBlock(text: String) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.LightGray.copy(alpha = 0.3f), shape = AppShapes.large)
-                .padding(8.dp),
+                .padding(8.dp)
+                .testAccessibleTag("result"),
             onClick = { offset ->
                 annotatedText
                     .getStringAnnotations(tag = "Clickable", start = offset, end = offset)

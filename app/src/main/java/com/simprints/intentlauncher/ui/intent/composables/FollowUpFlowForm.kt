@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.simprints.intentlauncher.tools.testAccessibleTag
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
 import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.intent.IntentViewState
@@ -42,7 +43,8 @@ fun FollowUpFlowForm(
                 "Session ID",
                 state.sessionId,
                 focusManager,
-                onSessionIdChanged,
+                testTag = "sessionId",
+                onChange = onSessionIdChanged,
                 modifier = Modifier.fillMaxWidth(),
             )
             Row(
@@ -53,12 +55,14 @@ fun FollowUpFlowForm(
                 Button(
                     onClick = onConfirm,
                     modifier = Modifier
-                        .weight(1f),
+                        .weight(1f)
+                        .testAccessibleTag("confirmButton"),
                 ) { Text("Confirm identity") }
                 Button(
                     onClick = onEnrolLast,
                     modifier = Modifier
-                        .weight(1f),
+                        .weight(1f)
+                        .testAccessibleTag("enrolLastButton"),
                 ) { Text("Enrol last") }
             }
         }

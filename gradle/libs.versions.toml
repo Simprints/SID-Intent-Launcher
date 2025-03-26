@@ -1,17 +1,17 @@
 [versions]
 kotlin = "2.0.0"
-pluginGradle = "8.6.1"
+pluginGradle = "8.9.0"
 pluginKsp = "2.0.0-1.0.22"
 
 simprints = "2025.1.3-SNAPSHOT"
 
 kotlinCoroutines = "1.10.1"
-hilt = "2.55"
+hilt = "2.56"
 hiltCompose = "1.2.0"
 
-composeBom = "2025.02.00"
+composeBom = "2025.03.00"
 composeActivity = "1.10.1"
-composeNavigation = "2.8.8"
+composeNavigation = "2.8.9"
 composeStateEvents = "2.2.0"
 accompanistThemeadapterMaterial = "0.36.0"
 lifecycleViewmodelKtx = "2.8.7"

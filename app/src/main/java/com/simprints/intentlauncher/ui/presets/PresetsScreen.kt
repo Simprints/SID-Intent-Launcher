@@ -1,8 +1,10 @@
 package com.simprints.intentlauncher.ui.presets
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
@@ -34,7 +36,10 @@ fun PresetsScreen(navController: NavHostController) {
             .fillMaxHeight()
             .fillMaxWidth(),
     ) {
-        TopAppBar(title = { Text("Presets") })
+        TopAppBar(
+            windowInsets = WindowInsets.statusBars,
+            title = { Text("Presets") },
+        )
         if (presetList.isEmpty()) {
             NothingToDisplay("No presets have been saved yet.")
         } else {

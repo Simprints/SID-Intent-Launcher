@@ -3,9 +3,11 @@ package com.simprints.intentlauncher.ui.intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.DropdownMenu
@@ -62,6 +64,7 @@ fun IntentScreen(navController: NavHostController) {
             .fillMaxWidth(),
     ) {
         TopAppBar(
+            windowInsets = WindowInsets.statusBars,
             title = { Text("Intent Launcher") },
             actions = {
                 IconButton(

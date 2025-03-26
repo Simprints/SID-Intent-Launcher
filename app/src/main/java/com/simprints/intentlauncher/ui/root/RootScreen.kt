@@ -1,5 +1,7 @@
 package com.simprints.intentlauncher.ui.root
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -31,7 +33,9 @@ fun RootScreen() {
 
     Scaffold(
         bottomBar = {
-            BottomNavigation {
+            BottomNavigation(
+                windowInsets = WindowInsets.navigationBars,
+            ) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
 

@@ -3,8 +3,10 @@ package com.simprints.intentlauncher.ui.custom
 import android.content.ActivityNotFoundException
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
@@ -58,6 +60,7 @@ fun CustomIntentScreen(navController: NavHostController) {
             .fillMaxWidth(),
     ) {
         TopAppBar(
+            windowInsets = WindowInsets.statusBars,
             title = { Text("Custom intent") },
             actions = {
                 IconButton(

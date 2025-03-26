@@ -1,8 +1,10 @@
 package com.simprints.intentlauncher.ui.details
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -45,6 +47,7 @@ fun IntentDetailsScreen(
             .fillMaxWidth(),
     ) {
         TopAppBar(
+            windowInsets = WindowInsets.statusBars,
             title = { Text("Intent details") },
             navigationIcon = { NavigateUpButton(navController) },
             actions = {

@@ -1,8 +1,10 @@
 package com.simprints.intentlauncher.ui.history
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
@@ -27,7 +29,10 @@ fun HistoryScreen(navController: NavHostController) {
             .fillMaxHeight()
             .fillMaxWidth(),
     ) {
-        TopAppBar(title = { Text("Intent History") })
+        TopAppBar(
+            windowInsets = WindowInsets.statusBars,
+            title = { Text("Intent History") },
+        )
         if (callList.isEmpty()) {
             NothingToDisplay("No intent calls have been made yet.")
         } else {

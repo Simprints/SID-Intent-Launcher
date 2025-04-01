@@ -22,8 +22,8 @@ android {
         applicationId = "com.simprints.intentlauncher"
         minSdk = 23
         targetSdk = 35
-        versionCode = 7
-        versionName = "2025.01.1"
+        versionCode = 8
+        versionName = "2025.01.2"
     }
 
     buildTypes {
@@ -46,7 +46,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.6"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 }
 

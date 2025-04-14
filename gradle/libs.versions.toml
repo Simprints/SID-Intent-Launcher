@@ -17,7 +17,7 @@ accompanistThemeadapterMaterial = "0.36.0"
 lifecycleViewmodelKtx = "2.8.7"
 
 room = "2.6.1"
-gson = "2.12.1"
+gson = "2.13.0"
 datastorePreferences = "1.1.4"
 
 

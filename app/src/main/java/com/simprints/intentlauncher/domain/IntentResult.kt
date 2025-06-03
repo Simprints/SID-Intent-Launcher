@@ -14,6 +14,8 @@ data class IntentResult(
     fun mappedResultCode(): String = when (code) {
         null -> "No result code"
         INVALID_CUSTOM_INTENT -> "INVALID CUSTOM INTENT"
+        ACTION_APP_NOT_FOUND -> "APP NOT FOUND FOR THIS ACTION"
+        SID_NOT_INSTALLED -> "SIMPRINTS ID APP NOT INSTALLED"
         Activity.RESULT_OK -> "OK"
         else -> getConstantNameByValue(code)
     }
@@ -35,5 +37,7 @@ data class IntentResult(
 
     companion object {
         const val INVALID_CUSTOM_INTENT = 9999
+        const val ACTION_APP_NOT_FOUND = 9998
+        const val SID_NOT_INSTALLED = 9997
     }
 }

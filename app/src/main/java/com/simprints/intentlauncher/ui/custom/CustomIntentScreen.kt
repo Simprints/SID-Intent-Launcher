@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.simprints.intentlauncher.domain.IntentResult.Companion.INVALID_CUSTOM_INTENT
+import com.simprints.intentlauncher.domain.IntentResult.Companion.ACTION_APP_NOT_FOUND
 import com.simprints.intentlauncher.tools.GenericIntentContract
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
@@ -47,7 +47,7 @@ fun CustomIntentScreen(navController: NavHostController) {
         try {
             intentLauncher.launch(it)
         } catch (e: ActivityNotFoundException) {
-            vm.intentResultReceived(INVALID_CUSTOM_INTENT to null)
+            vm.intentResultReceived(ACTION_APP_NOT_FOUND to null)
         }
     }
 

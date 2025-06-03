@@ -56,7 +56,9 @@ class CustomIntentViewModel @Inject constructor(
         cacheFields(it)
 
         val intent = Intent(it.action).apply {
-            it.extras.lines().forEach {
+            it.extras.lines().filter {
+                "=" in it
+            }.forEach {
                 val (key, value) = it.split("=")
                 putExtra(key, value)
             }

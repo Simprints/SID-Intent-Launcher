@@ -1,5 +1,6 @@
 package com.simprints.intentlauncher.ui.intent
 
+import android.content.ActivityNotFoundException
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,7 +54,13 @@ fun IntentScreen(navController: NavHostController) {
     EventEffect(
         event = viewState.showIntent,
         onConsumed = vm::intentShown,
-    ) { intentLauncher.launch(it) }
+    ) {
+        try {
+            intentLauncher.launch(it)
+        } catch (e: ActivityNotFoundException) {
+            vm.intentResultReceived(null)
+        }
+    }
 
     val menuExpanded = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()

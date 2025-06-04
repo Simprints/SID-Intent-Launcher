@@ -9,6 +9,8 @@ import com.simprints.intentlauncher.data.store.ProjectDataCache
 import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentCallRepository
 import com.simprints.intentlauncher.domain.IntentFields
+import com.simprints.intentlauncher.domain.IntentResult
+import com.simprints.intentlauncher.domain.IntentResult.Companion.SID_NOT_INSTALLED
 import com.simprints.intentlauncher.domain.IntentResultParser
 import com.simprints.intentlauncher.tools.extractEventsFromJson
 import com.simprints.libsimprints.Metadata
@@ -132,8 +134,12 @@ class IntentViewModel @Inject constructor(
         showIntent = triggered(request),
     )
 
-    fun intentResultReceived(result: SimprintsResponse) = viewModelScope.launch {
-        val intentResult = intentResultParser(result)
+    fun intentResultReceived(result: SimprintsResponse?) = viewModelScope.launch {
+        val intentResult = if (result == null) {
+            IntentResult(code = SID_NOT_INSTALLED)
+        } else {
+            intentResultParser(result)
+        }
         val lastIntentCall = viewState.value.lastIntentCall
 
         lastIntentCall?.let {

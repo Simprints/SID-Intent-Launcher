@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.simprints.intentlauncher.tools.testAccessibleTag
 import com.simprints.intentlauncher.ui.theme.AppShapes
 import com.simprints.intentlauncher.ui.theme.AppTypography
 import java.util.Locale
@@ -32,6 +33,7 @@ import java.util.Locale
 @Composable
 fun AccordionLayout(
     title: String,
+    testTag: String,
     defaultExpanded: Boolean = true,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
@@ -45,6 +47,7 @@ fun AccordionLayout(
     ) {
         Row(
             modifier = Modifier
+                .testAccessibleTag(testTag)
                 .fillMaxWidth()
                 .padding(8.dp)
                 .clickable { isExpanded = !isExpanded },
@@ -74,6 +77,7 @@ fun AccordionLayout(
 private fun AccordionLayoutPreviewOpen() {
     AccordionLayout(
         title = "Click to collapse",
+        testTag = "Accordion",
         defaultExpanded = true,
     ) {
         Text(
@@ -91,6 +95,7 @@ private fun AccordionLayoutPreviewOpen() {
 private fun AccordionLayoutPreviewClosed() {
     AccordionLayout(
         title = "Click to expand",
+        testTag = "Accordion",
         defaultExpanded = false,
     ) {
         Text(

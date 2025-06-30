@@ -30,6 +30,7 @@ fun ResponseEventsForm(
 ) {
     AccordionLayout(
         title = "Events",
+        testTag = "eventsAccordion",
         defaultExpanded = defaultExpanded,
     ) {
         Row(

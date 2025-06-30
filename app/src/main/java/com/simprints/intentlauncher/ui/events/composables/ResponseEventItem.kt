@@ -103,6 +103,7 @@ fun ResponseEventItem(
             )
             AccordionLayout(
                 title = "payload",
+                testTag = "payloadAccordion",
                 defaultExpanded = false,
                 modifier = Modifier.padding(top = 4.dp),
             ) {

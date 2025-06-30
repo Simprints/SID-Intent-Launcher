@@ -32,6 +32,7 @@ fun BiometricFlowForm(
 ) {
     AccordionLayout(
         title = "Biometric flow intent",
+        testTag = "biometricActionAccordion",
         defaultExpanded = defaultExpanded,
     ) {
         Column(

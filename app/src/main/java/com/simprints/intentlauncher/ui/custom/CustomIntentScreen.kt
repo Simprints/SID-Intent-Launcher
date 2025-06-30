@@ -85,6 +85,7 @@ fun CustomIntentScreen(navController: NavHostController) {
             )
             AccordionLayout(
                 title = "Result",
+                testTag = "resultsAccordion",
                 defaultExpanded = true,
             ) {
                 SelectableCodeBlock(viewState.result)

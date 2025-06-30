@@ -31,6 +31,7 @@ fun FollowUpFlowForm(
 ) {
     AccordionLayout(
         title = "Follow up flow intent",
+        testTag = "followUpActionAccordion",
         defaultExpanded = defaultExpanded,
     ) {
         Column(

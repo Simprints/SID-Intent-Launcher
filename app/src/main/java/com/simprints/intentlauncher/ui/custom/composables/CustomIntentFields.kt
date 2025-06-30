@@ -33,6 +33,7 @@ fun CustomIntentFields(
 ) {
     AccordionLayout(
         title = "Intent",
+        testTag = "customIntentAccordion",
         defaultExpanded = true,
     ) {
         Column {

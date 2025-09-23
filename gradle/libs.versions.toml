@@ -3,7 +3,7 @@ kotlin = "2.1.21"
 pluginGradle = "8.12.1"
 pluginKsp = "2.1.21-2.0.1"
 
-simprints = "2025.2.1"
+simprints = "2025.2.2"
 
 kotlinCoroutines = "1.10.2"
 hilt = "2.57.1"

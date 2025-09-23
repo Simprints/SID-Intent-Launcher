@@ -86,6 +86,7 @@ class IntentViewModel @Inject constructor(
             viewState.userId,
             viewState.moduleId,
             viewState.guid,
+            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
         )
     }
 
@@ -95,6 +96,7 @@ class IntentViewModel @Inject constructor(
             viewState.userId,
             viewState.sessionId,
             viewState.guid,
+            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
         )
     }
 
@@ -104,6 +106,7 @@ class IntentViewModel @Inject constructor(
             viewState.userId,
             viewState.moduleId,
             viewState.sessionId,
+            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
         )
     }
 

@@ -16,14 +16,14 @@ room {
 
 android {
     namespace = "com.simprints.intentlauncher"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.simprints.intentlauncher"
         minSdk = 23
-        targetSdk = 35
-        versionCode = 8
-        versionName = "2025.01.2"
+        targetSdk = 36
+        versionCode = 9
+        versionName = "2025.2.1"
     }
 
     buildTypes {

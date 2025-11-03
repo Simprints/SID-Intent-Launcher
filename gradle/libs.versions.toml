@@ -16,7 +16,7 @@ composeStateEvents = "2.2.0"
 accompanistThemeadapterMaterial = "0.36.0"
 lifecycleViewmodelKtx = "2.9.4"
 
-room = "2.8.0"
+room = "2.8.3"
 gson = "2.13.2"
 datastorePreferences = "1.1.7"
 

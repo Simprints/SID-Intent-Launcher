@@ -1,7 +1,7 @@
 [versions]
-kotlin = "2.1.21"
+kotlin = "2.3.0"
 pluginGradle = "8.13.2"
-pluginKsp = "2.1.21-2.0.1"
+pluginKsp = "2.3.4"
 
 simprints = "2025.2.2"
 

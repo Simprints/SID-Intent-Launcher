@@ -1,24 +1,24 @@
 [versions]
-kotlin = "2.1.21"
-pluginGradle = "8.13.0"
-pluginKsp = "2.1.21-2.0.1"
+kotlin = "2.3.0"
+pluginGradle = "8.13.2"
+pluginKsp = "2.3.4"
 
 simprints = "2025.2.2"
 
 kotlinCoroutines = "1.10.2"
-hilt = "2.57.1"
+hilt = "2.57.2"
 hiltCompose = "1.3.0"
 
-composeBom = "2025.09.00"
-composeActivity = "1.11.0"
-composeNavigation = "2.9.4"
+composeBom = "2025.12.01"
+composeActivity = "1.12.2"
+composeNavigation = "2.9.6"
 composeStateEvents = "2.2.0"
 accompanistThemeadapterMaterial = "0.36.0"
-lifecycleViewmodelKtx = "2.9.4"
+lifecycleViewmodelKtx = "2.10.0"
 
-room = "2.8.0"
+room = "2.8.4"
 gson = "2.13.2"
-datastorePreferences = "1.1.7"
+datastorePreferences = "1.2.0"
 
 
 [libraries]

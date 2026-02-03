@@ -9,7 +9,7 @@ kotlinCoroutines = "1.10.2"
 hilt = "2.57.2"
 hiltCompose = "1.3.0"
 
-composeBom = "2025.12.01"
+composeBom = "2026.01.01"
 composeActivity = "1.12.2"
 composeNavigation = "2.9.6"
 composeStateEvents = "2.2.0"

@@ -2,6 +2,8 @@ package com.simprints.intentlauncher.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Send
@@ -22,20 +24,20 @@ import com.simprints.intentlauncher.ui.presets.PresetsScreen
 
 sealed class Screen(
     val route: String,
-    @StringRes val titleId: Int,
+    @param:StringRes val titleId: Int,
     val arguments: List<NamedNavArgument> = emptyList(),
     val icon: ImageVector? = null,
 ) {
     data object Intent : Screen(
         route = "intent",
         titleId = R.string.screen_intent,
-        icon = Icons.Filled.Send,
+        icon = Icons.AutoMirrored.Filled.Send,
     )
 
     data object History : Screen(
         route = "history",
         titleId = R.string.screen_history,
-        icon = Icons.Filled.List,
+        icon = Icons.AutoMirrored.Filled.List,
     )
 
     data object Presets : Screen(
@@ -57,7 +59,7 @@ sealed class Screen(
     data object CustomIntent : Screen(
         route = "custom",
         titleId = R.string.screen_custom_intent,
-        icon = Icons.Filled.Send,
+        icon = Icons.AutoMirrored.Filled.Send,
     )
 
     data object ResponseEventDetails : Screen(

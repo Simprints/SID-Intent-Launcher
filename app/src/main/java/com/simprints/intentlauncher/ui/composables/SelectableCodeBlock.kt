@@ -1,21 +1,24 @@
 package com.simprints.intentlauncher.ui.composables
 
+import android.content.ClipData
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,14 +29,15 @@ import com.simprints.intentlauncher.ui.theme.AppTypography
 
 @Composable
 fun SelectableCodeBlock(text: String) {
-    val clipboardManager = LocalClipboardManager.current
+    val clipboardManager = LocalClipboard.current
     val annotatedText = textWithAnnotatedGuids(text)
+    val textLayoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
 
     val toastText = remember { mutableStateOf("") }
     ToastLauncher(toastText)
 
     SelectionContainer {
-        ClickableText(
+        Text(
             text = annotatedText,
             style = AppTypography.body2.copy(
                 fontFamily = FontFamily.Monospace,
@@ -42,16 +46,22 @@ fun SelectableCodeBlock(text: String) {
                 .fillMaxWidth()
                 .background(Color.LightGray.copy(alpha = 0.3f), shape = AppShapes.large)
                 .padding(8.dp)
-                .testAccessibleTag("result"),
-            onClick = { offset ->
-                annotatedText
-                    .getStringAnnotations(tag = "Clickable", start = offset, end = offset)
-                    .firstOrNull()
-                    ?.let { annotation ->
-                        clipboardManager.setText(AnnotatedString(annotation.item))
-                        toastText.value = "${annotation.item} copied to clipboard"
+                .testAccessibleTag("result")
+                .pointerInput(annotatedText) {
+                    detectTapGestures { position ->
+                        val layoutResult = textLayoutResult.value ?: return@detectTapGestures
+                        val offset = layoutResult.getOffsetForPosition(position)
+
+                        annotatedText
+                            .getStringAnnotations(tag = "Clickable", start = offset, end = offset)
+                            .firstOrNull()
+                            ?.let { annotation ->
+                                clipboardManager.nativeClipboard.setPrimaryClip(ClipData.newPlainText("guid", annotation.item))
+                                toastText.value = "${annotation.item} copied to clipboard"
+                            }
                     }
-            },
+                },
+            onTextLayout = { textLayoutResult.value = it },
         )
     }
 }

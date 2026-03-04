@@ -1,8 +1,9 @@
 package com.simprints.intentlauncher.ui.events
 
-import android.app.Activity
+import android.content.ClipData
 import android.view.WindowManager
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,13 +37,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.Clipboard
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.ui.composables.NavigateUpButton
@@ -63,8 +62,8 @@ fun ResponseEventsScreen(
     navController: NavHostController,
     intentId: String,
 ) {
-    val window = (LocalContext.current as? Activity)?.window
-    val clipboardManager = LocalClipboardManager.current
+    val window = LocalActivity.current?.window
+    val clipboardManager = LocalClipboard.current
     val vm =
         hiltViewModel<ResponseEventsScreenViewModel, ResponseEventsScreenViewModel.Factory> { factory ->
             factory.create(
@@ -103,6 +102,7 @@ fun ResponseEventsScreen(
         sheetContent = {
             when (val dialogType = eventDialogType) {
                 null -> Unit
+
                 is EventDialogType.SortingOptions -> SortingOptionsDialogWrapper(
                     viewState = viewState,
                     modalSheetState = modalSheetState,
@@ -138,8 +138,7 @@ fun ResponseEventsScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            eventDialogType =
-                                EventDialogType.SortingOptions(sortingOptions = EventSortingOption.entries)
+                            eventDialogType = EventDialogType.SortingOptions(sortingOptions = EventSortingOption.entries)
                             scope.launch { modalSheetState.show() }
                         },
                     ) {
@@ -201,7 +200,7 @@ fun ResponseEventsScreen(
 @Composable
 fun EventActionsDialogWrapper(
     event: ResponseEvent,
-    clipboardManager: ClipboardManager,
+    clipboardManager: Clipboard,
     toastTextState: MutableState<String>,
     modalSheetState: ModalBottomSheetState,
     scope: CoroutineScope,
@@ -213,7 +212,7 @@ fun EventActionsDialogWrapper(
     EventActionsDialog(
         event = event,
         onCopyId = { id ->
-            clipboardManager.setText(AnnotatedString(id))
+            clipboardManager.nativeClipboard.setPrimaryClip(ClipData.newPlainText("eventId", id))
             toastTextState.value = "$id copied to clipboard"
             scope.launch { modalSheetState.hide() }
         },
@@ -222,7 +221,7 @@ fun EventActionsDialogWrapper(
             if (json == null) {
                 toastTextState.value = "Error parsing event to JSON"
             } else {
-                clipboardManager.setText(AnnotatedString(json))
+                clipboardManager.nativeClipboard.setPrimaryClip(ClipData.newPlainText("eventJson", json))
                 toastTextState.value = "Event JSON copied to clipboard"
             }
             scope.launch { modalSheetState.hide() }
@@ -232,7 +231,7 @@ fun EventActionsDialogWrapper(
             if (json == null) {
                 toastTextState.value = "Error parsing payload to JSON"
             } else {
-                clipboardManager.setText(AnnotatedString(json))
+                clipboardManager.nativeClipboard.setPrimaryClip(ClipData.newPlainText("payloadJson", json))
                 toastTextState.value = "Paylaod JSON copied to clipboard"
             }
             scope.launch { modalSheetState.hide() }

@@ -18,7 +18,7 @@ lifecycleViewmodelKtx = "2.10.0"
 
 room = "2.8.4"
 gson = "2.13.2"
-datastorePreferences = "1.2.0"
+datastorePreferences = "1.2.1"
 
 
 [libraries]

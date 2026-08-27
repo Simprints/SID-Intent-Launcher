@@ -396,3 +396,33 @@ Current baseline note: `lintDebug` already fails before migration due to `NonObs
   - `:app:testDebugUnitTest` passes.
   - `:app:assembleDebug` passes.
   - `:app:lintDebug` fails on the same pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.
+
+### Screen 6/6 - Response Events screen (`ResponseEventsScreenViewModel` + `ResponseEventsScreen`)
+- **Status:** Completed and ready for review pause.
+- **Implemented**
+  - Migrated ViewModel to MVI by extending `BaseMviViewModel` with:
+    - `ResponseEventsUiState`,
+    - `ResponseEventsUiAction`,
+    - `ResponseEventsUiEffect`.
+  - Removed side effects from `combine` flow logic and moved loading/filtering/sorting into explicit action handling.
+  - Added explicit actions for load/search/sort/dialog state/copy actions.
+  - Added state-managed active dialog (`activeDialog`) and effect-managed clipboard/toast side effects.
+  - Updated `ResponseEventsScreen` to:
+    - dispatch `LoadEvents`,
+    - dispatch all UI interactions through `onAction(...)`,
+    - collect effects lifecycle-aware and perform clipboard/toast side effects in UI.
+  - Preserved assisted injection contract (`intentId`, `initialSoftInputMode`) and soft input mode restore behavior.
+  - Added `ResponseEventsScreenViewModelTest` coverage for:
+    - load + default sorting,
+    - search filtering,
+    - sorting mode switch,
+    - dialog state transitions,
+    - copy-id effect emission.
+- **Behavior parity notes**
+  - Navigation contract unchanged.
+  - Event list filtering/sorting behavior preserved.
+  - Bottom-sheet options flow and copy actions preserved, now routed via actions/effects.
+- **Validation evidence**
+  - `:app:testDebugUnitTest` passes.
+  - `:app:assembleDebug` passes.
+  - `:app:lintDebug` fails on the same pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.

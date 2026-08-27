@@ -1,17 +1,16 @@
 package com.simprints.intentlauncher.ui.events
 
-import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.simprints.intentlauncher.domain.IntentCallRepository
 import com.simprints.intentlauncher.tools.extractEventsFromJson
+import com.simprints.intentlauncher.ui.base.BaseMviViewModel
+import com.simprints.intentlauncher.ui.events.model.EventDialogType
 import com.simprints.intentlauncher.ui.events.model.EventSortingOption
 import com.simprints.intentlauncher.ui.intent.model.ResponseEvent
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 
 @HiltViewModel(assistedFactory = ResponseEventsScreenViewModel.Factory::class)
 class ResponseEventsScreenViewModel @AssistedInject constructor(
@@ -19,7 +18,14 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
     @Assisted val initialSoftInputMode: Int,
     private val intentCallRepository: IntentCallRepository,
     private val gson: Gson,
-) : ViewModel() {
+) : BaseMviViewModel<ResponseEventsUiState, ResponseEventsUiAction, ResponseEventsUiEffect>(
+        initialState = ResponseEventsUiState(
+            events = emptyList(),
+            totalEvents = 0,
+            query = "",
+            sorting = EventSortingOption.DateAsc,
+        ),
+    ) {
     @AssistedFactory
     interface Factory {
         fun create(
@@ -28,64 +34,116 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
         ): ResponseEventsScreenViewModel
     }
 
-    val initialViewState =
-        ResponseEventsViewState(
-            events = emptyList(),
-            totalEvents = 0,
-            query = "",
-            sorting = EventSortingOption.DateAsc,
-        )
-    private val allEventsFlow: MutableStateFlow<List<ResponseEvent>?> = MutableStateFlow(null)
-    private val searchQueryFlow: MutableStateFlow<String?> = MutableStateFlow(null)
-    private val sortFlow: MutableStateFlow<EventSortingOption> =
-        MutableStateFlow(initialViewState.sorting)
-    val state = combine(allEventsFlow, sortFlow, searchQueryFlow) { allEvents, sorting, query ->
-        val events = allEvents ?: intentCallRepository
+    private var allEvents: List<ResponseEvent> = emptyList()
+
+    override suspend fun handleAction(action: ResponseEventsUiAction) {
+        when (action) {
+            ResponseEventsUiAction.LoadEvents -> {
+                loadEvents()
+            }
+
+            is ResponseEventsUiAction.SearchQueryChanged -> {
+                reduceFilteredState(
+                    query = action.query,
+                    sorting = state.value.sorting,
+                )
+            }
+
+            is ResponseEventsUiAction.SortingChanged -> {
+                reduceFilteredState(
+                    query = state.value.query,
+                    sorting = action.sorting,
+                    activeDialog = null,
+                )
+            }
+
+            ResponseEventsUiAction.SortOptionsClicked -> {
+                reduce {
+                    it.copy(
+                        activeDialog = EventDialogType.SortingOptions(EventSortingOption.entries),
+                    )
+                }
+            }
+
+            is ResponseEventsUiAction.EventOptionsClicked -> {
+                reduce {
+                    it.copy(activeDialog = EventDialogType.EventOptions(action.event))
+                }
+            }
+
+            ResponseEventsUiAction.DialogDismissed -> {
+                reduce { it.copy(activeDialog = null) }
+            }
+
+            is ResponseEventsUiAction.CopyIdClicked -> {
+                emitEffect(
+                    ResponseEventsUiEffect.CopyToClipboard(
+                        label = "eventId",
+                        value = action.id,
+                    ),
+                )
+                emitEffect(ResponseEventsUiEffect.ShowToast("${action.id} copied to clipboard"))
+            }
+
+            is ResponseEventsUiAction.CopyEventJsonClicked -> {
+                emitEffect(
+                    ResponseEventsUiEffect.CopyToClipboard(
+                        label = "eventJson",
+                        value = gson.toJson(action.event),
+                    ),
+                )
+                emitEffect(ResponseEventsUiEffect.ShowToast("Event JSON copied to clipboard"))
+            }
+
+            is ResponseEventsUiAction.CopyPayloadJsonClicked -> {
+                emitEffect(
+                    ResponseEventsUiEffect.CopyToClipboard(
+                        label = "payloadJson",
+                        value = gson.toJson(action.event.payload),
+                    ),
+                )
+                emitEffect(ResponseEventsUiEffect.ShowToast("Paylaod JSON copied to clipboard"))
+            }
+        }
+    }
+
+    private suspend fun loadEvents() {
+        allEvents = intentCallRepository
             .getIntentCall(intentId)
             ?.result
             ?.json
             .extractEventsFromJson(gson)
-            .also { allEventsFlow.value = it }
-        val filteredEvents = events.filter { event ->
-            if (query.isNullOrEmpty()) {
+        reduceFilteredState(
+            query = state.value.query,
+            sorting = state.value.sorting,
+        )
+    }
+
+    private fun reduceFilteredState(
+        query: String,
+        sorting: EventSortingOption,
+        activeDialog: EventDialogType? = state.value.activeDialog,
+    ) {
+        val filteredEvents = allEvents.filter { event ->
+            if (query.isEmpty()) {
                 true
             } else {
                 event.id.contains(query, ignoreCase = true) ||
-                    event.type.contains(
-                        query,
-                        ignoreCase = true,
-                    )
+                    event.type.contains(query, ignoreCase = true)
             }
         }
         val sortedEvents = when (sorting) {
             EventSortingOption.DateAsc -> filteredEvents.sortedBy { it.createdAtMs }
             EventSortingOption.AsReceivedInResponse -> filteredEvents
         }
-        return@combine ResponseEventsViewState(
-            events = sortedEvents,
-            totalEvents = events.size,
-            query = query.orEmpty(),
-            sorting = sorting,
-        )
-    }
-
-    fun setSorting(sorting: EventSortingOption) {
-        sortFlow.value = sorting
-    }
-
-    fun setSearchQuery(query: String?) {
-        searchQueryFlow.value = query
-    }
-
-    fun serializeEventToJson(event: ResponseEvent): String? = try {
-        gson.toJson(event)
-    } catch (e: Exception) {
-        null
-    }
-
-    fun serializePayloadToJson(event: ResponseEvent): String? = try {
-        gson.toJson(event.payload)
-    } catch (e: Exception) {
-        null
+        reduce {
+            it.copy(
+                query = query,
+                sorting = sorting,
+                activeDialog = activeDialog,
+                totalEvents = allEvents.size,
+                events = sortedEvents,
+            )
+        }
     }
 }

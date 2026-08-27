@@ -368,3 +368,31 @@ Current baseline note: `lintDebug` already fails before migration due to `NonObs
   - `:app:testDebugUnitTest` passes.
   - `:app:assembleDebug` passes.
   - `:app:lintDebug` fails on the same pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.
+
+### Screen 5/6 - Intent Details screen (`IntentDetailsViewModel` + `IntentDetailsScreen`)
+- **Status:** Completed and ready for review pause.
+- **Implemented**
+  - Migrated `IntentDetailsViewModel` to MVI with `IntentDetailsUiState`, `IntentDetailsUiAction`, `IntentDetailsUiEffect`.
+  - Added single entrypoint `onAction(...)` with explicit actions for load, delete, copy-fields, save-preset dialog show/dismiss, and confirm save.
+  - Replaced direct `MutableStateFlow<IntentCall>` exposure with `state.intentData` and `state.isSaveDialogVisible`.
+  - Added one-time effects for:
+    - `NavigateUp` after delete,
+    - `NavigateToIntent` after reuse-fields,
+    - `ShowToast("Preset saved")` after successful preset save.
+  - Updated `IntentDetailsScreen` to:
+    - dispatch load action from `LaunchedEffect`,
+    - collect effects lifecycle-aware,
+    - render from `vm.state`.
+  - Refactored `ShowInputFieldAlertDialog` to state-driven API (`Boolean` + dismiss callback) and wired it to ViewModel state/actions.
+  - Added `IntentDetailsViewModelTest` coverage for:
+    - load action -> state update,
+    - copy fields -> cache write + navigation effect,
+    - save preset -> repository call + toast effect + dialog hidden,
+    - delete -> repository call + navigate-up effect.
+- **Behavior parity notes**
+  - Navigation contract unchanged (`history/{intentId}` and return flows).
+  - Delete, reuse-fields, and save-preset UX behavior remains equivalent.
+- **Validation evidence**
+  - `:app:testDebugUnitTest` passes.
+  - `:app:assembleDebug` passes.
+  - `:app:lintDebug` fails on the same pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.

@@ -20,11 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
+import com.simprints.intentlauncher.tools.rememberFlow
 import com.simprints.intentlauncher.ui.Screen
 import com.simprints.intentlauncher.ui.composables.NavigateUpButton
 import com.simprints.intentlauncher.ui.composables.ShowInputFieldAlertDialog
 import com.simprints.intentlauncher.ui.composables.ToastLauncher
 import com.simprints.intentlauncher.ui.details.composables.IntentDetails
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun IntentDetailsScreen(
@@ -32,14 +34,20 @@ fun IntentDetailsScreen(
     intentId: String,
 ) {
     val vm = hiltViewModel<IntentDetailsViewModel>()
-
-    val showSaveDialog = remember { mutableStateOf(false) }
-
     val toastText = remember { mutableStateOf("") }
     ToastLauncher(toastText)
-
-    val intentData by vm.data.collectAsStateLifecycleAware()
-    LaunchedEffect(key1 = vm) { vm.loadIntent(intentId) }
+    val viewState by vm.state.collectAsStateLifecycleAware()
+    LaunchedEffect(vm, intentId) { vm.onAction(IntentDetailsUiAction.LoadIntent(intentId)) }
+    val lifecycleAwareEffects = rememberFlow(vm.effects)
+    LaunchedEffect(lifecycleAwareEffects, navController) {
+        lifecycleAwareEffects.collectLatest { effect ->
+            when (effect) {
+                IntentDetailsUiEffect.NavigateToIntent -> navController.navigate(Screen.Intent.route)
+                IntentDetailsUiEffect.NavigateUp -> navController.navigateUp()
+                is IntentDetailsUiEffect.ShowToast -> toastText.value = effect.message
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -53,8 +61,7 @@ fun IntentDetailsScreen(
             actions = {
                 IconButton(
                     onClick = {
-                        vm.deleteIntent(intentId)
-                        navController.navigateUp()
+                        vm.onAction(IntentDetailsUiAction.DeleteIntentClicked(intentId))
                     },
                 ) {
                     Icon(Icons.Filled.Delete, contentDescription = "Delete")
@@ -62,22 +69,25 @@ fun IntentDetailsScreen(
             },
         )
         IntentDetails(
-            data = intentData,
+            data = viewState.intentData,
             onCopyFields = {
-                vm.copyFieldsToStore(intentData.fields)
-                navController.navigate(Screen.Intent.route)
+                vm.onAction(IntentDetailsUiAction.CopyFieldsClicked)
             },
-            onSavePreset = { showSaveDialog.value = true },
+            onSavePreset = { vm.onAction(IntentDetailsUiAction.SavePresetDialogShown) },
         )
         ShowInputFieldAlertDialog(
-            openDialog = showSaveDialog,
+            openDialog = viewState.isSaveDialogVisible,
             text = { Text(text = "Save the field values as a named preset for later use?") },
             label = { Text(text = "Preset name") },
             confirmButtonText = { Text(text = "Save") },
             onConfirm = {
-                vm.savePreset(it.ifEmpty { intentData.fields.projectId }, intentData.fields)
-                toastText.value = "Preset saved"
+                vm.onAction(
+                    IntentDetailsUiAction.SavePresetConfirmed(
+                        name = it.ifEmpty { viewState.intentData.fields.projectId },
+                    ),
+                )
             },
+            onDismiss = { vm.onAction(IntentDetailsUiAction.SavePresetDialogDismissed) },
         )
     }
 }

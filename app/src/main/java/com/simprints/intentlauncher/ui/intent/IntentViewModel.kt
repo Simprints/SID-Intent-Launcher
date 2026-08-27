@@ -1,8 +1,6 @@
 package com.simprints.intentlauncher.ui.intent
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.simprints.intentlauncher.data.store.ProjectDataCache
@@ -13,13 +11,12 @@ import com.simprints.intentlauncher.domain.IntentResult
 import com.simprints.intentlauncher.domain.IntentResult.Companion.SID_NOT_INSTALLED
 import com.simprints.intentlauncher.domain.IntentResultParser
 import com.simprints.intentlauncher.tools.extractEventsFromJson
+import com.simprints.intentlauncher.ui.base.BaseMviViewModel
 import com.simprints.libsimprints.Metadata
 import com.simprints.libsimprints.Metadata.InvalidMetadataException
 import com.simprints.libsimprints.contracts.SimprintsRequest
 import com.simprints.libsimprints.contracts.SimprintsResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.palm.composestateevents.consumed
-import de.palm.composestateevents.triggered
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -31,86 +28,114 @@ class IntentViewModel @Inject constructor(
     private val intentCallRepository: IntentCallRepository,
     private val intentResultParser: IntentResultParser,
     private val gson: Gson,
-) : ViewModel() {
-    val viewState = savedStateHandle.getStateFlow(KEY_VIEW_STATE, IntentViewState())
+) : BaseMviViewModel<IntentViewUiState, IntentUiAction, IntentUiEffect>(
+        initialState = IntentViewUiState(
+            projectId = savedStateHandle[KEY_PROJECT_ID] ?: "",
+            userId = savedStateHandle[KEY_USER_ID] ?: "",
+            moduleId = savedStateHandle[KEY_MODULE_ID] ?: "",
+            metadata = savedStateHandle[KEY_METADATA] ?: "",
+            guid = savedStateHandle[KEY_GUID] ?: "",
+            sessionId = savedStateHandle[KEY_SESSION_ID] ?: "",
+            result = savedStateHandle[KEY_RESULT] ?: "",
+            responseJson = savedStateHandle[KEY_RESPONSE_JSON] ?: "",
+            responseIntentId = savedStateHandle[KEY_RESPONSE_INTENT_ID],
+            isWrongMetadataAlertVisible = savedStateHandle[KEY_IS_WRONG_METADATA_ALERT_VISIBLE] ?: false,
+            events = emptyList(),
+        ),
+    ) {
+    override suspend fun handleAction(action: IntentUiAction) {
+        when (action) {
+            IntentUiAction.LoadCachedFields -> fetchCachedFieldValues()
 
-    private fun updateViewState(update: (IntentViewState) -> IntentViewState) {
-        savedStateHandle[KEY_VIEW_STATE] = update(viewState.value)
+            IntentUiAction.EnrollClicked -> executeSimHelperAction { state ->
+                SimprintsRequest.Enrol(
+                    state.projectId,
+                    state.userId,
+                    state.moduleId,
+                    state.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
+                )
+            }
+
+            IntentUiAction.IdentifyClicked -> executeSimHelperAction { state ->
+                SimprintsRequest.Identify(
+                    state.projectId,
+                    state.userId,
+                    state.moduleId,
+                    state.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
+                )
+            }
+
+            IntentUiAction.VerifyClicked -> executeSimHelperAction { state ->
+                SimprintsRequest.Verify(
+                    state.projectId,
+                    state.userId,
+                    state.moduleId,
+                    state.guid,
+                    state.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
+                )
+            }
+
+            IntentUiAction.ConfirmClicked -> executeSimHelperAction { state ->
+                SimprintsRequest.ConfirmIdentity(
+                    state.projectId,
+                    state.userId,
+                    state.sessionId,
+                    state.guid,
+                    state.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
+                )
+            }
+
+            IntentUiAction.EnrolLastClicked -> executeSimHelperAction { state ->
+                SimprintsRequest.EnrolLastBiometrics(
+                    state.projectId,
+                    state.userId,
+                    state.moduleId,
+                    state.sessionId,
+                    state.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
+                )
+            }
+
+            IntentUiAction.ClearFieldsClicked -> clearFields()
+
+            is IntentUiAction.IntentResultReceived -> intentResultReceived(action.result)
+
+            is IntentUiAction.GuidChanged -> reduce { it.copy(guid = action.value) }
+
+            is IntentUiAction.MetadataChanged -> reduce { it.copy(metadata = action.value) }
+
+            is IntentUiAction.ModuleIdChanged -> reduce { it.copy(moduleId = action.value) }
+
+            is IntentUiAction.ProjectIdChanged -> reduce { it.copy(projectId = action.value) }
+
+            is IntentUiAction.SessionIdChanged -> reduce { it.copy(sessionId = action.value) }
+
+            is IntentUiAction.UserIdChanged -> reduce { it.copy(userId = action.value) }
+
+            IntentUiAction.WrongMetadataAlertDismissed -> reduce { it.copy(isWrongMetadataAlertVisible = false) }
+        }
     }
 
-    fun updateProjectId(projectId: String) = updateViewState { it.copy(projectId = projectId) }
-
-    fun updateUserId(userId: String) = updateViewState { it.copy(userId = userId) }
-
-    fun updateModuleId(moduleId: String) = updateViewState { it.copy(moduleId = moduleId) }
-
-    fun updateMetadata(metadata: String) = updateViewState { it.copy(metadata = metadata) }
-
-    fun updateGuid(guid: String) = updateViewState { it.copy(guid = guid) }
-
-    fun updateSessionId(sessionId: String) = updateViewState { it.copy(sessionId = sessionId) }
-
-    fun intentShown() = updateViewState { it.copy(showIntent = consumed()) }
-
-    private fun executeSimHelperAction(createRequest: (IntentViewState) -> SimprintsRequest) = updateViewState { state ->
+    private fun executeSimHelperAction(createRequest: (IntentViewUiState) -> SimprintsRequest) = viewModelScope.launch {
+        val state = state.value
         val request = try {
             createRequest(state)
         } catch (_: InvalidMetadataException) {
-            return@updateViewState state.copy(showWrongMetadataAlert = mutableStateOf(true))
+            reduce { it.copy(isWrongMetadataAlertVisible = true) }
+            return@launch
         }
         cacheFields(state)
-        copyWithCachedIntent(state, request)
+        val pendingCall = createPendingCall(state, request)
+        setSavedState(KEY_PENDING_INTENT_CALL, pendingCall)
+        emitEffect(IntentUiEffect.LaunchSimprintsIntent(request))
     }
 
-    fun enroll() = executeSimHelperAction { viewState ->
-        SimprintsRequest.Enrol(
-            viewState.projectId,
-            viewState.userId,
-            viewState.moduleId,
-            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
-        )
-    }
+    private fun cacheFields(state: IntentViewUiState) = viewModelScope.launch {
+        savedStateHandle[KEY_PROJECT_ID] = state.projectId
+        savedStateHandle[KEY_USER_ID] = state.userId
+        savedStateHandle[KEY_MODULE_ID] = state.moduleId
+        savedStateHandle[KEY_GUID] = state.guid
+        savedStateHandle[KEY_METADATA] = state.metadata
 
-    fun identify() = executeSimHelperAction { viewState ->
-        SimprintsRequest.Identify(
-            viewState.projectId,
-            viewState.userId,
-            viewState.moduleId,
-            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
-        )
-    }
-
-    fun verify() = executeSimHelperAction { viewState ->
-        SimprintsRequest.Verify(
-            viewState.projectId,
-            viewState.userId,
-            viewState.moduleId,
-            viewState.guid,
-            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
-        )
-    }
-
-    fun confirm() = executeSimHelperAction { viewState ->
-        SimprintsRequest.ConfirmIdentity(
-            viewState.projectId,
-            viewState.userId,
-            viewState.sessionId,
-            viewState.guid,
-            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
-        )
-    }
-
-    fun enrolLast() = executeSimHelperAction { viewState ->
-        SimprintsRequest.EnrolLastBiometrics(
-            viewState.projectId,
-            viewState.userId,
-            viewState.moduleId,
-            viewState.sessionId,
-            viewState.metadata.takeIf { it.isNotBlank() }?.let { Metadata(it) },
-        )
-    }
-
-    private fun cacheFields(state: IntentViewState) = viewModelScope.launch {
         projectDataCache.save(
             projectId = state.projectId,
             userId = state.userId,
@@ -120,54 +145,52 @@ class IntentViewModel @Inject constructor(
         )
     }
 
-    private fun copyWithCachedIntent(
-        state: IntentViewState,
+    private fun createPendingCall(
+        state: IntentViewUiState,
         request: SimprintsRequest,
-    ) = state.copy(
-        lastIntentCall = IntentCall(
-            timestamp = Date(),
-            intent = request.toIntent(),
-            fields = IntentFields(
-                projectId = state.projectId,
-                userId = state.userId,
-                moduleId = state.moduleId,
-                metadata = state.metadata,
-            ),
+    ) = IntentCall(
+        timestamp = Date(),
+        intent = request.toIntent(),
+        fields = IntentFields(
+            projectId = state.projectId,
+            userId = state.userId,
+            moduleId = state.moduleId,
+            metadata = state.metadata,
         ),
-        showIntent = triggered(request),
     )
 
-    fun intentResultReceived(result: SimprintsResponse?) = viewModelScope.launch {
+    private fun intentResultReceived(result: SimprintsResponse?) = viewModelScope.launch {
         val intentResult = if (result == null) {
             IntentResult(code = SID_NOT_INSTALLED)
         } else {
             intentResultParser(result)
         }
-        val lastIntentCall = viewState.value.lastIntentCall
+        val pendingIntentCall = savedStateHandle.get<IntentCall>(KEY_PENDING_INTENT_CALL)
 
-        lastIntentCall?.let {
+        pendingIntentCall?.let {
             intentCallRepository.save(call = it, result = intentResult)
         }
-        updateViewState {
+        setSavedState(KEY_PENDING_INTENT_CALL, null)
+        reduce {
             it.copy(
                 result = intentResult.simpleText(),
                 sessionId = intentResult.sessionId.orEmpty(),
-                lastIntentCall = null,
-                responseIntentId = lastIntentCall?.id,
+                responseIntentId = pendingIntentCall?.id,
                 responseJson = intentResult.json.orEmpty(),
                 events = intentResult.json?.extractEventsFromJson(gson).orEmpty(),
+                isWrongMetadataAlertVisible = false,
             )
         }
     }
 
-    fun fetchCachedFieldValues() = viewModelScope.launch {
+    private fun fetchCachedFieldValues() = viewModelScope.launch {
         val projectId = projectDataCache.getProjectId()
         val userId = projectDataCache.getUserId()
         val moduleId = projectDataCache.getModuleId()
         val metadata = projectDataCache.getMetadata()
         val guid = projectDataCache.getGuid()
 
-        updateViewState {
+        reduce {
             it.copy(
                 projectId = projectId,
                 userId = userId,
@@ -178,12 +201,30 @@ class IntentViewModel @Inject constructor(
         }
     }
 
-    fun clearFields() = viewModelScope.launch {
+    private fun clearFields() = viewModelScope.launch {
         projectDataCache.clear()
-        updateViewState { IntentViewState() }
+        reduce { IntentViewUiState() }
+        setSavedState(KEY_PENDING_INTENT_CALL, null)
+    }
+
+    private fun <T> setSavedState(
+        key: String,
+        value: T,
+    ) {
+        savedStateHandle[key] = value
     }
 
     companion object {
-        private const val KEY_VIEW_STATE = "view_state"
+        private const val KEY_PROJECT_ID = "project_id"
+        private const val KEY_USER_ID = "user_id"
+        private const val KEY_MODULE_ID = "module_id"
+        private const val KEY_METADATA = "metadata"
+        private const val KEY_GUID = "guid"
+        private const val KEY_SESSION_ID = "session_id"
+        private const val KEY_RESULT = "result"
+        private const val KEY_RESPONSE_JSON = "response_json"
+        private const val KEY_RESPONSE_INTENT_ID = "response_intent_id"
+        private const val KEY_PENDING_INTENT_CALL = "pending_intent_call"
+        private const val KEY_IS_WRONG_METADATA_ALERT_VISIBLE = "is_wrong_metadata_alert_visible"
     }
 }

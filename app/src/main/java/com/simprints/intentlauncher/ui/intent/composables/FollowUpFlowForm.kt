@@ -18,11 +18,11 @@ import androidx.compose.ui.unit.dp
 import com.simprints.intentlauncher.tools.testAccessibleTag
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
 import com.simprints.intentlauncher.ui.composables.PropertyField
-import com.simprints.intentlauncher.ui.intent.IntentViewState
+import com.simprints.intentlauncher.ui.intent.IntentViewUiState
 
 @Composable
 fun FollowUpFlowForm(
-    state: IntentViewState,
+    state: IntentViewUiState,
     focusManager: FocusManager = LocalFocusManager.current,
     defaultExpanded: Boolean = false,
     onSessionIdChanged: (String) -> Unit = {},
@@ -74,7 +74,7 @@ fun FollowUpFlowForm(
 @Composable
 private fun FollowUpFlowFormPreview() {
     FollowUpFlowForm(
-        IntentViewState(),
+        IntentViewUiState(),
         defaultExpanded = true,
     )
 }

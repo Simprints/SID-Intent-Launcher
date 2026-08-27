@@ -19,12 +19,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
-import com.simprints.intentlauncher.ui.intent.IntentViewState
+import com.simprints.intentlauncher.ui.intent.IntentViewUiState
 import com.simprints.intentlauncher.ui.theme.AppColorScheme
 
 @Composable
 fun ResponseEventsForm(
-    state: IntentViewState,
+    state: IntentViewUiState,
     defaultExpanded: Boolean = false,
     onClick: (String) -> Unit = {},
 ) {
@@ -71,7 +71,7 @@ fun ResponseEventsForm(
 @Composable
 private fun FollowUpFlowFormPreview() {
     FollowUpFlowForm(
-        IntentViewState(),
+        IntentViewUiState(),
         defaultExpanded = true,
     )
 }

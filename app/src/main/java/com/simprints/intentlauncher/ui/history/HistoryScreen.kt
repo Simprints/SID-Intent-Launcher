@@ -10,9 +10,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.ui.Screen
@@ -22,7 +23,8 @@ import com.simprints.intentlauncher.ui.history.composables.HistoryItem
 @Composable
 fun HistoryScreen(navController: NavHostController) {
     val vm = hiltViewModel<HistoryViewModel>()
-    val callList by vm.data.collectAsStateLifecycleAware()
+    val viewState by vm.state.collectAsStateLifecycleAware()
+    LaunchedEffect(vm) { vm.onAction(HistoryUiAction.LoadHistory) }
 
     Column(
         modifier = Modifier
@@ -33,11 +35,11 @@ fun HistoryScreen(navController: NavHostController) {
             windowInsets = WindowInsets.statusBars,
             title = { Text("Intent History") },
         )
-        if (callList.isEmpty()) {
+        if (viewState.items.isEmpty()) {
             NothingToDisplay("No intent calls have been made yet.")
         } else {
             LazyColumn {
-                items(callList) { item ->
+                items(viewState.items) { item ->
                     HistoryItem(
                         data = item,
                         onClick = { navController.navigate(Screen.IntentDetails.createRoute(it)) },

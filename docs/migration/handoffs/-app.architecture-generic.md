@@ -326,3 +326,19 @@ Current baseline note: `lintDebug` already fails before migration due to `NonObs
   - `:app:testDebugUnitTest` passes.
   - `:app:assembleDebug` passes.
   - `:app:lintDebug` fails on the same pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.
+
+### Screen 3/6 - History screen (`HistoryViewModel` + `HistoryScreen`)
+- **Status:** Completed and ready for review pause.
+- **Implemented**
+  - Migrated `HistoryViewModel` to MVI with `HistoryViewUiState`, `HistoryUiAction`, `HistoryUiEffect`.
+  - Added single entrypoint `onAction(...)` and explicit `LoadHistory` action.
+  - Replaced direct `MutableStateFlow<List<IntentCall>>` exposure with `state` containing `items`.
+  - Updated `HistoryScreen` to dispatch `LoadHistory` from `LaunchedEffect` and render from `vm.state`.
+  - Added `HistoryViewModelTest` to verify repository flow emission updates state.
+- **Behavior parity notes**
+  - Navigation contract unchanged (`history` and item click to `history/{intentId}`).
+  - Empty state and list rendering behavior preserved.
+- **Validation evidence**
+  - `:app:testDebugUnitTest` passes.
+  - `:app:assembleDebug` passes.
+  - `:app:lintDebug` fails on the same pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.

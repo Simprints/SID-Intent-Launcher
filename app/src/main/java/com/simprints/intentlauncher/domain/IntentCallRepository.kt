@@ -72,6 +72,7 @@ class IntentCallRepository @Inject constructor(
         .joinToString(separator = "|") { (key, value) -> "$key=$value" }
 
     private fun String.fromString(): Map<String, String> = split("|")
+        .filter { it.contains("=") }
         .associate { entry ->
             val (key, value) = entry.split("=")
             key to value

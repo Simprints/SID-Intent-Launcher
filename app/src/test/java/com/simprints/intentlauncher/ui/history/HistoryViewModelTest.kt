@@ -1,0 +1,59 @@
+package com.simprints.intentlauncher.ui.history
+
+import com.simprints.intentlauncher.domain.IntentCall
+import com.simprints.intentlauncher.domain.IntentCallRepository
+import io.mockk.every
+import io.mockk.mockk
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.Assert.assertEquals
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class HistoryViewModelTest {
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
+    private val repository = mockk<IntentCallRepository>()
+
+    @Test
+    fun `load history updates state from repository flow`() = runTest {
+        val callsFlow = MutableStateFlow(emptyList<IntentCall>())
+        every { repository.getAllIntentCalls() } returns callsFlow
+
+        val vm = HistoryViewModel(repository)
+        vm.onAction(HistoryUiAction.LoadHistory)
+        advanceUntilIdle()
+        assertEquals(0, vm.state.value.items.size)
+
+        callsFlow.value = listOf(IntentCall(id = "one"), IntentCall(id = "two"))
+        advanceUntilIdle()
+
+        assertEquals(2, vm.state.value.items.size)
+        assertEquals("one", vm.state.value.items[0].id)
+        assertEquals("two", vm.state.value.items[1].id)
+    }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class MainDispatcherRule(
+    private val dispatcher: TestDispatcher = StandardTestDispatcher(),
+) : TestWatcher() {
+    override fun starting(description: Description) {
+        Dispatchers.setMain(dispatcher)
+    }
+
+    override fun finished(description: Description) {
+        Dispatchers.resetMain()
+    }
+}

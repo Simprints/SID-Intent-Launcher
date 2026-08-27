@@ -183,7 +183,11 @@ class IntentViewModel @Inject constructor(
         }
     }
 
-    private fun fetchCachedFieldValues() = viewModelScope.launch {
+    fun loadCachedFields() = viewModelScope.launch {
+        fetchCachedFieldValues()
+    }
+
+    private suspend fun fetchCachedFieldValues() {
         val projectId = projectDataCache.getProjectId()
         val userId = projectDataCache.getUserId()
         val moduleId = projectDataCache.getModuleId()

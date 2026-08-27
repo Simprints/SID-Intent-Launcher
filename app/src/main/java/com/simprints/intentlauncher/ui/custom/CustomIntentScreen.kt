@@ -37,8 +37,6 @@ fun CustomIntentScreen(navController: NavHostController) {
     val vm = hiltViewModel<CustomIntentViewModel>()
     val viewState by vm.state.collectAsStateLifecycleAware()
 
-    LaunchedEffect(key1 = vm) { vm.onAction(CustomIntentUiAction.LoadCachedFields) }
-
     val intentLauncher = rememberLauncherForActivityResult(GenericIntentContract()) {
         vm.onAction(CustomIntentUiAction.IntentResultReceived(it))
     }

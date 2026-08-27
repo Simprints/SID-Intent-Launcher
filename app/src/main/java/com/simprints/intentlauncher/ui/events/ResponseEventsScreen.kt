@@ -73,7 +73,6 @@ fun ResponseEventsScreen(
             )
         }
     val viewState by vm.state.collectAsStateLifecycleAware()
-    LaunchedEffect(vm) { vm.onAction(ResponseEventsUiAction.LoadEvents) }
 
     val lifecycleAwareEffects = rememberFlow(vm.effects)
     val toastTextState = remember { mutableStateOf("") }

@@ -2,16 +2,13 @@ package com.simprints.intentlauncher.ui.custom
 
 import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.SavedStateHandle
-import com.simprints.intentlauncher.data.store.ProjectDataCache
 import com.google.gson.Gson
+import com.simprints.intentlauncher.data.store.ProjectDataCache
 import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentCallRepository
-import com.simprints.intentlauncher.domain.IntentResult
 import com.simprints.intentlauncher.domain.IntentResult.Companion.INVALID_CUSTOM_INTENT
 import com.simprints.intentlauncher.domain.IntentResultParser
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -33,7 +30,7 @@ class CustomIntentViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     private val savedStateHandle = SavedStateHandle()
-    private val projectDataCache = mockk<ProjectDataCache>()
+    private val projectDataCache = mockk<ProjectDataCache>(relaxed = true)
     private val intentCallRepository = mockk<IntentCallRepository>()
     private val intentResultParser = IntentResultParser(Gson())
 
@@ -55,7 +52,6 @@ class CustomIntentViewModelTest {
         coEvery { projectDataCache.getCustomExtras() } returns "k=v"
 
         val vm = createViewModel()
-        vm.onAction(CustomIntentUiAction.LoadCachedFields)
         advanceUntilIdle()
 
         assertEquals("cached.action", vm.state.value.action)
@@ -87,8 +83,14 @@ class CustomIntentViewModelTest {
         vm.onAction(CustomIntentUiAction.IntentResultReceived(200 to null))
         advanceUntilIdle()
 
-        assertTrue(vm.state.value.result.contains("200"))
-        assertTrue(vm.state.value.result.contains("null"))
+        assertTrue(
+            vm.state.value.result
+                .contains("200"),
+        )
+        assertTrue(
+            vm.state.value.result
+                .contains("null"),
+        )
         coVerify(exactly = 1) { intentCallRepository.save(any(), any()) }
     }
 

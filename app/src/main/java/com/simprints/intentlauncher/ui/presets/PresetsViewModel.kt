@@ -6,7 +6,7 @@ import com.simprints.intentlauncher.domain.IntentPresetRepository
 import com.simprints.intentlauncher.domain.Preset
 import com.simprints.intentlauncher.ui.base.BaseMviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,22 +17,18 @@ class PresetsViewModel @Inject constructor(
 ) : BaseMviViewModel<PresetsViewUiState, PresetsUiAction, PresetsUiEffect>(
         initialState = PresetsViewUiState(),
     ) {
-    private var loadJob: Job? = null
-
-    override suspend fun handleAction(action: PresetsUiAction) {
-        when (action) {
-            PresetsUiAction.LoadPresets -> loadPresets()
-            is PresetsUiAction.UsePresetClicked -> usePreset(action.item)
-            is PresetsUiAction.DeletePresetClicked -> deletePreset(action.item)
+    init {
+        viewModelScope.launch {
+            presetRepo.getPresets().collectLatest { presets ->
+                reduce { it.copy(items = presets) }
+            }
         }
     }
 
-    private fun loadPresets() {
-        if (loadJob != null) return
-        loadJob = viewModelScope.launch {
-            presetRepo.getPresets().collect { presets ->
-                reduce { it.copy(items = presets) }
-            }
+    override suspend fun handleAction(action: PresetsUiAction) {
+        when (action) {
+            is PresetsUiAction.UsePresetClicked -> usePreset(action.item)
+            is PresetsUiAction.DeletePresetClicked -> deletePreset(action.item)
         }
     }
 

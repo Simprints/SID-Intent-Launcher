@@ -46,8 +46,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun IntentScreen(navController: NavHostController) {
     val vm = hiltViewModel<IntentViewModel>()
     val viewState by vm.state.collectAsStateLifecycleAware()
-
-    LaunchedEffect(key1 = vm) { vm.onAction(IntentUiAction.LoadCachedFields) }
+    LaunchedEffect(vm) { vm.loadCachedFields() }
 
     val intentLauncher = rememberLauncherForActivityResult(SimprintsContract()) {
         vm.onAction(IntentUiAction.IntentResultReceived(it))

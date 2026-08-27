@@ -10,8 +10,6 @@ data class PresetsViewUiState(
 ) : UiState
 
 sealed interface PresetsUiAction : UiAction {
-    data object LoadPresets : PresetsUiAction
-
     data class UsePresetClicked(
         val item: Preset,
     ) : PresetsUiAction

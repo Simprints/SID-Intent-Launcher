@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.collectLatest
 fun PresetsScreen(navController: NavHostController) {
     val vm = hiltViewModel<PresetsViewModel>()
     val viewState by vm.state.collectAsStateLifecycleAware()
-    LaunchedEffect(vm) { vm.onAction(PresetsUiAction.LoadPresets) }
 
     val toastText = remember { mutableStateOf("") }
     ToastLauncher(toastText)

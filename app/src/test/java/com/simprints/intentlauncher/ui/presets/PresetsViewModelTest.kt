@@ -39,7 +39,6 @@ class PresetsViewModelTest {
         every { presetRepo.getPresets() } returns presetsFlow
 
         val vm = createViewModel()
-        vm.onAction(PresetsUiAction.LoadPresets)
         advanceUntilIdle()
         assertEquals(0, vm.state.value.items.size)
 
@@ -50,7 +49,11 @@ class PresetsViewModelTest {
         advanceUntilIdle()
 
         assertEquals(2, vm.state.value.items.size)
-        assertEquals("one", vm.state.value.items[0].id)
+        assertEquals(
+            "one",
+            vm.state.value.items[0]
+                .id,
+        )
     }
 
     @Test

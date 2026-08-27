@@ -16,15 +16,33 @@ data class ResponseEventsUiState(
 ) : UiState
 
 sealed interface ResponseEventsUiAction : UiAction {
-    data object LoadEvents : ResponseEventsUiAction
-    data class SearchQueryChanged(val query: String) : ResponseEventsUiAction
-    data class SortingChanged(val sorting: EventSortingOption) : ResponseEventsUiAction
+    data class SearchQueryChanged(
+        val query: String,
+    ) : ResponseEventsUiAction
+
+    data class SortingChanged(
+        val sorting: EventSortingOption,
+    ) : ResponseEventsUiAction
+
     data object SortOptionsClicked : ResponseEventsUiAction
-    data class EventOptionsClicked(val event: ResponseEvent) : ResponseEventsUiAction
+
+    data class EventOptionsClicked(
+        val event: ResponseEvent,
+    ) : ResponseEventsUiAction
+
     data object DialogDismissed : ResponseEventsUiAction
-    data class CopyIdClicked(val id: String) : ResponseEventsUiAction
-    data class CopyEventJsonClicked(val event: ResponseEvent) : ResponseEventsUiAction
-    data class CopyPayloadJsonClicked(val event: ResponseEvent) : ResponseEventsUiAction
+
+    data class CopyIdClicked(
+        val id: String,
+    ) : ResponseEventsUiAction
+
+    data class CopyEventJsonClicked(
+        val event: ResponseEvent,
+    ) : ResponseEventsUiAction
+
+    data class CopyPayloadJsonClicked(
+        val event: ResponseEvent,
+    ) : ResponseEventsUiAction
 }
 
 sealed interface ResponseEventsUiEffect : UiEffect {

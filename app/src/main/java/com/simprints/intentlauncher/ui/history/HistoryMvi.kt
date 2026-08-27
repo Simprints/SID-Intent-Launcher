@@ -9,8 +9,6 @@ data class HistoryViewUiState(
     val items: List<IntentCall> = emptyList(),
 ) : UiState
 
-sealed interface HistoryUiAction : UiAction {
-    data object LoadHistory : HistoryUiAction
-}
+sealed interface HistoryUiAction : UiAction
 
 sealed interface HistoryUiEffect : UiEffect

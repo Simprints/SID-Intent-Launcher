@@ -2,6 +2,7 @@ package com.simprints.intentlauncher.ui.custom
 
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.simprints.intentlauncher.data.store.ProjectDataCache
 import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentCallRepository
@@ -10,6 +11,7 @@ import com.simprints.intentlauncher.domain.IntentResultParser
 import com.simprints.intentlauncher.tools.toIsoString
 import com.simprints.intentlauncher.ui.base.BaseMviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
@@ -28,9 +30,12 @@ class CustomIntentViewModel @Inject constructor(
     ) {
     private var pendingIntentCall: IntentCall? = null
 
+    init {
+        viewModelScope.launch { fetchCachedFieldValues() }
+    }
+
     override suspend fun handleAction(action: CustomIntentUiAction) {
         when (action) {
-            CustomIntentUiAction.LoadCachedFields -> fetchCachedFieldValues()
             is CustomIntentUiAction.ActionChanged -> reduceAndPersist { it.copy(action = action.value) }
             is CustomIntentUiAction.ExtrasChanged -> reduceAndPersist { it.copy(extras = action.value) }
             CustomIntentUiAction.LaunchClicked -> launchIntent()

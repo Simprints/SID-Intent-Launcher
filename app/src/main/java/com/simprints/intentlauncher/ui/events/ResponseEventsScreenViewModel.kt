@@ -1,5 +1,6 @@
 package com.simprints.intentlauncher.ui.events
 
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.simprints.intentlauncher.domain.IntentCallRepository
 import com.simprints.intentlauncher.tools.extractEventsFromJson
@@ -11,6 +12,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = ResponseEventsScreenViewModel.Factory::class)
 class ResponseEventsScreenViewModel @AssistedInject constructor(
@@ -34,14 +36,14 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
         ): ResponseEventsScreenViewModel
     }
 
+    init {
+        viewModelScope.launch { loadEvents() }
+    }
+
     private var allEvents: List<ResponseEvent> = emptyList()
 
     override suspend fun handleAction(action: ResponseEventsUiAction) {
         when (action) {
-            ResponseEventsUiAction.LoadEvents -> {
-                loadEvents()
-            }
-
             is ResponseEventsUiAction.SearchQueryChanged -> {
                 reduceFilteredState(
                     query = action.query,
@@ -102,12 +104,12 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
                         value = gson.toJson(action.event.payload),
                     ),
                 )
-                emitEffect(ResponseEventsUiEffect.ShowToast("Paylaod JSON copied to clipboard"))
+                emitEffect(ResponseEventsUiEffect.ShowToast("Payload JSON copied to clipboard"))
             }
         }
     }
 
-    private suspend fun loadEvents() {
+    private fun loadEvents() = viewModelScope.launch {
         allEvents = intentCallRepository
             .getIntentCall(intentId)
             ?.result

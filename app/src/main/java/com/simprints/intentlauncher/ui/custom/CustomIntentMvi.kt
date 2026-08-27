@@ -12,11 +12,20 @@ data class CustomIntentViewUiState(
 ) : UiState
 
 sealed interface CustomIntentUiAction : UiAction {
-    data object LoadCachedFields : CustomIntentUiAction
-    data class ActionChanged(val value: String) : CustomIntentUiAction
-    data class ExtrasChanged(val value: String) : CustomIntentUiAction
+    data class ActionChanged(
+        val value: String,
+    ) : CustomIntentUiAction
+
+    data class ExtrasChanged(
+        val value: String,
+    ) : CustomIntentUiAction
+
     data object LaunchClicked : CustomIntentUiAction
-    data class IntentResultReceived(val result: Pair<Int, Intent?>) : CustomIntentUiAction
+
+    data class IntentResultReceived(
+        val result: Pair<Int, Intent?>,
+    ) : CustomIntentUiAction
+
     data object ClearFieldsClicked : CustomIntentUiAction
 }
 

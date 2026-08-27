@@ -2,11 +2,11 @@ package com.simprints.intentlauncher.ui.history
 
 import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentCallRepository
-import io.mockk.every
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -27,12 +27,11 @@ class HistoryViewModelTest {
     private val repository = mockk<IntentCallRepository>()
 
     @Test
-    fun `load history updates state from repository flow`() = runTest {
+    fun `history state updates from repository flow when started`() = runTest {
         val callsFlow = MutableStateFlow(emptyList<IntentCall>())
         every { repository.getAllIntentCalls() } returns callsFlow
 
         val vm = HistoryViewModel(repository)
-        vm.onAction(HistoryUiAction.LoadHistory)
         advanceUntilIdle()
         assertEquals(0, vm.state.value.items.size)
 
@@ -40,8 +39,34 @@ class HistoryViewModelTest {
         advanceUntilIdle()
 
         assertEquals(2, vm.state.value.items.size)
-        assertEquals("one", vm.state.value.items[0].id)
-        assertEquals("two", vm.state.value.items[1].id)
+        assertEquals(
+            "one",
+            vm.state.value.items[0]
+                .id,
+        )
+        assertEquals(
+            "two",
+            vm.state.value.items[1]
+                .id,
+        )
+    }
+
+    @Test
+    fun `history collection keeps observing repository updates after start`() = runTest {
+        every { repository.getAllIntentCalls() } returns flow {
+            emit(listOf(IntentCall(id = "one")))
+            emit(listOf(IntentCall(id = "two")))
+        }
+
+        val vm = HistoryViewModel(repository)
+        advanceUntilIdle()
+
+        assertEquals(1, vm.state.value.items.size)
+        assertEquals(
+            "two",
+            vm.state.value.items[0]
+                .id,
+        )
     }
 }
 

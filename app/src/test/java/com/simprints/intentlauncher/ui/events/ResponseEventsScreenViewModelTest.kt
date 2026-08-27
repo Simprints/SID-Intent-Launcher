@@ -10,8 +10,7 @@ import com.simprints.intentlauncher.domain.IntentResult
 import com.simprints.intentlauncher.ui.events.model.EventDialogType
 import com.simprints.intentlauncher.ui.events.model.EventSortingOption
 import com.simprints.intentlauncher.ui.intent.model.ResponseEvent
-import io.mockk.coEvery
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -32,7 +31,7 @@ class ResponseEventsScreenViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val intentCallRepository = mockk<IntentCallRepository>()
+    private val intentCallRepository = mockk<IntentCallRepository>(relaxed = true)
     private val gson: Gson = GsonBuilder()
         .setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
         .create()
@@ -45,13 +44,20 @@ class ResponseEventsScreenViewModelTest {
         )
         val vm = createViewModel()
 
-        vm.onAction(ResponseEventsUiAction.LoadEvents)
         advanceUntilIdle()
 
         assertEquals(2, vm.state.value.totalEvents)
         assertEquals(2, vm.state.value.events.size)
-        assertEquals("id-2", vm.state.value.events[0].id)
-        assertEquals("id-1", vm.state.value.events[1].id)
+        assertEquals(
+            "id-2",
+            vm.state.value.events[0]
+                .id,
+        )
+        assertEquals(
+            "id-1",
+            vm.state.value.events[1]
+                .id,
+        )
     }
 
     @Test
@@ -61,14 +67,18 @@ class ResponseEventsScreenViewModelTest {
             result = IntentResult(json = eventsJson()),
         )
         val vm = createViewModel()
-        vm.onAction(ResponseEventsUiAction.LoadEvents)
         advanceUntilIdle()
 
         vm.onAction(ResponseEventsUiAction.SearchQueryChanged("id-1"))
         advanceUntilIdle()
 
         assertEquals(1, vm.state.value.events.size)
-        assertEquals("id-1", vm.state.value.events.first().id)
+        assertEquals(
+            "id-1",
+            vm.state.value.events
+                .first()
+                .id,
+        )
     }
 
     @Test
@@ -78,14 +88,21 @@ class ResponseEventsScreenViewModelTest {
             result = IntentResult(json = eventsJson()),
         )
         val vm = createViewModel()
-        vm.onAction(ResponseEventsUiAction.LoadEvents)
         advanceUntilIdle()
 
         vm.onAction(ResponseEventsUiAction.SortingChanged(EventSortingOption.AsReceivedInResponse))
         advanceUntilIdle()
 
-        assertEquals("id-1", vm.state.value.events[0].id)
-        assertEquals("id-2", vm.state.value.events[1].id)
+        assertEquals(
+            "id-1",
+            vm.state.value.events[0]
+                .id,
+        )
+        assertEquals(
+            "id-2",
+            vm.state.value.events[1]
+                .id,
+        )
     }
 
     @Test
@@ -140,11 +157,12 @@ class ResponseEventsScreenViewModelTest {
         gson = gson,
     )
 
-    private fun eventsJson(): String = """
+    private fun eventsJson(): String =
+        """
         {
           "events":"{\"events\":[{\"id\":\"id-1\",\"type\":\"ONE_TO_MANY_MATCH\",\"scopeId\":\"scope-1\",\"projectId\":\"project-1\",\"payload\":{\"createdAt\":{\"ms\":5}}},{\"id\":\"id-2\",\"type\":\"ONE_TO_MANY_MATCH\",\"scopeId\":\"scope-2\",\"projectId\":\"project-2\",\"payload\":{\"createdAt\":{\"ms\":1}}}]}"
         }
-    """.trimIndent()
+        """.trimIndent()
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)

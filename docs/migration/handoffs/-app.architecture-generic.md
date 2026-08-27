@@ -342,3 +342,29 @@ Current baseline note: `lintDebug` already fails before migration due to `NonObs
   - `:app:testDebugUnitTest` passes.
   - `:app:assembleDebug` passes.
   - `:app:lintDebug` fails on the same pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.
+
+### Screen 4/6 - Presets screen (`PresetsViewModel` + `PresetsScreen`)
+- **Status:** Completed and ready for review pause.
+- **Implemented**
+  - Migrated `PresetsViewModel` to MVI with `PresetsViewUiState`, `PresetsUiAction`, `PresetsUiEffect`.
+  - Added single entrypoint `onAction(...)` and explicit `LoadPresets` action.
+  - Replaced direct `MutableStateFlow<List<Preset>>` exposure with `state.items`.
+  - Added effects for one-time events:
+    - `NavigateToIntent` on preset usage,
+    - `ShowToast("Preset deleted")` on delete.
+  - Updated `PresetsScreen` to:
+    - dispatch `LoadPresets` from `LaunchedEffect`,
+    - collect effects lifecycle-aware,
+    - render from `vm.state`.
+  - Added `PresetsViewModelTest` coverage for:
+    - repository flow -> state updates,
+    - use preset cache persistence + navigation effect,
+    - delete action repository call + toast effect.
+- **Behavior parity notes**
+  - Navigation contract unchanged (`presets` and navigation to `intent` on preset usage).
+  - Existing delete confirmation dialog behavior preserved.
+  - Preset save/use/delete behavior remains equivalent.
+- **Validation evidence**
+  - `:app:testDebugUnitTest` passes.
+  - `:app:assembleDebug` passes.
+  - `:app:lintDebug` fails on the same pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.

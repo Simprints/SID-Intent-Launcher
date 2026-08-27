@@ -36,7 +36,7 @@ abstract class BaseMviViewModel<S : UiState, A : UiAction, E : UiEffect>(
         internalState.update(reducer)
     }
 
-    protected fun emitEffect(effect: E) {
-        internalEffects.tryEmit(effect)
+    protected suspend fun emitEffect(effect: E) {
+        internalEffects.emit(effect)
     }
 }

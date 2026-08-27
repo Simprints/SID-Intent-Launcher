@@ -1,6 +1,7 @@
 package com.simprints.intentlauncher.ui.custom
 
 import android.content.ActivityNotFoundException
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -25,29 +26,38 @@ import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.domain.IntentResult.Companion.ACTION_APP_NOT_FOUND
 import com.simprints.intentlauncher.tools.GenericIntentContract
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
+import com.simprints.intentlauncher.tools.rememberFlow
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
 import com.simprints.intentlauncher.ui.composables.SelectableCodeBlock
 import com.simprints.intentlauncher.ui.custom.composables.CustomIntentFields
-import de.palm.composestateevents.EventEffect
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun CustomIntentScreen(navController: NavHostController) {
     val vm = hiltViewModel<CustomIntentViewModel>()
-    val viewState by vm.viewState.collectAsStateLifecycleAware()
+    val viewState by vm.state.collectAsStateLifecycleAware()
 
-    LaunchedEffect(key1 = vm) { vm.fetchCachedFieldValues() }
+    LaunchedEffect(key1 = vm) { vm.onAction(CustomIntentUiAction.LoadCachedFields) }
 
     val intentLauncher = rememberLauncherForActivityResult(GenericIntentContract()) {
-        vm.intentResultReceived(it)
+        vm.onAction(CustomIntentUiAction.IntentResultReceived(it))
     }
-    EventEffect(
-        event = viewState.showIntent,
-        onConsumed = vm::intentShown,
-    ) {
-        try {
-            intentLauncher.launch(it)
-        } catch (e: ActivityNotFoundException) {
-            vm.intentResultReceived(ACTION_APP_NOT_FOUND to null)
+
+    val lifecycleAwareEffects = rememberFlow(vm.effects)
+    LaunchedEffect(lifecycleAwareEffects, intentLauncher) {
+        lifecycleAwareEffects.collectLatest { effect ->
+            when (effect) {
+                is CustomIntentUiEffect.LaunchIntent -> {
+                    val intent = Intent(effect.action).apply {
+                        effect.extras.forEach { (key, value) -> putExtra(key, value) }
+                    }
+                    try {
+                        intentLauncher.launch(intent)
+                    } catch (_: ActivityNotFoundException) {
+                        vm.onAction(CustomIntentUiAction.IntentResultReceived(ACTION_APP_NOT_FOUND to null))
+                    }
+                }
+            }
         }
     }
 
@@ -64,7 +74,7 @@ fun CustomIntentScreen(navController: NavHostController) {
             title = { Text("Custom intent") },
             actions = {
                 IconButton(
-                    onClick = { vm.clearFields() },
+                    onClick = { vm.onAction(CustomIntentUiAction.ClearFieldsClicked) },
                 ) {
                     Icon(Icons.Filled.Delete, contentDescription = "Clear")
                 }
@@ -79,9 +89,9 @@ fun CustomIntentScreen(navController: NavHostController) {
             CustomIntentFields(
                 viewState,
                 focusManager,
-                onActionChange = vm::updateAction,
-                onExtrasChange = vm::updateExtras,
-                onLaunch = { vm.launchIntent() },
+                onActionChange = { vm.onAction(CustomIntentUiAction.ActionChanged(it)) },
+                onExtrasChange = { vm.onAction(CustomIntentUiAction.ExtrasChanged(it)) },
+                onLaunch = { vm.onAction(CustomIntentUiAction.LaunchClicked) },
             )
             AccordionLayout(
                 title = "Result",

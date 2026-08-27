@@ -300,3 +300,29 @@ Current baseline note: `lintDebug` already fails before migration due to `NonObs
   - `:app:testDebugUnitTest` passes.
   - `:app:assembleDebug` passes.
   - `:app:lintDebug` fails on pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.
+
+### Screen 2/6 - Custom Intent screen (`CustomIntentViewModel` + `CustomIntentScreen`)
+- **Status:** Completed and ready for review pause.
+- **Implemented**
+  - Migrated to MVI contract with `CustomIntentViewUiState`, `CustomIntentUiAction`, and `CustomIntentUiEffect`.
+  - Reworked `CustomIntentViewModel` to extend `BaseMviViewModel` and expose immutable `state` + one-off `effects`.
+  - Replaced direct VM mutation methods with single `onAction(...)` entrypoint.
+  - Removed `de.palm.composestateevents` usage from this screen path.
+  - Kept cached action/extras restoration and clear behavior.
+  - Moved Android `Intent` construction to UI effect handling in `CustomIntentScreen` for cleaner ViewModel/domain boundaries.
+  - Switched pending custom call tracking to in-memory VM field (`pendingIntentCall`) to avoid SavedStateHandle parcel/runtime issues while preserving behavior.
+  - Added `CustomIntentViewModelTest` coverage for:
+    - field updates,
+    - cached hydration,
+    - launch cache persistence,
+    - result handling and repository persistence path,
+    - invalid custom intent non-persistence path,
+    - clear/reset behavior.
+- **Behavior parity notes**
+  - Navigation route contract unchanged (`custom`).
+  - Custom intent launch still occurs through `GenericIntentContract`; only trigger mechanism changed (effect flow).
+  - Result text rendering and history persistence rules preserved (`INVALID_CUSTOM_INTENT` still excluded from save path).
+- **Validation evidence**
+  - `:app:testDebugUnitTest` passes.
+  - `:app:assembleDebug` passes.
+  - `:app:lintDebug` fails on the same pre-existing `AccordionLayout.kt` `NonObservableLocale` issue.

@@ -82,4 +82,9 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.gson)
     implementation(libs.datastore)
+
+    testImplementation(libs.junit4)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
 }

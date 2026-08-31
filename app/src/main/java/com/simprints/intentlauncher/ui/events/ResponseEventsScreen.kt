@@ -25,6 +25,7 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -38,12 +39,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.tools.rememberFlow
-import com.simprints.intentlauncher.ui.composables.NavigateUpButton
 import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.composables.ToastLauncher
 import com.simprints.intentlauncher.ui.events.composables.EventActionsDialog
@@ -52,6 +54,7 @@ import com.simprints.intentlauncher.ui.events.composables.SortingOptionsDialog
 import com.simprints.intentlauncher.ui.events.model.EventDialogType
 import com.simprints.intentlauncher.ui.events.model.EventSortingOption
 import com.simprints.intentlauncher.ui.intent.model.ResponseEvent
+import com.simprints.intentlauncher.ui.theme.ApplicationTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -93,68 +96,98 @@ fun ResponseEventsScreen(
         }
     }
 
-    val scope = rememberCoroutineScope()
-    val modalSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
-        skipHalfExpanded = true,
-    )
-    if (modalSheetState.currentValue == ModalBottomSheetValue.Hidden && viewState.activeDialog != null) {
-        vm.onAction(ResponseEventsUiAction.DialogDismissed)
-    }
-
     // Setting SoftInputMode to SOFT_INPUT_ADJUST_RESIZE so that content won't shift away from the
     // screen when the keyboard is displayed. Setting it back to the initial value once the widget
-    // is no longer visible
+    // is no longer visible.
     window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     DisposableEffect(Unit) {
         onDispose {
             window?.setSoftInputMode(vm.initialSoftInputMode)
         }
     }
+
+    ResponseEventsContent(
+        state = viewState,
+        onNavigateUp = { navController.navigateUp() },
+        onSortOptionsClick = { vm.onAction(ResponseEventsUiAction.SortOptionsClicked) },
+        onSearchQueryChange = { vm.onAction(ResponseEventsUiAction.SearchQueryChanged(it)) },
+        onEventOptionsClick = { vm.onAction(ResponseEventsUiAction.EventOptionsClicked(it)) },
+        onSortingChanged = { vm.onAction(ResponseEventsUiAction.SortingChanged(it)) },
+        onDialogDismiss = { vm.onAction(ResponseEventsUiAction.DialogDismissed) },
+        onCopyId = { vm.onAction(ResponseEventsUiAction.CopyIdClicked(it)) },
+        onCopyEventJson = { vm.onAction(ResponseEventsUiAction.CopyEventJsonClicked(it)) },
+        onCopyPayloadJson = { vm.onAction(ResponseEventsUiAction.CopyPayloadJsonClicked(it)) },
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ResponseEventsContent(
+    state: ResponseEventsUiState,
+    onNavigateUp: () -> Unit,
+    onSortOptionsClick: () -> Unit,
+    onSearchQueryChange: (String) -> Unit,
+    onEventOptionsClick: (ResponseEvent) -> Unit,
+    onSortingChanged: (EventSortingOption) -> Unit,
+    onDialogDismiss: () -> Unit,
+    onCopyId: (String) -> Unit,
+    onCopyEventJson: (ResponseEvent) -> Unit,
+    onCopyPayloadJson: (ResponseEvent) -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    val modalSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
+        skipHalfExpanded = true,
+    )
+    if (modalSheetState.currentValue == ModalBottomSheetValue.Hidden && state.activeDialog != null) {
+        onDialogDismiss()
+    }
+
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
         sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
         sheetContent = {
-            when (val dialogType = viewState.activeDialog) {
+            when (val dialogType = state.activeDialog) {
                 null -> Unit
 
                 is EventDialogType.SortingOptions -> SortingOptionsDialogWrapper(
-                    viewState = viewState,
+                    viewState = state,
                     modalSheetState = modalSheetState,
                     scope = scope,
                     sortingOptions = dialogType.sortingOptions,
-                    onOptionSelected = { vm.onAction(ResponseEventsUiAction.SortingChanged(it)) },
+                    onOptionSelected = onSortingChanged,
                 )
 
                 is EventDialogType.EventOptions -> EventActionsDialogWrapper(
                     event = dialogType.event,
                     modalSheetState = modalSheetState,
                     scope = scope,
-                    onCopyId = { vm.onAction(ResponseEventsUiAction.CopyIdClicked(it)) },
-                    onCopyEventJson = { vm.onAction(ResponseEventsUiAction.CopyEventJsonClicked(it)) },
-                    onCopyPayloadJson = { vm.onAction(ResponseEventsUiAction.CopyPayloadJsonClicked(it)) },
+                    onCopyId = onCopyId,
+                    onCopyEventJson = onCopyEventJson,
+                    onCopyPayloadJson = onCopyPayloadJson,
                 )
             }
         },
         sheetBackgroundColor = MaterialTheme.colors.surface,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             val eventCountText = when {
-                viewState.events.size == viewState.totalEvents -> "${viewState.events.size}"
-                else -> "${viewState.events.size}/${viewState.totalEvents}"
+                state.events.size == state.totalEvents -> "${state.events.size}"
+                else -> "${state.events.size}/${state.totalEvents}"
             }
             TopAppBar(
                 windowInsets = WindowInsets.statusBars,
                 title = { Text("Response Events ($eventCountText) ") },
-                navigationIcon = { NavigateUpButton(navController) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateUp) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
                 actions = {
                     IconButton(
                         onClick = {
-                            vm.onAction(ResponseEventsUiAction.SortOptionsClicked)
+                            onSortOptionsClick()
                             scope.launch { modalSheetState.show() }
                         },
                     ) {
@@ -169,14 +202,13 @@ fun ResponseEventsScreen(
             ) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                 ) {
-                    items(viewState.events.size) { i ->
-                        val event = viewState.events[i]
+                    items(state.events.size) { i ->
+                        val event = state.events[i]
                         val modifier = when (i) {
                             0 -> Modifier.padding(top = 8.dp)
-                            viewState.events.size - 1 -> Modifier.padding(bottom = 8.dp)
+                            state.events.size - 1 -> Modifier.padding(bottom = 8.dp)
                             else -> Modifier
                         }
                         ResponseEventItem(
@@ -184,7 +216,7 @@ fun ResponseEventsScreen(
                             event = event,
                             position = i,
                         ) {
-                            vm.onAction(ResponseEventsUiAction.EventOptionsClicked(it))
+                            onEventOptionsClick(it)
                             scope.launch { modalSheetState.show() }
                         }
                     }
@@ -198,14 +230,11 @@ fun ResponseEventsScreen(
             ) {
                 PropertyField(
                     "Search",
-                    viewState.query,
+                    state.query,
                     LocalFocusManager.current,
                     testTag = "search",
-                    onChange = {
-                        vm.onAction(ResponseEventsUiAction.SearchQueryChanged(it))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    onChange = onSearchQueryChange,
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -262,4 +291,28 @@ fun SortingOptionsDialogWrapper(
             scope.launch { modalSheetState.hide() }
         },
     )
+}
+
+@Preview(showBackground = true, device = Devices.PHONE)
+@Composable
+private fun ResponseEventsContentPreviewEmpty() {
+    ApplicationTheme {
+        ResponseEventsContent(
+            state = ResponseEventsUiState(
+                events = emptyList(),
+                totalEvents = 0,
+                query = "",
+                sorting = EventSortingOption.DateAsc,
+            ),
+            onNavigateUp = {},
+            onSortOptionsClick = {},
+            onSearchQueryChange = {},
+            onEventOptionsClick = {},
+            onSortingChanged = {},
+            onDialogDismiss = {},
+            onCopyId = {},
+            onCopyEventJson = {},
+            onCopyPayloadJson = {},
+        )
+    }
 }

@@ -21,6 +21,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.domain.IntentResult.Companion.ACTION_APP_NOT_FOUND
@@ -30,6 +32,7 @@ import com.simprints.intentlauncher.tools.rememberFlow
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
 import com.simprints.intentlauncher.ui.composables.SelectableCodeBlock
 import com.simprints.intentlauncher.ui.custom.composables.CustomIntentFields
+import com.simprints.intentlauncher.ui.theme.ApplicationTheme
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -59,6 +62,23 @@ fun CustomIntentScreen(navController: NavHostController) {
         }
     }
 
+    CustomIntentContent(
+        state = viewState,
+        onActionChange = { vm.onAction(CustomIntentUiAction.ActionChanged(it)) },
+        onExtrasChange = { vm.onAction(CustomIntentUiAction.ExtrasChanged(it)) },
+        onLaunch = { vm.onAction(CustomIntentUiAction.LaunchClicked) },
+        onClear = { vm.onAction(CustomIntentUiAction.ClearFieldsClicked) },
+    )
+}
+
+@Composable
+fun CustomIntentContent(
+    state: CustomIntentViewUiState,
+    onActionChange: (String) -> Unit,
+    onExtrasChange: (String) -> Unit,
+    onLaunch: () -> Unit,
+    onClear: () -> Unit,
+) {
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
 
@@ -71,9 +91,7 @@ fun CustomIntentScreen(navController: NavHostController) {
             windowInsets = WindowInsets.statusBars,
             title = { Text("Custom intent") },
             actions = {
-                IconButton(
-                    onClick = { vm.onAction(CustomIntentUiAction.ClearFieldsClicked) },
-                ) {
+                IconButton(onClick = onClear) {
                     Icon(Icons.Filled.Delete, contentDescription = "Clear")
                 }
             },
@@ -85,19 +103,51 @@ fun CustomIntentScreen(navController: NavHostController) {
                 .verticalScroll(scrollState),
         ) {
             CustomIntentFields(
-                viewState,
+                state,
                 focusManager,
-                onActionChange = { vm.onAction(CustomIntentUiAction.ActionChanged(it)) },
-                onExtrasChange = { vm.onAction(CustomIntentUiAction.ExtrasChanged(it)) },
-                onLaunch = { vm.onAction(CustomIntentUiAction.LaunchClicked) },
+                onActionChange = onActionChange,
+                onExtrasChange = onExtrasChange,
+                onLaunch = onLaunch,
             )
             AccordionLayout(
                 title = "Result",
                 testTag = "resultsAccordion",
                 defaultExpanded = true,
             ) {
-                SelectableCodeBlock(viewState.result)
+                SelectableCodeBlock(state.result)
             }
         }
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PHONE)
+@Composable
+private fun CustomIntentContentPreviewEmpty() {
+    ApplicationTheme {
+        CustomIntentContent(
+            state = CustomIntentViewUiState(),
+            onActionChange = {},
+            onExtrasChange = {},
+            onLaunch = {},
+            onClear = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PHONE)
+@Composable
+private fun CustomIntentContentPreviewFilled() {
+    ApplicationTheme {
+        CustomIntentContent(
+            state = CustomIntentViewUiState(
+                action = "com.simprints.id.REGISTER",
+                extras = "projectId=demo-project\nuserId=user-1\nmoduleId=module-1",
+                result = "Result: COMPLETED",
+            ),
+            onActionChange = {},
+            onExtrasChange = {},
+            onLaunch = {},
+            onClear = {},
+        )
     }
 }

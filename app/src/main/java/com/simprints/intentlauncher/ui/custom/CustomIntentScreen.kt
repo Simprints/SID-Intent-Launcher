@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.domain.IntentResult.Companion.ACTION_APP_NOT_FOUND
 import com.simprints.intentlauncher.tools.GenericIntentContract
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
@@ -32,11 +31,12 @@ import com.simprints.intentlauncher.tools.rememberFlow
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
 import com.simprints.intentlauncher.ui.composables.SelectableCodeBlock
 import com.simprints.intentlauncher.ui.custom.composables.CustomIntentFields
+import com.simprints.intentlauncher.ui.navigation.Navigator
 import com.simprints.intentlauncher.ui.theme.ApplicationTheme
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun CustomIntentScreen(navController: NavHostController) {
+fun CustomIntentScreen(navigator: Navigator) {
     val vm = hiltViewModel<CustomIntentViewModel>()
     val viewState by vm.state.collectAsStateLifecycleAware()
 

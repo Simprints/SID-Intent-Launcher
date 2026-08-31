@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
 
     id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("kotlin-parcelize")
 
     id("com.google.devtools.ksp")
@@ -69,7 +70,9 @@ dependencies {
     implementation(libs.compose.graphics)
     implementation(libs.compose.preview)
     implementation(libs.compose.liveData)
-    implementation(libs.compose.navigation)
+    implementation(libs.navigation3.runtime)
+    implementation(libs.navigation3.ui)
+    implementation(libs.lifecycle.viewmodel.navigation3)
     implementation(libs.compose.stateEvent)
     debugImplementation(libs.compose.tooling)
 

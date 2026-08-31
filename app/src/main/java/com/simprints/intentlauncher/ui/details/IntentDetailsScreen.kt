@@ -21,21 +21,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentFields
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.tools.rememberFlow
-import com.simprints.intentlauncher.ui.Screen
 import com.simprints.intentlauncher.ui.composables.ShowInputFieldAlertDialog
 import com.simprints.intentlauncher.ui.composables.ToastLauncher
 import com.simprints.intentlauncher.ui.details.composables.IntentDetails
+import com.simprints.intentlauncher.ui.navigation.IntentRoute
+import com.simprints.intentlauncher.ui.navigation.Navigator
 import com.simprints.intentlauncher.ui.theme.ApplicationTheme
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun IntentDetailsScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     intentId: String,
 ) {
     val vm = hiltViewModel<IntentDetailsViewModel>()
@@ -44,11 +44,11 @@ fun IntentDetailsScreen(
     val viewState by vm.state.collectAsStateLifecycleAware()
     LaunchedEffect(vm, intentId) { vm.onAction(IntentDetailsUiAction.LoadIntent(intentId)) }
     val lifecycleAwareEffects = rememberFlow(vm.effects)
-    LaunchedEffect(lifecycleAwareEffects, navController) {
+    LaunchedEffect(lifecycleAwareEffects, navigator) {
         lifecycleAwareEffects.collectLatest { effect ->
             when (effect) {
-                IntentDetailsUiEffect.NavigateToIntent -> navController.navigate(Screen.Intent.route)
-                IntentDetailsUiEffect.NavigateUp -> navController.navigateUp()
+                IntentDetailsUiEffect.NavigateToIntent -> navigator.navigate(IntentRoute)
+                IntentDetailsUiEffect.NavigateUp -> navigator.goBack()
                 is IntentDetailsUiEffect.ShowToast -> toastText.value = effect.message
             }
         }
@@ -56,7 +56,7 @@ fun IntentDetailsScreen(
 
     IntentDetailsContent(
         state = viewState,
-        onNavigateUp = { navController.navigateUp() },
+        onNavigateUp = { navigator.goBack() },
         onAction = { vm.onAction(it) },
     )
 }
@@ -97,9 +97,11 @@ fun IntentDetailsContent(
             label = { Text(text = "Preset name") },
             confirmButtonText = { Text(text = "Save") },
             onConfirm = { name ->
-                onAction(IntentDetailsUiAction.SavePresetConfirmed(
-                    name = name.ifEmpty { state.intentData.fields.projectId },
-                ))
+                onAction(
+                    IntentDetailsUiAction.SavePresetConfirmed(
+                        name = name.ifEmpty { state.intentData.fields.projectId },
+                    ),
+                )
             },
             onDismiss = { onAction(IntentDetailsUiAction.SavePresetDialogDismissed) },
         )

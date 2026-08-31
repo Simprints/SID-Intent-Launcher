@@ -18,21 +18,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.domain.IntentFields
 import com.simprints.intentlauncher.domain.Preset
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.tools.rememberFlow
-import com.simprints.intentlauncher.ui.Screen
 import com.simprints.intentlauncher.ui.composables.NothingToDisplay
 import com.simprints.intentlauncher.ui.composables.ShowBasicAlertDialog
 import com.simprints.intentlauncher.ui.composables.ToastLauncher
+import com.simprints.intentlauncher.ui.navigation.IntentRoute
+import com.simprints.intentlauncher.ui.navigation.Navigator
 import com.simprints.intentlauncher.ui.presets.composables.PresetItem
 import com.simprints.intentlauncher.ui.theme.ApplicationTheme
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun PresetsScreen(navController: NavHostController) {
+fun PresetsScreen(navigator: Navigator) {
     val vm = hiltViewModel<PresetsViewModel>()
     val viewState by vm.state.collectAsStateLifecycleAware()
 
@@ -42,7 +42,7 @@ fun PresetsScreen(navController: NavHostController) {
     LaunchedEffect(lifecycleAwareEffects) {
         lifecycleAwareEffects.collectLatest { effect ->
             when (effect) {
-                PresetsUiEffect.NavigateToIntent -> navController.navigate(Screen.Intent.route)
+                PresetsUiEffect.NavigateToIntent -> navigator.navigate(IntentRoute)
                 is PresetsUiEffect.ShowToast -> toastText.value = effect.message
             }
         }

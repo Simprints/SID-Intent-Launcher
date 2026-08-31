@@ -15,23 +15,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentFields
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
-import com.simprints.intentlauncher.ui.Screen
 import com.simprints.intentlauncher.ui.composables.NothingToDisplay
 import com.simprints.intentlauncher.ui.history.composables.HistoryItem
+import com.simprints.intentlauncher.ui.navigation.IntentDetailsRoute
+import com.simprints.intentlauncher.ui.navigation.Navigator
 import com.simprints.intentlauncher.ui.theme.ApplicationTheme
 
 @Composable
-fun HistoryScreen(navController: NavHostController) {
+fun HistoryScreen(navigator: Navigator) {
     val vm = hiltViewModel<HistoryViewModel>()
     val viewState by vm.state.collectAsStateLifecycleAware()
 
     HistoryContent(
         items = viewState.items,
-        onItemClick = { navController.navigate(Screen.IntentDetails.createRoute(it)) },
+        onItemClick = { navigator.navigate(IntentDetailsRoute(it)) },
     )
 }
 

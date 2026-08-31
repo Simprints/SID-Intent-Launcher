@@ -30,10 +30,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.tools.rememberFlow
-import com.simprints.intentlauncher.ui.Screen
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
 import com.simprints.intentlauncher.ui.composables.SelectableCodeBlock
 import com.simprints.intentlauncher.ui.composables.ShowErrorAlert
@@ -41,12 +39,15 @@ import com.simprints.intentlauncher.ui.intent.composables.BiometricFlowForm
 import com.simprints.intentlauncher.ui.intent.composables.CoreFieldsForm
 import com.simprints.intentlauncher.ui.intent.composables.FollowUpFlowForm
 import com.simprints.intentlauncher.ui.intent.composables.ResponseEventsForm
+import com.simprints.intentlauncher.ui.navigation.CustomIntentRoute
+import com.simprints.intentlauncher.ui.navigation.Navigator
+import com.simprints.intentlauncher.ui.navigation.ResponseEventsRoute
 import com.simprints.intentlauncher.ui.theme.ApplicationTheme
 import com.simprints.libsimprints.contracts.SimprintsContract
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun IntentScreen(navController: NavHostController) {
+fun IntentScreen(navigator: Navigator) {
     val vm = hiltViewModel<IntentViewModel>()
     val viewState by vm.state.collectAsStateLifecycleAware()
     LaunchedEffect(vm) { vm.loadCachedFields() }
@@ -73,8 +74,8 @@ fun IntentScreen(navController: NavHostController) {
     IntentContent(
         state = viewState,
         onAction = { vm.onAction(it) },
-        onNavigateToResponseEvents = { navController.navigate(Screen.ResponseEventDetails.createRoute(it)) },
-        onNavigateToCustomIntent = { navController.navigate(Screen.CustomIntent.route) },
+        onNavigateToResponseEvents = { navigator.navigate(ResponseEventsRoute(it)) },
+        onNavigateToCustomIntent = { navigator.navigate(CustomIntentRoute) },
     )
 }
 

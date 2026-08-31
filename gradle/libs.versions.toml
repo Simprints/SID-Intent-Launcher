@@ -11,7 +11,8 @@ hiltCompose = "1.4.0"
 
 composeBom = "2026.08.00"
 composeActivity = "1.13.0"
-composeNavigation = "2.10.0"
+nav3Core = "1.0.0"
+lifecycleViewmodelNav3 = "2.11.0"
 composeStateEvents = "2.3.0"
 accompanistThemeadapterMaterial = "0.36.0"
 lifecycleViewmodelKtx = "2.11.0"
@@ -44,7 +45,9 @@ compose-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-graphics = { module = "androidx.compose.ui:ui-graphics" }
 compose-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 compose-liveData = { module = "androidx.compose.runtime:runtime-livedata"}
-compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
+navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 compose-stateEvent = { module = "com.github.leonard-palm:compose-state-events", version.ref = "composeStateEvents" }
 
 accompanist-themeAdapter = { module = "com.google.accompanist:accompanist-themeadapter-material", version.ref = "accompanistThemeadapterMaterial" }

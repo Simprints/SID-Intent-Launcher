@@ -43,7 +43,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
 import com.simprints.intentlauncher.tools.rememberFlow
 import com.simprints.intentlauncher.ui.composables.PropertyField
@@ -54,6 +53,7 @@ import com.simprints.intentlauncher.ui.events.composables.SortingOptionsDialog
 import com.simprints.intentlauncher.ui.events.model.EventDialogType
 import com.simprints.intentlauncher.ui.events.model.EventSortingOption
 import com.simprints.intentlauncher.ui.intent.model.ResponseEvent
+import com.simprints.intentlauncher.ui.navigation.Navigator
 import com.simprints.intentlauncher.ui.theme.ApplicationTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
@@ -62,7 +62,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ResponseEventsScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     intentId: String,
 ) {
     val window = LocalActivity.current?.window
@@ -108,7 +108,7 @@ fun ResponseEventsScreen(
 
     ResponseEventsContent(
         state = viewState,
-        onNavigateUp = { navController.navigateUp() },
+        onNavigateUp = { navigator.goBack() },
         onAction = { vm.onAction(it) },
     )
 }

@@ -109,14 +109,7 @@ fun ResponseEventsScreen(
     ResponseEventsContent(
         state = viewState,
         onNavigateUp = { navController.navigateUp() },
-        onSortOptionsClick = { vm.onAction(ResponseEventsUiAction.SortOptionsClicked) },
-        onSearchQueryChange = { vm.onAction(ResponseEventsUiAction.SearchQueryChanged(it)) },
-        onEventOptionsClick = { vm.onAction(ResponseEventsUiAction.EventOptionsClicked(it)) },
-        onSortingChanged = { vm.onAction(ResponseEventsUiAction.SortingChanged(it)) },
-        onDialogDismiss = { vm.onAction(ResponseEventsUiAction.DialogDismissed) },
-        onCopyId = { vm.onAction(ResponseEventsUiAction.CopyIdClicked(it)) },
-        onCopyEventJson = { vm.onAction(ResponseEventsUiAction.CopyEventJsonClicked(it)) },
-        onCopyPayloadJson = { vm.onAction(ResponseEventsUiAction.CopyPayloadJsonClicked(it)) },
+        onAction = { vm.onAction(it) },
     )
 }
 
@@ -125,14 +118,7 @@ fun ResponseEventsScreen(
 fun ResponseEventsContent(
     state: ResponseEventsUiState,
     onNavigateUp: () -> Unit,
-    onSortOptionsClick: () -> Unit,
-    onSearchQueryChange: (String) -> Unit,
-    onEventOptionsClick: (ResponseEvent) -> Unit,
-    onSortingChanged: (EventSortingOption) -> Unit,
-    onDialogDismiss: () -> Unit,
-    onCopyId: (String) -> Unit,
-    onCopyEventJson: (ResponseEvent) -> Unit,
-    onCopyPayloadJson: (ResponseEvent) -> Unit,
+    onAction: (ResponseEventsUiAction) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(
@@ -141,7 +127,7 @@ fun ResponseEventsContent(
         skipHalfExpanded = true,
     )
     if (modalSheetState.currentValue == ModalBottomSheetValue.Hidden && state.activeDialog != null) {
-        onDialogDismiss()
+        onAction(ResponseEventsUiAction.DialogDismissed)
     }
 
     ModalBottomSheetLayout(
@@ -156,16 +142,16 @@ fun ResponseEventsContent(
                     modalSheetState = modalSheetState,
                     scope = scope,
                     sortingOptions = dialogType.sortingOptions,
-                    onOptionSelected = onSortingChanged,
+                    onOptionSelected = { onAction(ResponseEventsUiAction.SortingChanged(it)) },
                 )
 
                 is EventDialogType.EventOptions -> EventActionsDialogWrapper(
                     event = dialogType.event,
                     modalSheetState = modalSheetState,
                     scope = scope,
-                    onCopyId = onCopyId,
-                    onCopyEventJson = onCopyEventJson,
-                    onCopyPayloadJson = onCopyPayloadJson,
+                    onCopyId = { onAction(ResponseEventsUiAction.CopyIdClicked(it)) },
+                    onCopyEventJson = { onAction(ResponseEventsUiAction.CopyEventJsonClicked(it)) },
+                    onCopyPayloadJson = { onAction(ResponseEventsUiAction.CopyPayloadJsonClicked(it)) },
                 )
             }
         },
@@ -187,7 +173,7 @@ fun ResponseEventsContent(
                 actions = {
                     IconButton(
                         onClick = {
-                            onSortOptionsClick()
+                            onAction(ResponseEventsUiAction.SortOptionsClicked)
                             scope.launch { modalSheetState.show() }
                         },
                     ) {
@@ -216,7 +202,7 @@ fun ResponseEventsContent(
                             event = event,
                             position = i,
                         ) {
-                            onEventOptionsClick(it)
+                            onAction(ResponseEventsUiAction.EventOptionsClicked(it))
                             scope.launch { modalSheetState.show() }
                         }
                     }
@@ -233,11 +219,28 @@ fun ResponseEventsContent(
                     state.query,
                     LocalFocusManager.current,
                     testTag = "search",
-                    onChange = onSearchQueryChange,
+                    onChange = { onAction(ResponseEventsUiAction.SearchQueryChanged(it)) },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PHONE)
+@Composable
+private fun ResponseEventsContentPreviewEmpty() {
+    ApplicationTheme {
+        ResponseEventsContent(
+            state = ResponseEventsUiState(
+                events = emptyList(),
+                totalEvents = 0,
+                query = "",
+                sorting = EventSortingOption.DateAsc,
+            ),
+            onNavigateUp = {},
+            onAction = {},
+        )
     }
 }
 
@@ -291,28 +294,4 @@ fun SortingOptionsDialogWrapper(
             scope.launch { modalSheetState.hide() }
         },
     )
-}
-
-@Preview(showBackground = true, device = Devices.PHONE)
-@Composable
-private fun ResponseEventsContentPreviewEmpty() {
-    ApplicationTheme {
-        ResponseEventsContent(
-            state = ResponseEventsUiState(
-                events = emptyList(),
-                totalEvents = 0,
-                query = "",
-                sorting = EventSortingOption.DateAsc,
-            ),
-            onNavigateUp = {},
-            onSortOptionsClick = {},
-            onSearchQueryChange = {},
-            onEventOptionsClick = {},
-            onSortingChanged = {},
-            onDialogDismiss = {},
-            onCopyId = {},
-            onCopyEventJson = {},
-            onCopyPayloadJson = {},
-        )
-    }
 }

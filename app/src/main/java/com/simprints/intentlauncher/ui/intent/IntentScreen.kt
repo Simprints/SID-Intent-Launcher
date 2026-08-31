@@ -72,42 +72,18 @@ fun IntentScreen(navController: NavHostController) {
 
     IntentContent(
         state = viewState,
-        onProjectIdChange = { vm.onAction(IntentUiAction.ProjectIdChanged(it)) },
-        onUserIdChange = { vm.onAction(IntentUiAction.UserIdChanged(it)) },
-        onModuleIdChange = { vm.onAction(IntentUiAction.ModuleIdChanged(it)) },
-        onMetadataChange = { vm.onAction(IntentUiAction.MetadataChanged(it)) },
-        onGuidChange = { vm.onAction(IntentUiAction.GuidChanged(it)) },
-        onEnroll = { vm.onAction(IntentUiAction.EnrollClicked) },
-        onIdentify = { vm.onAction(IntentUiAction.IdentifyClicked) },
-        onVerify = { vm.onAction(IntentUiAction.VerifyClicked) },
-        onSessionIdChanged = { vm.onAction(IntentUiAction.SessionIdChanged(it)) },
-        onConfirm = { vm.onAction(IntentUiAction.ConfirmClicked) },
-        onEnrolLast = { vm.onAction(IntentUiAction.EnrolLastClicked) },
-        onResponseEventsClick = { navController.navigate(Screen.ResponseEventDetails.createRoute(it)) },
-        onClearFields = { vm.onAction(IntentUiAction.ClearFieldsClicked) },
+        onAction = { vm.onAction(it) },
+        onNavigateToResponseEvents = { navController.navigate(Screen.ResponseEventDetails.createRoute(it)) },
         onNavigateToCustomIntent = { navController.navigate(Screen.CustomIntent.route) },
-        onWrongMetadataDismiss = { vm.onAction(IntentUiAction.WrongMetadataAlertDismissed) },
     )
 }
 
 @Composable
 fun IntentContent(
     state: IntentViewUiState,
-    onProjectIdChange: (String) -> Unit,
-    onUserIdChange: (String) -> Unit,
-    onModuleIdChange: (String) -> Unit,
-    onMetadataChange: (String) -> Unit,
-    onGuidChange: (String) -> Unit,
-    onEnroll: () -> Unit,
-    onIdentify: () -> Unit,
-    onVerify: () -> Unit,
-    onSessionIdChanged: (String) -> Unit,
-    onConfirm: () -> Unit,
-    onEnrolLast: () -> Unit,
-    onResponseEventsClick: (String) -> Unit,
-    onClearFields: () -> Unit,
+    onAction: (IntentUiAction) -> Unit,
+    onNavigateToResponseEvents: (String) -> Unit,
     onNavigateToCustomIntent: () -> Unit,
-    onWrongMetadataDismiss: () -> Unit,
 ) {
     val menuExpanded = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
@@ -132,7 +108,7 @@ fun IntentContent(
                     DropdownMenuItem(
                         onClick = {
                             menuExpanded.value = false
-                            onClearFields()
+                            onAction(IntentUiAction.ClearFieldsClicked)
                         },
                     ) {
                         Text("Clear fields")
@@ -159,30 +135,30 @@ fun IntentContent(
             CoreFieldsForm(
                 state = state,
                 focusManager = focusManager,
-                onProjectIdChange = onProjectIdChange,
-                onUserIdChange = onUserIdChange,
-                onModuleIdChange = onModuleIdChange,
-                onMetadataChange = onMetadataChange,
+                onProjectIdChange = { onAction(IntentUiAction.ProjectIdChanged(it)) },
+                onUserIdChange = { onAction(IntentUiAction.UserIdChanged(it)) },
+                onModuleIdChange = { onAction(IntentUiAction.ModuleIdChanged(it)) },
+                onMetadataChange = { onAction(IntentUiAction.MetadataChanged(it)) },
             )
             BiometricFlowForm(
                 state = state,
                 focusManager = focusManager,
                 defaultExpanded = true,
-                onGuidChange = onGuidChange,
-                onEnroll = onEnroll,
-                onIdentify = onIdentify,
-                onVerify = onVerify,
+                onGuidChange = { onAction(IntentUiAction.GuidChanged(it)) },
+                onEnroll = { onAction(IntentUiAction.EnrollClicked) },
+                onIdentify = { onAction(IntentUiAction.IdentifyClicked) },
+                onVerify = { onAction(IntentUiAction.VerifyClicked) },
             )
             FollowUpFlowForm(
                 state = state,
                 focusManager = focusManager,
-                onSessionIdChanged = onSessionIdChanged,
-                onConfirm = onConfirm,
-                onEnrolLast = onEnrolLast,
+                onSessionIdChanged = { onAction(IntentUiAction.SessionIdChanged(it)) },
+                onConfirm = { onAction(IntentUiAction.ConfirmClicked) },
+                onEnrolLast = { onAction(IntentUiAction.EnrolLastClicked) },
             )
             ResponseEventsForm(
                 state = state,
-                onClick = onResponseEventsClick,
+                onClick = onNavigateToResponseEvents,
             )
             AccordionLayout(
                 title = "Result",
@@ -199,7 +175,7 @@ fun IntentContent(
         text = { Text(text = "Metadata field should contain valid JSON string") },
         confirmButtonText = { Text(text = "OK") },
         onConfirm = {},
-        onDismiss = onWrongMetadataDismiss,
+        onDismiss = { onAction(IntentUiAction.WrongMetadataAlertDismissed) },
     )
 }
 
@@ -209,21 +185,9 @@ private fun IntentContentPreviewEmpty() {
     ApplicationTheme {
         IntentContent(
             state = IntentViewUiState(),
-            onProjectIdChange = {},
-            onUserIdChange = {},
-            onModuleIdChange = {},
-            onMetadataChange = {},
-            onGuidChange = {},
-            onEnroll = {},
-            onIdentify = {},
-            onVerify = {},
-            onSessionIdChanged = {},
-            onConfirm = {},
-            onEnrolLast = {},
-            onResponseEventsClick = {},
-            onClearFields = {},
+            onAction = {},
+            onNavigateToResponseEvents = {},
             onNavigateToCustomIntent = {},
-            onWrongMetadataDismiss = {},
         )
     }
 }
@@ -240,21 +204,9 @@ private fun IntentContentPreviewFilled() {
                 metadata = """{"key":"value"}""",
                 result = "ENROL COMPLETED",
             ),
-            onProjectIdChange = {},
-            onUserIdChange = {},
-            onModuleIdChange = {},
-            onMetadataChange = {},
-            onGuidChange = {},
-            onEnroll = {},
-            onIdentify = {},
-            onVerify = {},
-            onSessionIdChanged = {},
-            onConfirm = {},
-            onEnrolLast = {},
-            onResponseEventsClick = {},
-            onClearFields = {},
+            onAction = {},
+            onNavigateToResponseEvents = {},
             onNavigateToCustomIntent = {},
-            onWrongMetadataDismiss = {},
         )
     }
 }

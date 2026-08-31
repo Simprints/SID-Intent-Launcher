@@ -50,16 +50,14 @@ fun PresetsScreen(navController: NavHostController) {
 
     PresetsContent(
         items = viewState.items,
-        onUsePreset = { vm.onAction(PresetsUiAction.UsePresetClicked(it)) },
-        onDeletePreset = { vm.onAction(PresetsUiAction.DeletePresetClicked(it)) },
+        onAction = { vm.onAction(it) },
     )
 }
 
 @Composable
 fun PresetsContent(
     items: List<Preset>,
-    onUsePreset: (Preset) -> Unit,
-    onDeletePreset: (Preset) -> Unit,
+    onAction: (PresetsUiAction) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -78,14 +76,14 @@ fun PresetsContent(
                     val showDeleteDialog = remember { mutableStateOf(false) }
                     PresetItem(
                         data = item,
-                        onUse = { onUsePreset(item) },
+                        onUse = { onAction(PresetsUiAction.UsePresetClicked(item)) },
                         onDelete = { showDeleteDialog.value = true },
                     )
                     ShowBasicAlertDialog(
                         openDialog = showDeleteDialog,
                         title = { Text(text = "Delete preset?") },
                         confirmButtonText = { Text(text = "Delete") },
-                        onConfirm = { onDeletePreset(item) },
+                        onConfirm = { onAction(PresetsUiAction.DeletePresetClicked(item)) },
                     )
                 }
             }
@@ -99,8 +97,7 @@ private fun PresetsContentPreviewEmpty() {
     ApplicationTheme {
         PresetsContent(
             items = emptyList(),
-            onUsePreset = {},
-            onDeletePreset = {},
+            onAction = {},
         )
     }
 }
@@ -122,8 +119,7 @@ private fun PresetsContentPreviewWithItems() {
                     fields = IntentFields(projectId = "demo", moduleId = "module-2", userId = "user-2"),
                 ),
             ),
-            onUsePreset = {},
-            onDeletePreset = {},
+            onAction = {},
         )
     }
 }

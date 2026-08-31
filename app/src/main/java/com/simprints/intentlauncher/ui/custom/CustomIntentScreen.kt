@@ -64,20 +64,14 @@ fun CustomIntentScreen(navController: NavHostController) {
 
     CustomIntentContent(
         state = viewState,
-        onActionChange = { vm.onAction(CustomIntentUiAction.ActionChanged(it)) },
-        onExtrasChange = { vm.onAction(CustomIntentUiAction.ExtrasChanged(it)) },
-        onLaunch = { vm.onAction(CustomIntentUiAction.LaunchClicked) },
-        onClear = { vm.onAction(CustomIntentUiAction.ClearFieldsClicked) },
+        onAction = { vm.onAction(it) },
     )
 }
 
 @Composable
 fun CustomIntentContent(
     state: CustomIntentViewUiState,
-    onActionChange: (String) -> Unit,
-    onExtrasChange: (String) -> Unit,
-    onLaunch: () -> Unit,
-    onClear: () -> Unit,
+    onAction: (CustomIntentUiAction) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     val focusManager = LocalFocusManager.current
@@ -91,7 +85,7 @@ fun CustomIntentContent(
             windowInsets = WindowInsets.statusBars,
             title = { Text("Custom intent") },
             actions = {
-                IconButton(onClick = onClear) {
+                IconButton(onClick = { onAction(CustomIntentUiAction.ClearFieldsClicked) }) {
                     Icon(Icons.Filled.Delete, contentDescription = "Clear")
                 }
             },
@@ -105,9 +99,9 @@ fun CustomIntentContent(
             CustomIntentFields(
                 state,
                 focusManager,
-                onActionChange = onActionChange,
-                onExtrasChange = onExtrasChange,
-                onLaunch = onLaunch,
+                onActionChange = { onAction(CustomIntentUiAction.ActionChanged(it)) },
+                onExtrasChange = { onAction(CustomIntentUiAction.ExtrasChanged(it)) },
+                onLaunch = { onAction(CustomIntentUiAction.LaunchClicked) },
             )
             AccordionLayout(
                 title = "Result",
@@ -126,10 +120,7 @@ private fun CustomIntentContentPreviewEmpty() {
     ApplicationTheme {
         CustomIntentContent(
             state = CustomIntentViewUiState(),
-            onActionChange = {},
-            onExtrasChange = {},
-            onLaunch = {},
-            onClear = {},
+            onAction = {},
         )
     }
 }
@@ -144,10 +135,7 @@ private fun CustomIntentContentPreviewFilled() {
                 extras = "projectId=demo-project\nuserId=user-1\nmoduleId=module-1",
                 result = "Result: COMPLETED",
             ),
-            onActionChange = {},
-            onExtrasChange = {},
-            onLaunch = {},
-            onClear = {},
+            onAction = {},
         )
     }
 }

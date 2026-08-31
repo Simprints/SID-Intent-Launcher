@@ -57,17 +57,7 @@ fun IntentDetailsScreen(
     IntentDetailsContent(
         state = viewState,
         onNavigateUp = { navController.navigateUp() },
-        onDelete = { vm.onAction(IntentDetailsUiAction.DeleteIntentClicked(intentId)) },
-        onCopyFields = { vm.onAction(IntentDetailsUiAction.CopyFieldsClicked) },
-        onSavePresetShow = { vm.onAction(IntentDetailsUiAction.SavePresetDialogShown) },
-        onSavePresetDismiss = { vm.onAction(IntentDetailsUiAction.SavePresetDialogDismissed) },
-        onSavePresetConfirm = { name ->
-            vm.onAction(
-                IntentDetailsUiAction.SavePresetConfirmed(
-                    name = name.ifEmpty { viewState.intentData.fields.projectId },
-                ),
-            )
-        },
+        onAction = { vm.onAction(it) },
     )
 }
 
@@ -75,11 +65,7 @@ fun IntentDetailsScreen(
 fun IntentDetailsContent(
     state: IntentDetailsUiState,
     onNavigateUp: () -> Unit,
-    onDelete: () -> Unit,
-    onCopyFields: () -> Unit,
-    onSavePresetShow: () -> Unit,
-    onSavePresetDismiss: () -> Unit,
-    onSavePresetConfirm: (String) -> Unit,
+    onAction: (IntentDetailsUiAction) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -95,23 +81,27 @@ fun IntentDetailsContent(
                 }
             },
             actions = {
-                IconButton(onClick = onDelete) {
+                IconButton(onClick = { onAction(IntentDetailsUiAction.DeleteIntentClicked(state.intentData.id)) }) {
                     Icon(Icons.Filled.Delete, contentDescription = "Delete")
                 }
             },
         )
         IntentDetails(
             data = state.intentData,
-            onCopyFields = onCopyFields,
-            onSavePreset = onSavePresetShow,
+            onCopyFields = { onAction(IntentDetailsUiAction.CopyFieldsClicked) },
+            onSavePreset = { onAction(IntentDetailsUiAction.SavePresetDialogShown) },
         )
         ShowInputFieldAlertDialog(
             openDialog = state.isSaveDialogVisible,
             text = { Text(text = "Save the field values as a named preset for later use?") },
             label = { Text(text = "Preset name") },
             confirmButtonText = { Text(text = "Save") },
-            onConfirm = onSavePresetConfirm,
-            onDismiss = onSavePresetDismiss,
+            onConfirm = { name ->
+                onAction(IntentDetailsUiAction.SavePresetConfirmed(
+                    name = name.ifEmpty { state.intentData.fields.projectId },
+                ))
+            },
+            onDismiss = { onAction(IntentDetailsUiAction.SavePresetDialogDismissed) },
         )
     }
 }
@@ -131,11 +121,7 @@ private fun IntentDetailsContentPreview() {
                 isSaveDialogVisible = false,
             ),
             onNavigateUp = {},
-            onDelete = {},
-            onCopyFields = {},
-            onSavePresetShow = {},
-            onSavePresetDismiss = {},
-            onSavePresetConfirm = {},
+            onAction = {},
         )
     }
 }

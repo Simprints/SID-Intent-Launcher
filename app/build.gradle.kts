@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         applicationId = "com.simprints.intentlauncher"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 37
         versionCode = 10
         versionName = "2026.1.0"

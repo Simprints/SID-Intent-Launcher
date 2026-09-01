@@ -37,7 +37,7 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
     }
 
     init {
-        viewModelScope.launch { loadEvents() }
+        loadEvents()
     }
 
     private var allEvents: List<ResponseEvent> = emptyList()

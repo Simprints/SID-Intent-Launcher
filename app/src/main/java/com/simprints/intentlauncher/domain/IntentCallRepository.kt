@@ -74,7 +74,7 @@ class IntentCallRepository @Inject constructor(
     private fun String.fromString(): Map<String, String> = split("|")
         .filter { it.contains("=") }
         .associate { entry ->
-            val (key, value) = entry.split("=")
+            val (key, value) = entry.split("=", limit = 2)
             key to value
         }
 }

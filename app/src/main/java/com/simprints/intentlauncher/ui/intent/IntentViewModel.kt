@@ -130,11 +130,11 @@ class IntentViewModel @Inject constructor(
     }
 
     private fun cacheFields(state: IntentViewUiState) = viewModelScope.launch {
-        savedStateHandle[KEY_PROJECT_ID] = state.projectId
-        savedStateHandle[KEY_USER_ID] = state.userId
-        savedStateHandle[KEY_MODULE_ID] = state.moduleId
-        savedStateHandle[KEY_GUID] = state.guid
-        savedStateHandle[KEY_METADATA] = state.metadata
+        setSavedState(KEY_SESSION_ID, state.sessionId)
+        setSavedState(KEY_USER_ID, state.userId)
+        setSavedState(KEY_MODULE_ID, state.moduleId)
+        setSavedState(KEY_GUID, state.guid)
+        setSavedState(KEY_METADATA, state.metadata)
 
         projectDataCache.save(
             projectId = state.projectId,
@@ -208,7 +208,7 @@ class IntentViewModel @Inject constructor(
     private fun clearFields() = viewModelScope.launch {
         projectDataCache.clear()
         reduce { IntentViewUiState() }
-        setSavedState(KEY_PENDING_INTENT_CALL, null)
+        savedStateHandle.keys().forEach { key -> savedStateHandle.remove<Any>(key) }
     }
 
     private fun <T> setSavedState(

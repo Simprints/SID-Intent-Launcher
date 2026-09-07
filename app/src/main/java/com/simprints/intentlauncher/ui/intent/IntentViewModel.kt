@@ -99,19 +99,19 @@ class IntentViewModel @Inject constructor(
 
             is IntentUiAction.IntentResultReceived -> intentResultReceived(action.result)
 
-            is IntentUiAction.GuidChanged -> reduce { it.copy(guid = action.value) }
+            is IntentUiAction.GuidChanged -> updateState { it.copy(guid = action.value) }
 
-            is IntentUiAction.MetadataChanged -> reduce { it.copy(metadata = action.value) }
+            is IntentUiAction.MetadataChanged -> updateState { it.copy(metadata = action.value) }
 
-            is IntentUiAction.ModuleIdChanged -> reduce { it.copy(moduleId = action.value) }
+            is IntentUiAction.ModuleIdChanged -> updateState { it.copy(moduleId = action.value) }
 
-            is IntentUiAction.ProjectIdChanged -> reduce { it.copy(projectId = action.value) }
+            is IntentUiAction.ProjectIdChanged -> updateState { it.copy(projectId = action.value) }
 
-            is IntentUiAction.SessionIdChanged -> reduce { it.copy(sessionId = action.value) }
+            is IntentUiAction.SessionIdChanged -> updateState { it.copy(sessionId = action.value) }
 
-            is IntentUiAction.UserIdChanged -> reduce { it.copy(userId = action.value) }
+            is IntentUiAction.UserIdChanged -> updateState { it.copy(userId = action.value) }
 
-            IntentUiAction.WrongMetadataAlertDismissed -> reduce { it.copy(isWrongMetadataAlertVisible = false) }
+            IntentUiAction.WrongMetadataAlertDismissed -> updateState { it.copy(isWrongMetadataAlertVisible = false) }
         }
     }
 
@@ -120,7 +120,7 @@ class IntentViewModel @Inject constructor(
         val request = try {
             createRequest(state)
         } catch (_: InvalidMetadataException) {
-            reduce { it.copy(isWrongMetadataAlertVisible = true) }
+            updateState { it.copy(isWrongMetadataAlertVisible = true) }
             return@launch
         }
         cacheFields(state)
@@ -171,7 +171,7 @@ class IntentViewModel @Inject constructor(
             intentCallRepository.save(call = it, result = intentResult)
         }
         setSavedState(KEY_PENDING_INTENT_CALL, null)
-        reduce {
+        updateState {
             it.copy(
                 result = intentResult.simpleText(),
                 sessionId = intentResult.sessionId.orEmpty(),
@@ -194,7 +194,7 @@ class IntentViewModel @Inject constructor(
         val metadata = projectDataCache.getMetadata()
         val guid = projectDataCache.getGuid()
 
-        reduce {
+        updateState {
             it.copy(
                 projectId = projectId,
                 userId = userId,
@@ -207,7 +207,7 @@ class IntentViewModel @Inject constructor(
 
     private fun clearFields() = viewModelScope.launch {
         projectDataCache.clear()
-        reduce { IntentViewUiState() }
+        updateState { IntentViewUiState() }
         savedStateHandle.keys().forEach { key -> savedStateHandle.remove<Any>(key) }
     }
 

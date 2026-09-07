@@ -32,8 +32,8 @@ abstract class BaseMviViewModel<S : UiState, A : UiAction, E : UiEffect>(
 
     // Non-overrideable internals
 
-    protected fun reduce(reducer: (S) -> S) {
-        internalState.update(reducer)
+    protected fun updateState(function: (S) -> S) {
+        internalState.update(function)
     }
 
     protected suspend fun emitEffect(effect: E) {

@@ -20,7 +20,7 @@ class PresetsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             presetRepo.getPresets().collectLatest { presets ->
-                reduce { it.copy(items = presets) }
+                updateState { it.copy(items = presets) }
             }
         }
     }

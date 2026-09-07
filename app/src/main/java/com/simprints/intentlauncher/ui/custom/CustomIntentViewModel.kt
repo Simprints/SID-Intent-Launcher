@@ -36,8 +36,8 @@ class CustomIntentViewModel @Inject constructor(
 
     override suspend fun handleAction(action: CustomIntentUiAction) {
         when (action) {
-            is CustomIntentUiAction.ActionChanged -> reduceAndPersist { it.copy(action = action.value) }
-            is CustomIntentUiAction.ExtrasChanged -> reduceAndPersist { it.copy(extras = action.value) }
+            is CustomIntentUiAction.ActionChanged -> updateAndPersist { it.copy(action = action.value) }
+            is CustomIntentUiAction.ExtrasChanged -> updateAndPersist { it.copy(extras = action.value) }
             CustomIntentUiAction.LaunchClicked -> launchIntent()
             is CustomIntentUiAction.IntentResultReceived -> intentResultReceived(action.result)
             CustomIntentUiAction.ClearFieldsClicked -> clearFields()
@@ -47,7 +47,7 @@ class CustomIntentViewModel @Inject constructor(
     private suspend fun fetchCachedFieldValues() {
         val action = projectDataCache.getCustomAction()
         val extras = projectDataCache.getCustomExtras()
-        reduceAndPersist {
+        updateAndPersist {
             it.copy(
                 action = action,
                 extras = extras,
@@ -57,7 +57,7 @@ class CustomIntentViewModel @Inject constructor(
 
     private suspend fun clearFields() {
         projectDataCache.clearCustomIntent()
-        reduceAndPersist { CustomIntentViewUiState() }
+        updateAndPersist { CustomIntentViewUiState() }
         pendingIntentCall = null
     }
 
@@ -89,15 +89,15 @@ class CustomIntentViewModel @Inject constructor(
             }
         }
         pendingIntentCall = null
-        reduceAndPersist {
+        updateAndPersist {
             it.copy(
                 result = intentResult.simpleText(),
             )
         }
     }
 
-    private fun reduceAndPersist(update: (CustomIntentViewUiState) -> CustomIntentViewUiState) {
-        reduce(update)
+    private fun updateAndPersist(update: (CustomIntentViewUiState) -> CustomIntentViewUiState) {
+        updateState(update)
         val newState = state.value
         setSavedState(KEY_ACTION, newState.action)
         setSavedState(KEY_EXTRAS, newState.extras)

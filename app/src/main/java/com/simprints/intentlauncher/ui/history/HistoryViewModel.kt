@@ -17,7 +17,7 @@ class HistoryViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             intentRepository.getAllIntentCalls().collectLatest { calls ->
-                reduce { it.copy(items = calls) }
+                updateState { it.copy(items = calls) }
             }
         }
     }

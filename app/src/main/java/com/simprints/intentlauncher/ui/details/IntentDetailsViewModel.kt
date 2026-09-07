@@ -20,15 +20,15 @@ class IntentDetailsViewModel @Inject constructor(
             is IntentDetailsUiAction.LoadIntent -> loadIntent(action.intentId)
             is IntentDetailsUiAction.DeleteIntentClicked -> deleteIntent(action.intentId)
             IntentDetailsUiAction.CopyFieldsClicked -> copyFieldsToStore()
-            IntentDetailsUiAction.SavePresetDialogShown -> reduce { it.copy(isSaveDialogVisible = true) }
-            IntentDetailsUiAction.SavePresetDialogDismissed -> reduce { it.copy(isSaveDialogVisible = false) }
+            IntentDetailsUiAction.SavePresetDialogShown -> updateState { it.copy(isSaveDialogVisible = true) }
+            IntentDetailsUiAction.SavePresetDialogDismissed -> updateState { it.copy(isSaveDialogVisible = false) }
             is IntentDetailsUiAction.SavePresetConfirmed -> savePreset(action.name)
         }
     }
 
     private suspend fun loadIntent(intentId: String) {
         val intentData = intentRepository.getIntentCall(intentId)
-        reduce {
+        updateState {
             it.copy(
                 intentData = intentData ?: it.intentData,
             )
@@ -50,7 +50,7 @@ class IntentDetailsViewModel @Inject constructor(
     private suspend fun savePreset(name: String) {
         val fields = state.value.intentData.fields
         presetRepository.save(name, fields)
-        reduce { it.copy(isSaveDialogVisible = false) }
+        updateState { it.copy(isSaveDialogVisible = false) }
         emitEffect(IntentDetailsUiEffect.ShowToast("Preset saved"))
     }
 

@@ -45,14 +45,14 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
     override suspend fun handleAction(action: ResponseEventsUiAction) {
         when (action) {
             is ResponseEventsUiAction.SearchQueryChanged -> {
-                reduceFilteredState(
+                updateFilteredState(
                     query = action.query,
                     sorting = state.value.sorting,
                 )
             }
 
             is ResponseEventsUiAction.SortingChanged -> {
-                reduceFilteredState(
+                updateFilteredState(
                     query = state.value.query,
                     sorting = action.sorting,
                     activeDialog = null,
@@ -60,7 +60,7 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
             }
 
             ResponseEventsUiAction.SortOptionsClicked -> {
-                reduce {
+                updateState {
                     it.copy(
                         activeDialog = EventDialogType.SortingOptions(EventSortingOption.entries),
                     )
@@ -68,13 +68,13 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
             }
 
             is ResponseEventsUiAction.EventOptionsClicked -> {
-                reduce {
+                updateState {
                     it.copy(activeDialog = EventDialogType.EventOptions(action.event))
                 }
             }
 
             ResponseEventsUiAction.DialogDismissed -> {
-                reduce { it.copy(activeDialog = null) }
+                updateState { it.copy(activeDialog = null) }
             }
 
             is ResponseEventsUiAction.CopyIdClicked -> {
@@ -115,13 +115,13 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
             ?.result
             ?.json
             .extractEventsFromJson(gson)
-        reduceFilteredState(
+        updateFilteredState(
             query = state.value.query,
             sorting = state.value.sorting,
         )
     }
 
-    private fun reduceFilteredState(
+    private fun updateFilteredState(
         query: String,
         sorting: EventSortingOption,
         activeDialog: EventDialogType? = state.value.activeDialog,
@@ -138,7 +138,7 @@ class ResponseEventsScreenViewModel @AssistedInject constructor(
             EventSortingOption.DateAsc -> filteredEvents.sortedBy { it.createdAtMs }
             EventSortingOption.AsReceivedInResponse -> filteredEvents
         }
-        reduce {
+        updateState {
             it.copy(
                 query = query,
                 sorting = sorting,

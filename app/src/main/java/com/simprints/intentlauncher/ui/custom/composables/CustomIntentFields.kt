@@ -20,12 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simprints.intentlauncher.ui.composables.AccordionLayout
 import com.simprints.intentlauncher.ui.composables.PropertyField
-import com.simprints.intentlauncher.ui.custom.CustomIntentViewState
+import com.simprints.intentlauncher.ui.custom.CustomIntentViewUiState
 import com.simprints.intentlauncher.ui.theme.AppTypography
 
 @Composable
 fun CustomIntentFields(
-    state: CustomIntentViewState,
+    state: CustomIntentViewUiState,
     focusManager: FocusManager = LocalFocusManager.current,
     onActionChange: (String) -> Unit = {},
     onExtrasChange: (String) -> Unit = {},
@@ -83,7 +83,7 @@ fun CustomIntentFields(
 @Composable
 private fun CustomIntentFieldsPreview() {
     CustomIntentFields(
-        state = CustomIntentViewState(
+        state = CustomIntentViewUiState(
             action = "com.intent.action",
             extras = "key=value\nkey2=value2",
         ),

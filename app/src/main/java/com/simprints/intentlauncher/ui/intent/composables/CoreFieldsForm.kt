@@ -11,11 +11,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simprints.intentlauncher.ui.composables.PropertyField
-import com.simprints.intentlauncher.ui.intent.IntentViewState
+import com.simprints.intentlauncher.ui.intent.IntentViewUiState
 
 @Composable
 fun CoreFieldsForm(
-    state: IntentViewState,
+    state: IntentViewUiState,
     focusManager: FocusManager = LocalFocusManager.current,
     onProjectIdChange: (String) -> Unit = {},
     onUserIdChange: (String) -> Unit = {},
@@ -68,5 +68,5 @@ fun CoreFieldsForm(
 @Preview(showBackground = true)
 @Composable
 private fun CoreFieldsFormPreview() {
-    CoreFieldsForm(IntentViewState())
+    CoreFieldsForm(IntentViewUiState())
 }

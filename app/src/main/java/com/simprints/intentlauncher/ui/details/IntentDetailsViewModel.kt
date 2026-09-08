@@ -1,16 +1,10 @@
 package com.simprints.intentlauncher.ui.details
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.simprints.intentlauncher.data.store.ProjectDataCache
-import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentCallRepository
-import com.simprints.intentlauncher.domain.IntentFields
 import com.simprints.intentlauncher.domain.IntentPresetRepository
+import com.simprints.intentlauncher.ui.base.BaseMviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,15 +12,31 @@ class IntentDetailsViewModel @Inject constructor(
     private val projectDataCache: ProjectDataCache,
     private val intentRepository: IntentCallRepository,
     private val presetRepository: IntentPresetRepository,
-) : ViewModel() {
-    private val _data = MutableStateFlow(IntentCall())
-    val data: StateFlow<IntentCall> = _data
-
-    fun loadIntent(intentId: String) = viewModelScope.launch {
-        _data.value = intentRepository.getIntentCall(intentId) ?: IntentCall()
+) : BaseMviViewModel<IntentDetailsUiState, IntentDetailsUiAction, IntentDetailsUiEffect>(
+        initialState = IntentDetailsUiState(),
+    ) {
+    override suspend fun handleAction(action: IntentDetailsUiAction) {
+        when (action) {
+            is IntentDetailsUiAction.LoadIntent -> loadIntent(action.intentId)
+            is IntentDetailsUiAction.DeleteIntentClicked -> deleteIntent(action.intentId)
+            IntentDetailsUiAction.CopyFieldsClicked -> copyFieldsToStore()
+            IntentDetailsUiAction.SavePresetDialogShown -> updateState { it.copy(isSaveDialogVisible = true) }
+            IntentDetailsUiAction.SavePresetDialogDismissed -> updateState { it.copy(isSaveDialogVisible = false) }
+            is IntentDetailsUiAction.SavePresetConfirmed -> savePreset(action.name)
+        }
     }
 
-    fun copyFieldsToStore(fields: IntentFields) = viewModelScope.launch {
+    private suspend fun loadIntent(intentId: String) {
+        val intentData = intentRepository.getIntentCall(intentId)
+        updateState {
+            it.copy(
+                intentData = intentData ?: it.intentData,
+            )
+        }
+    }
+
+    private suspend fun copyFieldsToStore() {
+        val fields = state.value.intentData.fields
         projectDataCache.save(
             projectId = fields.projectId,
             userId = fields.userId,
@@ -34,16 +44,18 @@ class IntentDetailsViewModel @Inject constructor(
             metadata = fields.metadata,
             guid = "",
         )
+        emitEffect(IntentDetailsUiEffect.NavigateToIntent)
     }
 
-    fun savePreset(
-        name: String,
-        fields: IntentFields,
-    ) = viewModelScope.launch {
+    private suspend fun savePreset(name: String) {
+        val fields = state.value.intentData.fields
         presetRepository.save(name, fields)
+        updateState { it.copy(isSaveDialogVisible = false) }
+        emitEffect(IntentDetailsUiEffect.ShowToast("Preset saved"))
     }
 
-    fun deleteIntent(intentId: String) = viewModelScope.launch {
+    private suspend fun deleteIntent(intentId: String) {
         intentRepository.deleteIntentCall(intentId)
+        emitEffect(IntentDetailsUiEffect.NavigateUp)
     }
 }

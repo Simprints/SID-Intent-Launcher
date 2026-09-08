@@ -2,16 +2,15 @@ package com.simprints.intentlauncher.ui.custom
 
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.simprints.intentlauncher.data.store.ProjectDataCache
 import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentCallRepository
 import com.simprints.intentlauncher.domain.IntentResult.Companion.INVALID_CUSTOM_INTENT
 import com.simprints.intentlauncher.domain.IntentResultParser
+import com.simprints.intentlauncher.tools.toIsoString
+import com.simprints.intentlauncher.ui.base.BaseMviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.palm.composestateevents.consumed
-import de.palm.composestateevents.triggered
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -22,18 +21,33 @@ class CustomIntentViewModel @Inject constructor(
     private val projectDataCache: ProjectDataCache,
     private val intentCallRepository: IntentCallRepository,
     private val intentResultParser: IntentResultParser,
-) : ViewModel() {
-    val viewState = savedStateHandle.getStateFlow(KEY_VIEW_STATE, CustomIntentViewState())
+) : BaseMviViewModel<CustomIntentViewUiState, CustomIntentUiAction, CustomIntentUiEffect>(
+        initialState = CustomIntentViewUiState(
+            action = savedStateHandle[KEY_ACTION] ?: "",
+            extras = savedStateHandle[KEY_EXTRAS] ?: "",
+            result = savedStateHandle[KEY_RESULT] ?: "",
+        ),
+    ) {
+    private var pendingIntentCall: IntentCall? = null
 
-    private fun updateViewState(update: (CustomIntentViewState) -> CustomIntentViewState) {
-        savedStateHandle[KEY_VIEW_STATE] = update(viewState.value)
+    init {
+        viewModelScope.launch { fetchCachedFieldValues() }
     }
 
-    fun fetchCachedFieldValues() = viewModelScope.launch {
+    override suspend fun handleAction(action: CustomIntentUiAction) {
+        when (action) {
+            is CustomIntentUiAction.ActionChanged -> updateAndPersist { it.copy(action = action.value) }
+            is CustomIntentUiAction.ExtrasChanged -> updateAndPersist { it.copy(extras = action.value) }
+            CustomIntentUiAction.LaunchClicked -> launchIntent()
+            is CustomIntentUiAction.IntentResultReceived -> intentResultReceived(action.result)
+            CustomIntentUiAction.ClearFieldsClicked -> clearFields()
+        }
+    }
+
+    private suspend fun fetchCachedFieldValues() {
         val action = projectDataCache.getCustomAction()
         val extras = projectDataCache.getCustomExtras()
-
-        updateViewState {
+        updateAndPersist {
             it.copy(
                 action = action,
                 extras = extras,
@@ -41,61 +55,73 @@ class CustomIntentViewModel @Inject constructor(
         }
     }
 
-    fun updateAction(newAction: String) = updateViewState { it.copy(action = newAction) }
-
-    fun updateExtras(newExtras: String) = updateViewState { it.copy(extras = newExtras) }
-
-    fun intentShown() = updateViewState { it.copy(showIntent = consumed()) }
-
-    fun clearFields() = viewModelScope.launch {
+    private suspend fun clearFields() {
         projectDataCache.clearCustomIntent()
-        updateViewState { CustomIntentViewState() }
+        updateAndPersist { CustomIntentViewUiState() }
+        pendingIntentCall = null
     }
 
-    fun launchIntent() = updateViewState {
-        cacheFields(it)
-
-        val intent = Intent(it.action).apply {
-            it.extras.lines().filter {
-                "=" in it
-            }.forEach {
-                val (key, value) = it.split("=")
-                putExtra(key, value)
-            }
-        }
-
-        it.copy(
-            lastIntentCall = IntentCall(
-                timestamp = Date(),
-                intent = intent,
+    private suspend fun launchIntent() {
+        val uiState = state.value
+        projectDataCache.saveCustomIntent(uiState.action, uiState.extras)
+        val extras = parseExtras(uiState.extras)
+        val pendingCall = IntentCall(
+            timestamp = Date().toIsoString(),
+            action = uiState.action,
+            extra = extras,
+        )
+        pendingIntentCall = pendingCall
+        emitEffect(
+            CustomIntentUiEffect.LaunchIntent(
+                action = uiState.action,
+                extras = extras,
             ),
-            showIntent = triggered(intent),
         )
     }
 
-    private fun cacheFields(it: CustomIntentViewState) = viewModelScope.launch {
-        projectDataCache.saveCustomIntent(it.action, it.extras)
-    }
-
-    fun intentResultReceived(result: Pair<Int, Intent?>) = viewModelScope.launch {
+    private suspend fun intentResultReceived(result: Pair<Int, Intent?>) {
         val (code, intent) = result
         val intentResult = intentResultParser(code, intent?.extras)
 
         if (code != INVALID_CUSTOM_INTENT) {
-            viewState.value.lastIntentCall?.let {
+            pendingIntentCall?.let {
                 intentCallRepository.save(call = it, result = intentResult)
             }
         }
-
-        updateViewState {
+        pendingIntentCall = null
+        updateAndPersist {
             it.copy(
                 result = intentResult.simpleText(),
-                lastIntentCall = null,
             )
         }
     }
 
+    private fun updateAndPersist(update: (CustomIntentViewUiState) -> CustomIntentViewUiState) {
+        updateState(update)
+        val newState = state.value
+        setSavedState(KEY_ACTION, newState.action)
+        setSavedState(KEY_EXTRAS, newState.extras)
+        setSavedState(KEY_RESULT, newState.result)
+    }
+
+    private fun parseExtras(extras: String): Map<String, String> = extras
+        .lines()
+        .filter { "=" in it }
+        .associate { line ->
+            val (key, value) = line.split("=", limit = 2)
+            key to value
+        }
+
+    private fun <T> setSavedState(
+        key: String,
+        value: T,
+    ) {
+        savedStateHandle[key] = value
+    }
+
     companion object {
-        private const val KEY_VIEW_STATE = "view_state"
+        private const val KEY_ACTION = "custom_action"
+        private const val KEY_EXTRAS = "custom_extras"
+        private const val KEY_RESULT = "custom_result"
     }
 }

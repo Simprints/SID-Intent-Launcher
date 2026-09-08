@@ -1,27 +1,26 @@
 package com.simprints.intentlauncher.ui.history
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.simprints.intentlauncher.domain.IntentCall
 import com.simprints.intentlauncher.domain.IntentCallRepository
+import com.simprints.intentlauncher.ui.base.BaseMviViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val intentRepository: IntentCallRepository,
-) : ViewModel() {
-    private val _data = MutableStateFlow<List<IntentCall>>(emptyList())
-    val data: StateFlow<List<IntentCall>> = _data
-
+) : BaseMviViewModel<HistoryViewUiState, HistoryUiAction, HistoryUiEffect>(
+        initialState = HistoryViewUiState(),
+    ) {
     init {
         viewModelScope.launch {
-            intentRepository.getAllIntentCalls().collect { newData ->
-                _data.value = newData
+            intentRepository.getAllIntentCalls().collectLatest { calls ->
+                updateState { it.copy(items = calls) }
             }
         }
     }
+
+    override suspend fun handleAction(action: HistoryUiAction) = Unit
 }

@@ -9,7 +9,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,18 +18,22 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ShowInputFieldAlertDialog(
-    openDialog: MutableState<Boolean> = remember { mutableStateOf(false) },
+    openDialog: Boolean = false,
     title: @Composable (() -> Unit)? = null,
     text: @Composable (() -> Unit)? = null,
     label: @Composable (() -> Unit)? = null,
     confirmButtonText: @Composable RowScope.() -> Unit,
     onConfirm: (String) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val textFieldValue = remember { mutableStateOf(TextFieldValue()) }
 
-    if (openDialog.value) {
+    if (openDialog) {
         AlertDialog(
-            onDismissRequest = { openDialog.value = false },
+            onDismissRequest = {
+                onDismiss()
+                textFieldValue.value = TextFieldValue()
+            },
             title = title,
             text = {
                 Column {
@@ -47,14 +50,19 @@ fun ShowInputFieldAlertDialog(
                 TextButton(
                     onClick = {
                         onConfirm(textFieldValue.value.text.trim())
-                        openDialog.value = false
+                        onDismiss()
                         textFieldValue.value = TextFieldValue()
                     },
                     content = confirmButtonText,
                 )
             },
             dismissButton = {
-                TextButton(onClick = { openDialog.value = false }) {
+                TextButton(
+                    onClick = {
+                        onDismiss()
+                        textFieldValue.value = TextFieldValue()
+                    },
+                ) {
                     Text("Dismiss")
                 }
             },
@@ -70,5 +78,6 @@ private fun ShowBasicAlertDialogPreview() {
         text = { Text("Text") },
         confirmButtonText = { Text("Confirm") },
         onConfirm = {},
+        onDismiss = {},
     )
 }

@@ -25,26 +25,26 @@ import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.Clipboard
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.simprints.intentlauncher.tools.collectAsStateLifecycleAware
-import com.simprints.intentlauncher.ui.composables.NavigateUpButton
+import com.simprints.intentlauncher.tools.rememberFlow
 import com.simprints.intentlauncher.ui.composables.PropertyField
 import com.simprints.intentlauncher.ui.composables.ToastLauncher
 import com.simprints.intentlauncher.ui.events.composables.EventActionsDialog
@@ -53,13 +53,16 @@ import com.simprints.intentlauncher.ui.events.composables.SortingOptionsDialog
 import com.simprints.intentlauncher.ui.events.model.EventDialogType
 import com.simprints.intentlauncher.ui.events.model.EventSortingOption
 import com.simprints.intentlauncher.ui.intent.model.ResponseEvent
+import com.simprints.intentlauncher.ui.navigation.Navigator
+import com.simprints.intentlauncher.ui.theme.ApplicationTheme
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ResponseEventsScreen(
-    navController: NavHostController,
+    navigator: Navigator,
     intentId: String,
 ) {
     val window = LocalActivity.current?.window
@@ -72,73 +75,105 @@ fun ResponseEventsScreen(
                     ?: WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
             )
         }
-    val viewState by vm.state.collectAsStateLifecycleAware(initial = vm.initialViewState)
-    // What kind of dialog is displayed
-    var eventDialogType by remember { mutableStateOf<EventDialogType?>(null) }
-    val scope = rememberCoroutineScope()
-    val modalSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden,
-        confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
-        skipHalfExpanded = true,
-    )
+    val viewState by vm.state.collectAsStateLifecycleAware()
+
+    val lifecycleAwareEffects = rememberFlow(vm.effects)
     val toastTextState = remember { mutableStateOf("") }
     ToastLauncher(toastTextState)
-    if (modalSheetState.currentValue == ModalBottomSheetValue.Hidden) {
-        eventDialogType = null
+    LaunchedEffect(lifecycleAwareEffects, clipboardManager) {
+        lifecycleAwareEffects.collectLatest { effect ->
+            when (effect) {
+                is ResponseEventsUiEffect.CopyToClipboard -> {
+                    clipboardManager.nativeClipboard.setPrimaryClip(
+                        ClipData.newPlainText(effect.label, effect.value),
+                    )
+                }
+
+                is ResponseEventsUiEffect.ShowToast -> {
+                    toastTextState.value = effect.message
+                }
+            }
+        }
     }
 
     // Setting SoftInputMode to SOFT_INPUT_ADJUST_RESIZE so that content won't shift away from the
     // screen when the keyboard is displayed. Setting it back to the initial value once the widget
-    // is no longer visible
+    // is no longer visible.
     window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     DisposableEffect(Unit) {
         onDispose {
             window?.setSoftInputMode(vm.initialSoftInputMode)
         }
     }
+
+    ResponseEventsContent(
+        state = viewState,
+        onNavigateUp = { navigator.goBack() },
+        onAction = { vm.onAction(it) },
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ResponseEventsContent(
+    state: ResponseEventsUiState,
+    onNavigateUp: () -> Unit,
+    onAction: (ResponseEventsUiAction) -> Unit,
+) {
+    val scope = rememberCoroutineScope()
+    val modalSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmValueChange = { it != ModalBottomSheetValue.HalfExpanded },
+        skipHalfExpanded = true,
+    )
+    if (modalSheetState.currentValue == ModalBottomSheetValue.Hidden && state.activeDialog != null) {
+        onAction(ResponseEventsUiAction.DialogDismissed)
+    }
+
     ModalBottomSheetLayout(
         sheetState = modalSheetState,
         sheetShape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
         sheetContent = {
-            when (val dialogType = eventDialogType) {
+            when (val dialogType = state.activeDialog) {
                 null -> Unit
 
                 is EventDialogType.SortingOptions -> SortingOptionsDialogWrapper(
-                    viewState = viewState,
+                    viewState = state,
                     modalSheetState = modalSheetState,
                     scope = scope,
-                    viewModel = vm,
                     sortingOptions = dialogType.sortingOptions,
+                    onOptionSelected = { onAction(ResponseEventsUiAction.SortingChanged(it)) },
                 )
 
                 is EventDialogType.EventOptions -> EventActionsDialogWrapper(
                     event = dialogType.event,
                     modalSheetState = modalSheetState,
                     scope = scope,
-                    viewModel = vm,
-                    clipboardManager = clipboardManager,
-                    toastTextState = toastTextState,
+                    onCopyId = { onAction(ResponseEventsUiAction.CopyIdClicked(it)) },
+                    onCopyEventJson = { onAction(ResponseEventsUiAction.CopyEventJsonClicked(it)) },
+                    onCopyPayloadJson = { onAction(ResponseEventsUiAction.CopyPayloadJsonClicked(it)) },
                 )
             }
         },
         sheetBackgroundColor = MaterialTheme.colors.surface,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-        ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             val eventCountText = when {
-                viewState.events.size == viewState.totalEvents -> "${viewState.events.size}"
-                else -> "${viewState.events.size}/${viewState.totalEvents}"
+                state.events.size == state.totalEvents -> "${state.events.size}"
+                else -> "${state.events.size}/${state.totalEvents}"
             }
             TopAppBar(
                 windowInsets = WindowInsets.statusBars,
                 title = { Text("Response Events ($eventCountText) ") },
-                navigationIcon = { NavigateUpButton(navController) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateUp) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
                 actions = {
                     IconButton(
                         onClick = {
-                            eventDialogType = EventDialogType.SortingOptions(sortingOptions = EventSortingOption.entries)
+                            onAction(ResponseEventsUiAction.SortOptionsClicked)
                             scope.launch { modalSheetState.show() }
                         },
                     ) {
@@ -153,14 +188,13 @@ fun ResponseEventsScreen(
             ) {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                 ) {
-                    items(viewState.events.size) { i ->
-                        val event = viewState.events[i]
+                    items(state.events.size) { i ->
+                        val event = state.events[i]
                         val modifier = when (i) {
                             0 -> Modifier.padding(top = 8.dp)
-                            viewState.events.size - 1 -> Modifier.padding(bottom = 8.dp)
+                            state.events.size - 1 -> Modifier.padding(bottom = 8.dp)
                             else -> Modifier
                         }
                         ResponseEventItem(
@@ -168,7 +202,7 @@ fun ResponseEventsScreen(
                             event = event,
                             position = i,
                         ) {
-                            eventDialogType = EventDialogType.EventOptions(event = it)
+                            onAction(ResponseEventsUiAction.EventOptionsClicked(it))
                             scope.launch { modalSheetState.show() }
                         }
                     }
@@ -182,17 +216,31 @@ fun ResponseEventsScreen(
             ) {
                 PropertyField(
                     "Search",
-                    viewState.query,
+                    state.query,
                     LocalFocusManager.current,
                     testTag = "search",
-                    onChange = {
-                        vm.setSearchQuery(it)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    onChange = { onAction(ResponseEventsUiAction.SearchQueryChanged(it)) },
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true, device = Devices.PHONE)
+@Composable
+private fun ResponseEventsContentPreviewEmpty() {
+    ApplicationTheme {
+        ResponseEventsContent(
+            state = ResponseEventsUiState(
+                events = emptyList(),
+                totalEvents = 0,
+                query = "",
+                sorting = EventSortingOption.DateAsc,
+            ),
+            onNavigateUp = {},
+            onAction = {},
+        )
     }
 }
 
@@ -200,11 +248,11 @@ fun ResponseEventsScreen(
 @Composable
 fun EventActionsDialogWrapper(
     event: ResponseEvent,
-    clipboardManager: Clipboard,
-    toastTextState: MutableState<String>,
     modalSheetState: ModalBottomSheetState,
     scope: CoroutineScope,
-    viewModel: ResponseEventsScreenViewModel,
+    onCopyId: (String) -> Unit,
+    onCopyEventJson: (ResponseEvent) -> Unit,
+    onCopyPayloadJson: (ResponseEvent) -> Unit,
 ) {
     BackHandler(enabled = modalSheetState.isVisible) {
         scope.launch { modalSheetState.hide() }
@@ -212,28 +260,15 @@ fun EventActionsDialogWrapper(
     EventActionsDialog(
         event = event,
         onCopyId = { id ->
-            clipboardManager.nativeClipboard.setPrimaryClip(ClipData.newPlainText("eventId", id))
-            toastTextState.value = "$id copied to clipboard"
+            onCopyId(id)
             scope.launch { modalSheetState.hide() }
         },
         onCopyEventJson = {
-            val json = viewModel.serializeEventToJson(it)
-            if (json == null) {
-                toastTextState.value = "Error parsing event to JSON"
-            } else {
-                clipboardManager.nativeClipboard.setPrimaryClip(ClipData.newPlainText("eventJson", json))
-                toastTextState.value = "Event JSON copied to clipboard"
-            }
+            onCopyEventJson(it)
             scope.launch { modalSheetState.hide() }
         },
         onCopyPayloadJson = {
-            val json = viewModel.serializePayloadToJson(it)
-            if (json == null) {
-                toastTextState.value = "Error parsing payload to JSON"
-            } else {
-                clipboardManager.nativeClipboard.setPrimaryClip(ClipData.newPlainText("payloadJson", json))
-                toastTextState.value = "Paylaod JSON copied to clipboard"
-            }
+            onCopyPayloadJson(it)
             scope.launch { modalSheetState.hide() }
         },
     )
@@ -242,11 +277,11 @@ fun EventActionsDialogWrapper(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SortingOptionsDialogWrapper(
-    viewState: ResponseEventsViewState,
+    viewState: ResponseEventsUiState,
     modalSheetState: ModalBottomSheetState,
     scope: CoroutineScope,
-    viewModel: ResponseEventsScreenViewModel,
     sortingOptions: List<EventSortingOption>,
+    onOptionSelected: (EventSortingOption) -> Unit,
 ) {
     BackHandler(enabled = modalSheetState.isVisible) {
         scope.launch { modalSheetState.hide() }
@@ -255,7 +290,7 @@ fun SortingOptionsDialogWrapper(
         current = viewState.sorting,
         options = sortingOptions,
         onOptionSelected = { sortingOption ->
-            viewModel.setSorting(sortingOption)
+            onOptionSelected(sortingOption)
             scope.launch { modalSheetState.hide() }
         },
     )

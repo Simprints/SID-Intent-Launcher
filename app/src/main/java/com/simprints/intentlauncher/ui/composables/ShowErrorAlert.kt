@@ -5,29 +5,27 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ShowErrorAlert(
-    openDialog: MutableState<Boolean> = remember { mutableStateOf(false) },
+    openDialog: Boolean = false,
     title: @Composable (() -> Unit)? = null,
     text: @Composable (() -> Unit)? = null,
     confirmButtonText: @Composable RowScope.() -> Unit,
     onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
-    if (openDialog.value) {
+    if (openDialog) {
         AlertDialog(
-            onDismissRequest = { openDialog.value = false },
+            onDismissRequest = onDismiss,
             title = title,
             text = text,
             confirmButton = {
                 TextButton(
                     onClick = {
                         onConfirm()
-                        openDialog.value = false
+                        onDismiss()
                     },
                     content = confirmButtonText,
                 )
@@ -44,5 +42,6 @@ private fun ShowErrorAlertPreview() {
         text = { Text("Text") },
         confirmButtonText = { Text("Confirm") },
         onConfirm = {},
+        onDismiss = {},
     )
 }

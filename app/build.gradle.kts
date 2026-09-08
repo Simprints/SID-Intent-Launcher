@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
 
     id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("kotlin-parcelize")
 
     id("com.google.devtools.ksp")
@@ -19,7 +20,7 @@ android {
 
     defaultConfig {
         applicationId = "com.simprints.intentlauncher"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 37
         versionCode = 10
         versionName = "2026.1.0"
@@ -69,7 +70,9 @@ dependencies {
     implementation(libs.compose.graphics)
     implementation(libs.compose.preview)
     implementation(libs.compose.liveData)
-    implementation(libs.compose.navigation)
+    implementation(libs.navigation3.runtime)
+    implementation(libs.navigation3.ui)
+    implementation(libs.lifecycle.viewmodel.navigation3)
     implementation(libs.compose.stateEvent)
     debugImplementation(libs.compose.tooling)
 
@@ -82,4 +85,9 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.gson)
     implementation(libs.datastore)
+
+    testImplementation(libs.junit4)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
 }
